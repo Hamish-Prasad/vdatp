@@ -678,227 +678,144 @@ void runFlyAround()
 	}
 }
 
-int main(int argc, char const *argv[]) 
-{ 
-	FILE *fp;
+// THIS SHOULD NOT BE USED, !_KBHIT
+void levitateTwoPoints(float x1, float y1, float z1,
+                       float x2, float y2, float z2,
+                       int delay_us)
+{
+    pauseFifoProcessing(true);
+    sendRawMove(0, 1, 0, 0);
+
+    while(!_kbhit())
+    {
+        // Point 1
+        sendmove(x1, y1, z1);
+        usleep(delay_us);
+
+        // Point 2
+        sendmove(x2, y2, z2);
+        usleep(delay_us);
+    }
+
+    pauseFifoProcessing(false);
+}
+
+int main(int argc, char const *argv[])
+{
+	// everything w/o comments in this "start" section is from the original
 	
-	float inc;
-	float a;
-	float Radius;
+    float Radius;
 
-	float cenX=FLY_RADIUS;
-	float cenY=0;
-	float cenZ=0;
-	float rotX=0;
-	float rotY=0;
-	float rotZ=0;
+    float p1[3], p2[3];
+	// d stores the distances to move by. d[0] = dx, d[1] = dy, d[2] = dz
+    float d[3];
 
-	float scale = 1.0f;
-	cenScale[0] = scale;
-	cenScale[1] = scale;
-	cenScale[2] = scale;
+    char inputBuffer[128];
+    int inputIndex = 0;
+
+    int toggle = 0; // 0 = p1, 1 = p2
 
     initSPI();
-	pauseFifoProcessing(true);
-	
-	
-	sscanf(argv[1],"%f", &BoardDistance);
-	sscanf(argv[2],"%f", &Radius);
-	
-	sendHalfDistance(BoardDistance/2);
-	setTimeFactor(2);
-	sendRadius(Radius);
-	
-	printf("listening\n");
-	int cnt =0;
-	
-	bool done = false;
-	while(!done)
-	{
-		int ch = getch();
-		
-		switch(ch) {
-			case 'H':
-				pauseFifoProcessing(true);
-				sendRawMove(0, 1, 0, 0);
-				sendmoveCol(HOME_X, HOME_Y, HOME_Z,1.0f, 1.0f, 1.0f);
-				pauseFifoProcessing(false);
-				break;
-			case 'h':
-				move(HOME_X, HOME_Y, HOME_Z);
-				cenX=0;//FLY_RADIUS;
-				cenY=0;
-				cenZ=0;
-				cenScale[0] = 1.0f;
-				cenScale[1] = 1.0f;
-				cenScale[2] = 1.0f;
-				cenPos[0] = 0;//FLY_RADIUS;
-				cenPos[1] = 0.0f;
-				cenPos[2] = 0.0f;
-				cenRot[0] = 0.0f;
-				cenRot[1] = 0.0f;
-				cenRot[2] = 0.0f;
-				rotX=0;
-				rotY=0;
-				rotZ=0;
-				sendMatrix();
-				printPos();
-				break;
-			case 'z':
-				zPos-=INC;
-				printPos();
-				moveCol(xPos,yPos,zPos, 1.0f, 1.0f, 1.0f);
-				break;
-			case 'a':
-				zPos+=INC;
-				printPos();
-				moveCol(xPos,yPos,zPos, 1.0f, 1.0f, 1.0f);
-				break;
-			case 'x':
-				xPos-=INC;
-				printPos();
-				moveCol(xPos,yPos,zPos, 1.0f, 1.0f, 1.0f);
-				break;
-			case 's':
-				xPos+=INC;
-				printPos();
-				moveCol(xPos,yPos,zPos, 1.0f, 1.0f, 1.0f);
-				break;
-			case 'c':
-				yPos-=INC;
-				printPos();
-				moveCol(xPos,yPos,zPos, 1.0f, 1.0f, 1.0f);
-				break;
-			case 'd':
-				yPos+=INC;
-				printPos();
-				moveCol(xPos,yPos,zPos, 1.0f, 1.0f, 1.0f);
-				break;
-			case 'o':
-				sendProfile();
-				break;
+    pauseFifoProcessing(true);
 
-			case '0':
-				spiTx[0]=0x01<<9;
-				spiTx[1]=0x0;
-				spiTx[2]=0x0;
-				spiTx[3]=0x0;
-				spiTx[4]=0;
-				transfer(8);
-				break;
-			case '=':
-				if(timeFactor<63)
-				{
-					timeFactor++;
-					setTimeFactor(timeFactor);
-					
-					printf("Time factor %d\n", timeFactor); 
-				}
-				break;
-			case ']':
-				if(timeFactor>0)
-				{
-					timeFactor--;
-					setTimeFactor(timeFactor);
-					
-					printf("Time factor %d\n", timeFactor);
-				}
-				break;
-			case 'j':
-				cenX += MOVE_INC;
-				moveCenter(cenX, cenY, cenZ);
-				break;
-			case 'm':
-				cenX -= MOVE_INC;
-				moveCenter(cenX, cenY, cenZ);
-				break;
-			case 'k':
-				cenY += MOVE_INC;
-				moveCenter(cenX, cenY, cenZ);
-				break;
-			case ',':
-				cenY -= MOVE_INC;
-				moveCenter(cenX, cenY, cenZ);
-				break;
-			case 'l':
-				cenZ += MOVE_INC;
-				moveCenter(cenX, cenY, cenZ);
-				break;
-			case '.':
-				cenZ -= MOVE_INC;
-				moveCenter(cenX, cenY, cenZ);
-				break;	
-			case '1':
-				rotX += 360.0/127.0;
-				if(rotX > 180.0f)
-					rotX -= 360.09f;
-				rotate(rotX, rotY, rotZ);
-				break;
-			case 'q':
-				rotX -= 360.0/127.0;
-				if(rotX < -180.0f)
-					rotX += 360.09f;
-				rotate(rotX, rotY, rotZ);
-				break;
-			case '2':
-				rotY += 360.0/127.0;
-				if(rotY > 180.0f)
-					rotY -= 360.09f;
-				rotate(rotX, rotY, rotZ);
-				break;
-			case 'w':
-				rotY -= 360.0/127.0;
-				if(rotY < -180.0f)
-					rotY += 360.09f;
-				rotate(rotX, rotY, rotZ);
-				break;
-			case '3':
-				rotZ += 360.0/127.0;
-				if(rotZ > 180.0f)
-					rotZ -= 360.09f;
-				rotate(rotX, rotY, rotZ);
-				break;
-			case 'e':
-				rotZ -= 360.0/127.0;
-				if(rotZ < -180.0f)
-					rotZ += 360.09f;
-				rotate(rotX, rotY, rotZ);
-				break;
-			case '4':
-				scale += 0.05f;
-				if(scale> 1.0f)
-					scale = 1.0f;
-				cenScale[0] = scale;
-				cenScale[1] = scale;
-				cenScale[2] = scale;
-				sendMatrix();
-				break;
-			case 'r':
-				scale -= 0.05f;
-				if(scale<0.05f)
-					scale = 0.05f;
-				cenScale[0] = scale;
-				cenScale[1] = scale;
-				cenScale[2] = scale;
-				sendMatrix();
-				break;	
-			case '5':
-				BoardDistance += 0.1;
-				sendHalfDistance(BoardDistance/2);
-				printf("Distance: %f\n", BoardDistance);
-				break;
-			case 't':
-				BoardDistance -= 0.1;
-				sendHalfDistance(BoardDistance/2);
-				printf("Distance: %f\n", BoardDistance);
-				break;
-			case '+':
-				runFlyAround();
-				break;
-		}
-		
-	}
-	
-	closeSPI();
-    return 0; 
-} 
+    sscanf(argv[1], "%f", &BoardDistance);
+    sscanf(argv[2], "%f", &Radius);
+
+    sendHalfDistance(BoardDistance/2);
+    setTimeFactor(2);
+    sendRadius(Radius);
+
+    printf("=== Two Particle Real-Time Control ===\n");
+
+    // initial positions
+    printf("Enter initial position for Particle 1 (x y z): ");
+    scanf("%f %f %f", &p1[0], &p1[1], &p1[2]);
+
+    printf("Enter initial position for Particle 2 (x y z): ");
+    scanf("%f %f %f", &p2[0], &p2[1], &p2[2]);
+
+    pauseFifoProcessing(false);
+
+    printf("\nControls:\n");
+    printf("- Type: dx dy dz + ENTER\n");
+    printf("- Moves alternate between particles\n");
+    printf("- Press q to quit\n\n");
+
+    inputIndex = 0;
+
+    while (1)
+    {
+        // Moves particles (alternating) at start of loop
+		// usleep 1 unit is 1 microsecond. Try increasing or decreasing if needed (perhaps 500 or 2000)
+        sendmove(p1[0], p1[1], p1[2]);
+        usleep(1000);
+        sendmove(p2[0], p2[1], p2[2]);
+        usleep(1000);
+
+        // If keyboard input exists
+        if (_kbhit())
+        {
+			// get characters
+            char ch = getch();
+
+            // only continue this branch/conditional if we press enter (or similar ig)
+            if (ch == '\n' || ch == '\r')
+            {
+				// end string if enter pressed
+                inputBuffer[inputIndex] = '\0';
+				
+				// make sure string has a length
+                if (inputIndex > 0)
+                {
+					// if q, exit
+                    if (inputBuffer[0] == 'q')
+                        break;
+
+                    // tries to find 3 floats in a row
+                    if (sscanf(inputBuffer, "%f %f %f", &d[0], &d[1], &d[2]) == 3)
+                    {
+						// alternation hooga booga
+                        if (toggle == 0)
+                        {
+                            p1[0] += d[0];
+                            p1[1] += d[1];
+                            p1[2] += d[2];
+
+                            printf("\nP1 -> %.2f %.2f %.2f\n", p1[0], p1[1], p1[2]);
+                        }
+                        else
+                        {
+                            p2[0] += d[0];
+                            p2[1] += d[1];
+                            p2[2] += d[2];
+
+                            printf("\nP2 -> %.2f %.2f %.2f\n", p2[0], p2[1], p2[2]);
+                        }
+						
+						//switch
+                        toggle = !toggle;
+                    }
+                    else
+                    {
+                        printf("\n AAA Invalid input. Use: dx dy dz\n");
+                    }
+                }
+				
+				// reset input index (only triggers after an enter). I hope this works but it may not I don't remember c
+                inputIndex = 0;
+            }
+            else
+            {
+                // build input string
+                if (inputIndex < sizeof(inputBuffer) - 1)
+                {
+                    inputBuffer[inputIndex++] = ch;
+                    putchar(ch); // echo manually
+                }
+            }
+        }
+    }
+
+    closeSPI();
+    return 0;
+}
