@@ -42,7 +42,7 @@ set_global_assignment -name DEVICE 10CL010YE144C8G
 set_global_assignment -name TOP_LEVEL_ENTITY HoloTop
 set_global_assignment -name ORIGINAL_QUARTUS_VERSION 18.1.1
 set_global_assignment -name PROJECT_CREATION_TIME_DATE "20:35:52  JANUARY 31, 2020"
-set_global_assignment -name LAST_QUARTUS_VERSION "18.1.0 Lite Edition"
+set_global_assignment -name LAST_QUARTUS_VERSION "18.1.1 Lite Edition"
 set_global_assignment -name PROJECT_OUTPUT_DIRECTORY output_files
 set_global_assignment -name MIN_CORE_JUNCTION_TEMP 0
 set_global_assignment -name MAX_CORE_JUNCTION_TEMP 85
@@ -248,72 +248,6 @@ set_global_assignment -name ENABLE_DRC_SETTINGS OFF
 set_global_assignment -name CYCLONEIII_CONFIGURATION_DEVICE EPCQ16A
 set_global_assignment -name CONFIGURATION_VCCIO_LEVEL 3.0V
 set_global_assignment -name OPTIMIZATION_MODE "AGGRESSIVE PERFORMANCE"
-set_instance_assignment -name PARTITION_HIERARCHY root_partition -to | -section_id Top
-set_global_assignment -name SOURCE_FILE MultK.cmp
-set_global_assignment -name SOURCE_FILE Int2Float.cmp
-set_global_assignment -name SOURCE_FILE Int10ToShortReal.cmp
-set_global_assignment -name SOURCE_FILE Float2Int.cmp
-set_global_assignment -name QIP_FILE Sub10.qip
-set_global_assignment -name QIP_FILE Sqrtf1.qip
-set_global_assignment -name QIP_FILE Sqrt.qip
-set_global_assignment -name QIP_FILE Sqr.qip
-set_global_assignment -name QIP_FILE SPI.qip
-set_global_assignment -name QIP_FILE posColFifo.qip
-set_global_assignment -name QIP_FILE n.qip
-set_global_assignment -name QIP_FILE MultK2.qip
-set_global_assignment -name QIP_FILE Mult10.qip
-set_global_assignment -name QIP_FILE Int10ToShortReal.qip
-set_global_assignment -name QIP_FILE Float2Int2.qip
-set_global_assignment -name QIP_FILE Divide16.qip
-set_global_assignment -name QIP_FILE DebugRAM.qip
-set_global_assignment -name QIP_FILE c.qip
-set_global_assignment -name QIP_FILE AddSub.qip
-set_global_assignment -name QIP_FILE Add22.qip
-set_global_assignment -name SYSTEMVERILOG_FILE Rotate1D_tb.sv
-set_global_assignment -name SYSTEMVERILOG_FILE pwm_tb.sv
-set_global_assignment -name SYSTEMVERILOG_FILE PwmCtrl_tb.sv
-set_global_assignment -name SYSTEMVERILOG_FILE Holo_tb.sv
-set_global_assignment -name SYSTEMVERILOG_FILE holo1_tb.sv
-set_global_assignment -name SYSTEMVERILOG_FILE Flag_CrossDomain.sv
-set_global_assignment -name SYSTEMVERILOG_FILE CalcPhase_tb.sv
-set_global_assignment -name VERILOG_FILE Sub10_bb.v
-set_global_assignment -name VERILOG_FILE Sub10.v
-set_global_assignment -name VERILOG_FILE Sqr_bb.v
-set_global_assignment -name VERILOG_FILE Sqrt_bb.v
-set_global_assignment -name VERILOG_FILE Sqrtf_bb.v
-set_global_assignment -name VERILOG_FILE Sqrtf1_bb.v
-set_global_assignment -name VERILOG_FILE Sqrtf1.v
-set_global_assignment -name VERILOG_FILE Sqrt.v
-set_global_assignment -name VERILOG_FILE Sqr.v
-set_global_assignment -name VERILOG_FILE SPI_bb.v
-set_global_assignment -name VERILOG_FILE SPI.v
-set_global_assignment -name VERILOG_FILE PosColRam_bb.v
-set_global_assignment -name VERILOG_FILE posColFifo_bb.v
-set_global_assignment -name VERILOG_FILE PosColFifo.v
-set_global_assignment -name VERILOG_FILE Pll_bb.v
-set_global_assignment -name VERILOG_FILE MultK_inst.v
-set_global_assignment -name VERILOG_FILE MultK_bb.v
-set_global_assignment -name VERILOG_FILE MultK.BAK.v
-set_global_assignment -name VERILOG_FILE Int2Float_inst.v
-set_global_assignment -name VERILOG_FILE Int2Float_bb.v
-set_global_assignment -name VERILOG_FILE Int2Float.BAK.v
-set_global_assignment -name VERILOG_FILE Int10ToShortReal_inst.v
-set_global_assignment -name VERILOG_FILE Int10ToShortReal_bb.v
-set_global_assignment -name VERILOG_FILE Int10ToShortReal.v
-set_global_assignment -name VERILOG_FILE Float2Int_inst.v
-set_global_assignment -name VERILOG_FILE Float2Int_bb.v
-set_global_assignment -name VERILOG_FILE Float2Int.BAK.v
-set_global_assignment -name VERILOG_FILE FlashFifo_bb.v
-set_global_assignment -name VERILOG_FILE Divide16_bb.v
-set_global_assignment -name VERILOG_FILE Divide16.v
-set_global_assignment -name VERILOG_FILE DebugRAM_bb.v
-set_global_assignment -name VERILOG_FILE DebugRAM.v
-set_global_assignment -name VERILOG_FILE CoeffMult_bb.v
-set_global_assignment -name VERILOG_FILE CoeffAdd_bb.v
-set_global_assignment -name VERILOG_FILE AddSub_bb.v
-set_global_assignment -name VERILOG_FILE AddSub.v
-set_global_assignment -name VERILOG_FILE Add22_bb.v
-set_global_assignment -name VERILOG_FILE Add22.v
 set_global_assignment -name QIP_FILE FlashFifo.qip
 set_global_assignment -name SYSTEMVERILOG_FILE QPIFlash.sv
 set_global_assignment -name QIP_FILE Sqrtf.qip
@@ -338,3 +272,4 @@ set_global_assignment -name SYSTEMVERILOG_FILE Rotate1D.sv
 set_global_assignment -name QIP_FILE CoeffMult.qip
 set_global_assignment -name QIP_FILE CoeffAdd.qip
 set_global_assignment -name SIGNALTAP_FILE stp1.stp
+set_instance_assignment -name PARTITION_HIERARCHY root_partition -to | -section_id Top
