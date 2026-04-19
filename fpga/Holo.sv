@@ -36,7 +36,7 @@ module Holo #(CLK_FREQ, OUT_FREQ, NUM_CHANNELS) (
 	localparam ROT_BIT_SIZE = 8;
 
 	// ============================================================
-	// NEW: MULTI-PARTICLE SUPPORT
+	// 🔥 NEW: MULTI-PARTICLE SUPPORT
 	// ============================================================
 	localparam NUM_PARTICLES = 4;
 
@@ -69,7 +69,7 @@ module Holo #(CLK_FREQ, OUT_FREQ, NUM_CHANNELS) (
 
 	logic [7:0] colors [3];
 
-	// MODIFIED: now driven from particle buffer
+	// 🔥 MODIFIED: now driven from particle buffer
 	logic [POS_BIT_SIZE-1:0] x;
 	logic [POS_BIT_SIZE-1:0] y;
 	logic [POS_BIT_SIZE-1:0] z;
@@ -121,7 +121,7 @@ module Holo #(CLK_FREQ, OUT_FREQ, NUM_CHANNELS) (
 	logic [POS_BIT_SIZE-1:0] CalcPosBuf[3];
 
 	// ============================================================
-	// NEW: store particles from FIFO
+	// 🔥 NEW: store particles from FIFO
 	// ============================================================
 	always @(posedge clk) begin
 		if (!nReset)
@@ -135,7 +135,7 @@ module Holo #(CLK_FREQ, OUT_FREQ, NUM_CHANNELS) (
 		end
 	end
 
-	// NEW: particle scheduler
+	// 🔥 NEW: particle scheduler
 	always @(posedge clk) begin
 		if (!nReset)
 			particleIdx <= 0;
@@ -179,7 +179,7 @@ module Holo #(CLK_FREQ, OUT_FREQ, NUM_CHANNELS) (
 
 			4:
 				begin
-					// MODIFIED: removed direct x/y/z write
+					// 🔥 MODIFIED: removed direct x/y/z write
 					fifoColors <= ramReadData[45:39];
 					calcStart <= 1;
 					fifoRdAck <= 1;
