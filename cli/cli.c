@@ -849,6 +849,8 @@ int main(int argc, char const *argv[])
 			case 'p':
 				TwoParticleTime();
 				break;
+			case '\b':
+				done = true;
 		}
 		
 	}
