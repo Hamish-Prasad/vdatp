@@ -1,4 +1,4 @@
- module HoloTop (
+module HoloTop (
 	input CLK_24M576,
 	
 	output [49:0] t,
@@ -26,6 +26,7 @@
 	logic clk;
 	logic nReset;
 	logic mathClk;
+	
 	Pll pll(
 		.inclk0(CLK_24M576),
 		.c0(clk),
@@ -38,21 +39,20 @@
 	);
 		
 	logic [2:0] LEDpwm;
-	assign red   =	LEDpwm[0];
+	assign red   = LEDpwm[0];
 	assign green = LEDpwm[1];
-	assign blue  =	LEDpwm[2];
+	assign blue  = LEDpwm[2];
 	
-	//generate syncout signal
 	localparam CLK_CNT_MAX = CLK_FREQ/OUT_FREQ;
 	reg [$clog2(CLK_CNT_MAX)-1:0] cnt;
+	
 	always@(posedge clk) begin
 		if(!nReset) begin
-				cnt <= '0;
-				syncout <= '0;
-			end
-		else begin
+			cnt <= '0;
+			syncout <= '0;
+		end else begin
 			cnt <= cnt == (CLK_CNT_MAX-1) ? 0 : cnt + 1;
-			syncout <= (cnt < CLK_CNT_MAX/2) ? '1 : '0;
+			syncout <= (cnt < CLK_CNT_MAX/2);
 		end
 	end
 	
@@ -73,5 +73,4 @@
 		.left
 	);
  
- endmodule
- 
+endmodule
