@@ -1,16 +1,16 @@
-Fitter Status : Successful - Mon Apr 20 14:59:02 2026
+Fitter Status : Successful - Tue Apr 21 03:34:46 2026
 Quartus Prime Version : 18.1.0 Build 625 09/12/2018 SJ Lite Edition
 Revision Name : holo1
 Top-level Entity Name : HoloTop
 Family : Cyclone 10 LP
 Device : 10CL010YE144C8G
 Timing Models : Final
-Total logic elements : 5,444 / 10,320 ( 53 % )
-    Total combinational functions : 3,896 / 10,320 ( 38 % )
-    Dedicated logic registers : 3,722 / 10,320 ( 36 % )
-Total registers : 3722
+Total logic elements : 35 / 10,320 ( < 1 % )
+    Total combinational functions : 32 / 10,320 ( < 1 % )
+    Dedicated logic registers : 29 / 10,320 ( < 1 % )
+Total registers : 29
 Total pins : 65 / 89 ( 73 % )
 Total virtual pins : 0
-Total memory bits : 376,832 / 423,936 ( 89 % )
-Embedded Multiplier 9-bit elements : 32 / 46 ( 70 % )
+Total memory bits : 0 / 423,936 ( 0 % )
+Embedded Multiplier 9-bit elements : 0 / 46 ( 0 % )
 Total PLLs : 1 / 2 ( 50 % )

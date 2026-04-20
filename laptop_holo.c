@@ -4,6 +4,8 @@
 #include <stdint.h>
 #include <unistd.h>
 #include <arpa/inet.h>
+#include <termios.h>
+#include <fcntl.h>
 
 #define NUM_CHANNELS 50
 #define MAX_PHASE_CNT 512.0f
@@ -11,7 +13,53 @@
 #define SPEED_OF_SOUND 343000.0f
 
 #define CMD_SET_PHASES 11
+#define INC 1.0f
 
+// ---------- keyboard ----------
+int kbhit(void)
+{
+    struct termios oldt, newt;
+    int ch;
+    int oldf;
+
+    tcgetattr(STDIN_FILENO, &oldt);
+    newt = oldt;
+    newt.c_lflag &= ~(ICANON | ECHO);
+    tcsetattr(STDIN_FILENO, TCSANOW, &newt);
+
+    oldf = fcntl(STDIN_FILENO, F_GETFL, 0);
+    fcntl(STDIN_FILENO, F_SETFL, oldf | O_NONBLOCK);
+
+    ch = getchar();
+
+    tcsetattr(STDIN_FILENO, TCSANOW, &oldt);
+    fcntl(STDIN_FILENO, F_SETFL, oldf);
+
+    if (ch != EOF) {
+        ungetc(ch, stdin);
+        return 1;
+    }
+
+    return 0;
+}
+
+int getch(void)
+{
+    struct termios oldattr, newattr;
+    int ch;
+
+    tcgetattr(STDIN_FILENO, &oldattr);
+    newattr = oldattr;
+    newattr.c_lflag &= ~(ICANON | ECHO);
+    tcsetattr(STDIN_FILENO, TCSANOW, &newattr);
+
+    ch = getchar();
+
+    tcsetattr(STDIN_FILENO, TCSANOW, &oldattr);
+    return ch;
+}
+
+// ---------- transducer positions ----------
 float xTransducer[NUM_CHANNELS] = {
      45,45,45,45,45,45,45,45,45,45,
      35,35,35,35,35,35,35,35,35,35,
@@ -28,6 +76,7 @@ float zTransducer[NUM_CHANNELS] = {
     -45,-35,-25,-15,-5,5,15,25,35,45
 };
 
+// ---------- phase math ----------
 float compute_phase(float x, float y, float z, float xt, float yt, float zt)
 {
     float dx = x - xt;
@@ -60,6 +109,12 @@ void compute_frame(float x, float y, float z, uint16_t *phases)
     }
 }
 
+void printPos(float x, float y, float z)
+{
+    printf("Pos: %.1f %.1f %.1f\n", x, y, z);
+}
+
+// ---------- MAIN ----------
 int main()
 {
     int sock = socket(AF_INET, SOCK_STREAM, 0);
@@ -76,10 +131,41 @@ int main()
 
     float x = 0, y = 0, z = 0;
 
+    printf("Controls:\n");
+    printf("a/z = Z axis\n");
+    printf("s/x = X axis\n");
+    printf("d/c = Y axis\n");
+
     while(1)
     {
+        // -------- input --------
+        if(kbhit())
+        {
+            int ch = getch();
+
+            switch(ch)
+            {
+                case 'a': z += INC; break;
+                case 'z': z -= INC; break;
+
+                case 's': x += INC; break;
+                case 'x': x -= INC; break;
+
+                case 'd': y += INC; break;
+                case 'c': y -= INC; break;
+
+                case 'h':
+                    x = y = z = 0;
+                    break;
+            }
+
+            printPos(x, y, z);
+        }
+
+        // -------- compute --------
         compute_frame(x, y, z, phases);
 
+        // -------- send --------
         buffer[0] = (CMD_SET_PHASES << 1);
 
         for(int i = 0; i < NUM_CHANNELS; i++) {
@@ -89,8 +175,7 @@ int main()
 
         send(sock, buffer, sizeof(buffer), 0);
 
-        z += 0.5f;
-        usleep(20000);
+        usleep(10000); // ~100 Hz update
     }
 
     return 0;
