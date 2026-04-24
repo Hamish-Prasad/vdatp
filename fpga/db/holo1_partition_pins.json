@@ -208,6 +208,14 @@
 					"strict" : false
 				},
 				{
+					"name" : "top",
+					"strict" : false
+				},
+				{
+					"name" : "left",
+					"strict" : false
+				},
+				{
 					"name" : "mosi",
 					"strict" : false
 				},

@@ -1,5 +1,5 @@
 Analysis & Synthesis report for holo1
-Fri Apr 24 15:00:23 2026
+Fri Apr 24 15:45:20 2026
 Quartus Prime Version 18.1.0 Build 625 09/12/2018 SJ Lite Edition
 
 
@@ -71,12 +71,15 @@ Quartus Prime Version 18.1.0 Build 625 09/12/2018 SJ Lite Edition
  63. Parameter Settings for User Entity Instance: Holo:holo|PwmCtrl:pwm|PWM:pwm[47]
  64. Parameter Settings for User Entity Instance: Holo:holo|PwmCtrl:pwm|PWM:pwm[48]
  65. Parameter Settings for User Entity Instance: Holo:holo|PwmCtrl:pwm|PWM:pwm[49]
- 66. altpll Parameter Settings by Entity Instance
- 67. Port Connectivity Checks: "Pll:pll"
- 68. Post-Synthesis Netlist Statistics for Top Partition
- 69. Elapsed Time Per Partition
- 70. Analysis & Synthesis Messages
- 71. Analysis & Synthesis Suppressed Messages
+ 66. Parameter Settings for Inferred Entity Instance: Holo:holo|lpm_mult:Mult0
+ 67. altpll Parameter Settings by Entity Instance
+ 68. lpm_mult Parameter Settings by Entity Instance
+ 69. Port Connectivity Checks: "Holo:holo|PwmCtrl:pwm"
+ 70. Port Connectivity Checks: "Pll:pll"
+ 71. Post-Synthesis Netlist Statistics for Top Partition
+ 72. Elapsed Time Per Partition
+ 73. Analysis & Synthesis Messages
+ 74. Analysis & Synthesis Suppressed Messages
 
 
 
@@ -102,16 +105,16 @@ refer to the applicable agreement for further details.
 +----------------------------------------------------------------------------------+
 ; Analysis & Synthesis Summary                                                     ;
 +------------------------------------+---------------------------------------------+
-; Analysis & Synthesis Status        ; Successful - Fri Apr 24 15:00:23 2026       ;
+; Analysis & Synthesis Status        ; Successful - Fri Apr 24 15:45:20 2026       ;
 ; Quartus Prime Version              ; 18.1.0 Build 625 09/12/2018 SJ Lite Edition ;
 ; Revision Name                      ; holo1                                       ;
 ; Top-level Entity Name              ; HoloTop                                     ;
 ; Family                             ; Cyclone 10 LP                               ;
-; Total logic elements               ; 2,099                                       ;
-;     Total combinational functions  ; 685                                         ;
-;     Dedicated logic registers      ; 1,624                                       ;
-; Total registers                    ; 1624                                        ;
-; Total pins                         ; 59                                          ;
+; Total logic elements               ; 10,723                                      ;
+;     Total combinational functions  ; 7,111                                       ;
+;     Dedicated logic registers      ; 4,150                                       ;
+; Total registers                    ; 4150                                        ;
+; Total pins                         ; 61                                          ;
 ; Total virtual pins                 ; 0                                           ;
 ; Total memory bits                  ; 0                                           ;
 ; Embedded Multiplier 9-bit elements ; 0                                           ;
@@ -214,35 +217,51 @@ refer to the applicable agreement for further details.
 ; Number detected on machine ; 8           ;
 ; Maximum allowed            ; 4           ;
 ;                            ;             ;
-; Average used               ; 1.01        ;
+; Average used               ; 1.03        ;
 ; Maximum used               ; 4           ;
 ;                            ;             ;
 ; Usage by Processor         ; % Time Used ;
 ;     Processor 1            ; 100.0%      ;
-;     Processor 2            ;   0.5%      ;
-;     Processor 3            ;   0.5%      ;
-;     Processor 4            ;   0.5%      ;
+;     Processor 2            ;   1.2%      ;
+;     Processor 3            ;   1.1%      ;
+;     Processor 4            ;   1.1%      ;
 +----------------------------+-------------+
 
 
-+------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
-; Analysis & Synthesis Source Files Read                                                                                                                                 ;
-+----------------------------------+-----------------+------------------------------+--------------------------------------------------------------------------+---------+
-; File Name with User-Entered Path ; Used in Netlist ; File Type                    ; File Name with Absolute Path                                             ; Library ;
-+----------------------------------+-----------------+------------------------------+--------------------------------------------------------------------------+---------+
-; HoloTop.sv                       ; yes             ; User SystemVerilog HDL File  ; C:/Users/Bored/OneDrive/Documents/GitHub/vdatp/fpga/HoloTop.sv           ;         ;
-; pwm.sv                           ; yes             ; User SystemVerilog HDL File  ; C:/Users/Bored/OneDrive/Documents/GitHub/vdatp/fpga/pwm.sv               ;         ;
-; PwmCtrl.sv                       ; yes             ; User SystemVerilog HDL File  ; C:/Users/Bored/OneDrive/Documents/GitHub/vdatp/fpga/PwmCtrl.sv           ;         ;
-; Pll.v                            ; yes             ; User Wizard-Generated File   ; C:/Users/Bored/OneDrive/Documents/GitHub/vdatp/fpga/Pll.v                ;         ;
-; Reset.sv                         ; yes             ; User SystemVerilog HDL File  ; C:/Users/Bored/OneDrive/Documents/GitHub/vdatp/fpga/Reset.sv             ;         ;
-; Holo.sv                          ; yes             ; User SystemVerilog HDL File  ; C:/Users/Bored/OneDrive/Documents/GitHub/vdatp/fpga/Holo.sv              ;         ;
-; altpll.tdf                       ; yes             ; Megafunction                 ; c:/intelfpga_lite/18.1/quartus/libraries/megafunctions/altpll.tdf        ;         ;
-; aglobal181.inc                   ; yes             ; Megafunction                 ; c:/intelfpga_lite/18.1/quartus/libraries/megafunctions/aglobal181.inc    ;         ;
-; stratix_pll.inc                  ; yes             ; Megafunction                 ; c:/intelfpga_lite/18.1/quartus/libraries/megafunctions/stratix_pll.inc   ;         ;
-; stratixii_pll.inc                ; yes             ; Megafunction                 ; c:/intelfpga_lite/18.1/quartus/libraries/megafunctions/stratixii_pll.inc ;         ;
-; cycloneii_pll.inc                ; yes             ; Megafunction                 ; c:/intelfpga_lite/18.1/quartus/libraries/megafunctions/cycloneii_pll.inc ;         ;
-; db/pll_altpll.v                  ; yes             ; Auto-Generated Megafunction  ; C:/Users/Bored/OneDrive/Documents/GitHub/vdatp/fpga/db/pll_altpll.v      ;         ;
-+----------------------------------+-----------------+------------------------------+--------------------------------------------------------------------------+---------+
++-------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
+; Analysis & Synthesis Source Files Read                                                                                                                                  ;
++----------------------------------+-----------------+------------------------------+---------------------------------------------------------------------------+---------+
+; File Name with User-Entered Path ; Used in Netlist ; File Type                    ; File Name with Absolute Path                                              ; Library ;
++----------------------------------+-----------------+------------------------------+---------------------------------------------------------------------------+---------+
+; HoloTop.sv                       ; yes             ; User SystemVerilog HDL File  ; C:/Users/Bored/OneDrive/Documents/GitHub/vdatp/fpga/HoloTop.sv            ;         ;
+; pwm.sv                           ; yes             ; User SystemVerilog HDL File  ; C:/Users/Bored/OneDrive/Documents/GitHub/vdatp/fpga/pwm.sv                ;         ;
+; PwmCtrl.sv                       ; yes             ; User SystemVerilog HDL File  ; C:/Users/Bored/OneDrive/Documents/GitHub/vdatp/fpga/PwmCtrl.sv            ;         ;
+; Pll.v                            ; yes             ; User Wizard-Generated File   ; C:/Users/Bored/OneDrive/Documents/GitHub/vdatp/fpga/Pll.v                 ;         ;
+; Reset.sv                         ; yes             ; User SystemVerilog HDL File  ; C:/Users/Bored/OneDrive/Documents/GitHub/vdatp/fpga/Reset.sv              ;         ;
+; Holo.sv                          ; yes             ; User SystemVerilog HDL File  ; C:/Users/Bored/OneDrive/Documents/GitHub/vdatp/fpga/Holo.sv               ;         ;
+; altpll.tdf                       ; yes             ; Megafunction                 ; c:/intelfpga_lite/18.1/quartus/libraries/megafunctions/altpll.tdf         ;         ;
+; aglobal181.inc                   ; yes             ; Megafunction                 ; c:/intelfpga_lite/18.1/quartus/libraries/megafunctions/aglobal181.inc     ;         ;
+; stratix_pll.inc                  ; yes             ; Megafunction                 ; c:/intelfpga_lite/18.1/quartus/libraries/megafunctions/stratix_pll.inc    ;         ;
+; stratixii_pll.inc                ; yes             ; Megafunction                 ; c:/intelfpga_lite/18.1/quartus/libraries/megafunctions/stratixii_pll.inc  ;         ;
+; cycloneii_pll.inc                ; yes             ; Megafunction                 ; c:/intelfpga_lite/18.1/quartus/libraries/megafunctions/cycloneii_pll.inc  ;         ;
+; db/pll_altpll.v                  ; yes             ; Auto-Generated Megafunction  ; C:/Users/Bored/OneDrive/Documents/GitHub/vdatp/fpga/db/pll_altpll.v       ;         ;
+; lpm_mult.tdf                     ; yes             ; Megafunction                 ; c:/intelfpga_lite/18.1/quartus/libraries/megafunctions/lpm_mult.tdf       ;         ;
+; lpm_add_sub.inc                  ; yes             ; Megafunction                 ; c:/intelfpga_lite/18.1/quartus/libraries/megafunctions/lpm_add_sub.inc    ;         ;
+; multcore.inc                     ; yes             ; Megafunction                 ; c:/intelfpga_lite/18.1/quartus/libraries/megafunctions/multcore.inc       ;         ;
+; bypassff.inc                     ; yes             ; Megafunction                 ; c:/intelfpga_lite/18.1/quartus/libraries/megafunctions/bypassff.inc       ;         ;
+; altshift.inc                     ; yes             ; Megafunction                 ; c:/intelfpga_lite/18.1/quartus/libraries/megafunctions/altshift.inc       ;         ;
+; multcore.tdf                     ; yes             ; Megafunction                 ; c:/intelfpga_lite/18.1/quartus/libraries/megafunctions/multcore.tdf       ;         ;
+; csa_add.inc                      ; yes             ; Megafunction                 ; c:/intelfpga_lite/18.1/quartus/libraries/megafunctions/csa_add.inc        ;         ;
+; mpar_add.inc                     ; yes             ; Megafunction                 ; c:/intelfpga_lite/18.1/quartus/libraries/megafunctions/mpar_add.inc       ;         ;
+; muleabz.inc                      ; yes             ; Megafunction                 ; c:/intelfpga_lite/18.1/quartus/libraries/megafunctions/muleabz.inc        ;         ;
+; mul_lfrg.inc                     ; yes             ; Megafunction                 ; c:/intelfpga_lite/18.1/quartus/libraries/megafunctions/mul_lfrg.inc       ;         ;
+; mul_boothc.inc                   ; yes             ; Megafunction                 ; c:/intelfpga_lite/18.1/quartus/libraries/megafunctions/mul_boothc.inc     ;         ;
+; alt_ded_mult.inc                 ; yes             ; Megafunction                 ; c:/intelfpga_lite/18.1/quartus/libraries/megafunctions/alt_ded_mult.inc   ;         ;
+; alt_ded_mult_y.inc               ; yes             ; Megafunction                 ; c:/intelfpga_lite/18.1/quartus/libraries/megafunctions/alt_ded_mult_y.inc ;         ;
+; dffpipe.inc                      ; yes             ; Megafunction                 ; c:/intelfpga_lite/18.1/quartus/libraries/megafunctions/dffpipe.inc        ;         ;
+; mpar_add.tdf                     ; yes             ; Megafunction                 ; c:/intelfpga_lite/18.1/quartus/libraries/megafunctions/mpar_add.tdf       ;         ;
+; altshift.tdf                     ; yes             ; Megafunction                 ; c:/intelfpga_lite/18.1/quartus/libraries/megafunctions/altshift.tdf       ;         ;
++----------------------------------+-----------------+------------------------------+---------------------------------------------------------------------------+---------+
 
 
 +--------------------------------------------------------------------------------------------------------------------------+
@@ -250,23 +269,23 @@ refer to the applicable agreement for further details.
 +---------------------------------------------+----------------------------------------------------------------------------+
 ; Resource                                    ; Usage                                                                      ;
 +---------------------------------------------+----------------------------------------------------------------------------+
-; Estimated Total logic elements              ; 2,099                                                                      ;
+; Estimated Total logic elements              ; 10,723                                                                     ;
 ;                                             ;                                                                            ;
-; Total combinational functions               ; 685                                                                        ;
+; Total combinational functions               ; 7111                                                                       ;
 ; Logic element usage by number of LUT inputs ;                                                                            ;
-;     -- 4 input functions                    ; 485                                                                        ;
-;     -- 3 input functions                    ; 59                                                                         ;
-;     -- <=2 input functions                  ; 141                                                                        ;
+;     -- 4 input functions                    ; 4721                                                                       ;
+;     -- 3 input functions                    ; 2303                                                                       ;
+;     -- <=2 input functions                  ; 87                                                                         ;
 ;                                             ;                                                                            ;
 ; Logic elements by mode                      ;                                                                            ;
-;     -- normal mode                          ; 638                                                                        ;
-;     -- arithmetic mode                      ; 47                                                                         ;
+;     -- normal mode                          ; 7088                                                                       ;
+;     -- arithmetic mode                      ; 23                                                                         ;
 ;                                             ;                                                                            ;
-; Total registers                             ; 1624                                                                       ;
-;     -- Dedicated logic registers            ; 1624                                                                       ;
+; Total registers                             ; 4150                                                                       ;
+;     -- Dedicated logic registers            ; 4150                                                                       ;
 ;     -- I/O registers                        ; 0                                                                          ;
 ;                                             ;                                                                            ;
-; I/O pins                                    ; 59                                                                         ;
+; I/O pins                                    ; 61                                                                         ;
 ;                                             ;                                                                            ;
 ; Embedded Multiplier 9-bit elements          ; 0                                                                          ;
 ;                                             ;                                                                            ;
@@ -274,9 +293,9 @@ refer to the applicable agreement for further details.
 ;     -- PLLs                                 ; 1                                                                          ;
 ;                                             ;                                                                            ;
 ; Maximum fan-out node                        ; Pll:pll|altpll:altpll_component|Pll_altpll:auto_generated|wire_pll1_clk[0] ;
-; Maximum fan-out                             ; 1611                                                                       ;
-; Total fan-out                               ; 7313                                                                       ;
-; Average fan-out                             ; 3.01                                                                       ;
+; Maximum fan-out                             ; 4137                                                                       ;
+; Total fan-out                               ; 38537                                                                      ;
+; Average fan-out                             ; 3.39                                                                       ;
 +---------------------------------------------+----------------------------------------------------------------------------+
 
 
@@ -285,9 +304,9 @@ refer to the applicable agreement for further details.
 +--------------------------------------+---------------------+---------------------------+-------------+--------------+---------+-----------+------+--------------+--------------------------------------------------------------------+-------------+--------------+
 ; Compilation Hierarchy Node           ; Combinational ALUTs ; Dedicated Logic Registers ; Memory Bits ; DSP Elements ; DSP 9x9 ; DSP 18x18 ; Pins ; Virtual Pins ; Full Hierarchy Name                                                ; Entity Name ; Library Name ;
 +--------------------------------------+---------------------+---------------------------+-------------+--------------+---------+-----------+------+--------------+--------------------------------------------------------------------+-------------+--------------+
-; |HoloTop                             ; 685 (10)            ; 1624 (10)                 ; 0           ; 0            ; 0       ; 0         ; 59   ; 0            ; |HoloTop                                                           ; HoloTop     ; work         ;
-;    |Holo:holo|                       ; 671 (306)           ; 1610 (1547)               ; 0           ; 0            ; 0       ; 0         ; 0    ; 0            ; |HoloTop|Holo:holo                                                 ; Holo        ; work         ;
-;       |PwmCtrl:pwm|                  ; 365 (15)            ; 63 (13)                   ; 0           ; 0            ; 0       ; 0         ; 0    ; 0            ; |HoloTop|Holo:holo|PwmCtrl:pwm                                     ; PwmCtrl     ; work         ;
+; |HoloTop                             ; 7111 (10)           ; 4150 (10)                 ; 0           ; 0            ; 0       ; 0         ; 61   ; 0            ; |HoloTop                                                           ; HoloTop     ; work         ;
+;    |Holo:holo|                       ; 7097 (6731)         ; 4136 (4073)               ; 0           ; 0            ; 0       ; 0         ; 0    ; 0            ; |HoloTop|Holo:holo                                                 ; Holo        ; work         ;
+;       |PwmCtrl:pwm|                  ; 364 (14)            ; 63 (13)                   ; 0           ; 0            ; 0       ; 0         ; 0    ; 0            ; |HoloTop|Holo:holo|PwmCtrl:pwm                                     ; PwmCtrl     ; work         ;
 ;          |PWM:pwm[0]|                ; 7 (7)               ; 1 (1)                     ; 0           ; 0            ; 0       ; 0         ; 0    ; 0            ; |HoloTop|Holo:holo|PwmCtrl:pwm|PWM:pwm[0]                          ; PWM         ; work         ;
 ;          |PWM:pwm[10]|               ; 7 (7)               ; 1 (1)                     ; 0           ; 0            ; 0       ; 0         ; 0    ; 0            ; |HoloTop|Holo:holo|PwmCtrl:pwm|PWM:pwm[10]                         ; PWM         ; work         ;
 ;          |PWM:pwm[11]|               ; 7 (7)               ; 1 (1)                     ; 0           ; 0            ; 0       ; 0         ; 0    ; 0            ; |HoloTop|Holo:holo|PwmCtrl:pwm|PWM:pwm[11]                         ; PWM         ; work         ;
@@ -338,6 +357,8 @@ refer to the applicable agreement for further details.
 ;          |PWM:pwm[7]|                ; 7 (7)               ; 1 (1)                     ; 0           ; 0            ; 0       ; 0         ; 0    ; 0            ; |HoloTop|Holo:holo|PwmCtrl:pwm|PWM:pwm[7]                          ; PWM         ; work         ;
 ;          |PWM:pwm[8]|                ; 7 (7)               ; 1 (1)                     ; 0           ; 0            ; 0       ; 0         ; 0    ; 0            ; |HoloTop|Holo:holo|PwmCtrl:pwm|PWM:pwm[8]                          ; PWM         ; work         ;
 ;          |PWM:pwm[9]|                ; 7 (7)               ; 1 (1)                     ; 0           ; 0            ; 0       ; 0         ; 0    ; 0            ; |HoloTop|Holo:holo|PwmCtrl:pwm|PWM:pwm[9]                          ; PWM         ; work         ;
+;       |lpm_mult:Mult0|               ; 2 (0)               ; 0 (0)                     ; 0           ; 0            ; 0       ; 0         ; 0    ; 0            ; |HoloTop|Holo:holo|lpm_mult:Mult0                                  ; lpm_mult    ; work         ;
+;          |multcore:mult_core|        ; 2 (2)               ; 0 (0)                     ; 0           ; 0            ; 0       ; 0         ; 0    ; 0            ; |HoloTop|Holo:holo|lpm_mult:Mult0|multcore:mult_core               ; multcore    ; work         ;
 ;    |Pll:pll|                         ; 0 (0)               ; 0 (0)                     ; 0           ; 0            ; 0       ; 0         ; 0    ; 0            ; |HoloTop|Pll:pll                                                   ; Pll         ; work         ;
 ;       |altpll:altpll_component|      ; 0 (0)               ; 0 (0)                     ; 0           ; 0            ; 0       ; 0         ; 0    ; 0            ; |HoloTop|Pll:pll|altpll:altpll_component                           ; altpll      ; work         ;
 ;          |Pll_altpll:auto_generated| ; 0 (0)               ; 0 (0)                     ; 0           ; 0            ; 0       ; 0         ; 0    ; 0            ; |HoloTop|Pll:pll|altpll:altpll_component|Pll_altpll:auto_generated ; Pll_altpll  ; work         ;
@@ -355,14 +376,64 @@ Note: For table entries with two numbers listed, the numbers in parentheses indi
 +--------+--------------+---------+--------------+--------------+------------------+-----------------+
 
 
-+--------------------------------------------------------------------------------+
-; Registers Removed During Synthesis                                             ;
-+---------------------------------------+----------------------------------------+
-; Register name                         ; Reason for Removal                     ;
-+---------------------------------------+----------------------------------------+
-; Reset:reset|cnt[3]                    ; Stuck at VCC due to stuck port data_in ;
-; Total Number of Removed Registers = 1 ;                                        ;
-+---------------------------------------+----------------------------------------+
++---------------------------------------------------------------------------------+
+; Registers Removed During Synthesis                                              ;
++----------------------------------------+----------------------------------------+
+; Register name                          ; Reason for Removal                     ;
++----------------------------------------+----------------------------------------+
+; Holo:holo|phase[49][0]                 ; Merged with Holo:holo|en[49]           ;
+; Holo:holo|phase[48][0]                 ; Merged with Holo:holo|en[48]           ;
+; Holo:holo|phase[47][0]                 ; Merged with Holo:holo|en[47]           ;
+; Holo:holo|phase[46][0]                 ; Merged with Holo:holo|en[46]           ;
+; Holo:holo|phase[45][0]                 ; Merged with Holo:holo|en[45]           ;
+; Holo:holo|phase[44][0]                 ; Merged with Holo:holo|en[44]           ;
+; Holo:holo|phase[42][0]                 ; Merged with Holo:holo|en[42]           ;
+; Holo:holo|phase[40][0]                 ; Merged with Holo:holo|en[40]           ;
+; Holo:holo|phase[36][0]                 ; Merged with Holo:holo|en[36]           ;
+; Holo:holo|phase[34][0]                 ; Merged with Holo:holo|en[34]           ;
+; Holo:holo|phase[33][0]                 ; Merged with Holo:holo|en[33]           ;
+; Holo:holo|phase[32][0]                 ; Merged with Holo:holo|en[32]           ;
+; Holo:holo|phase[16][0]                 ; Merged with Holo:holo|en[16]           ;
+; Holo:holo|phase[8][0]                  ; Merged with Holo:holo|en[8]            ;
+; Holo:holo|phase[4][0]                  ; Merged with Holo:holo|en[4]            ;
+; Holo:holo|phase[2][0]                  ; Merged with Holo:holo|en[2]            ;
+; Holo:holo|phase[1][0]                  ; Merged with Holo:holo|en[1]            ;
+; Holo:holo|phase[0][0]                  ; Merged with Holo:holo|en[0]            ;
+; Holo:holo|phase[43][0]                 ; Merged with Holo:holo|en[43]           ;
+; Holo:holo|phase[41][0]                 ; Merged with Holo:holo|en[41]           ;
+; Holo:holo|phase[39][0]                 ; Merged with Holo:holo|en[39]           ;
+; Holo:holo|phase[38][0]                 ; Merged with Holo:holo|en[38]           ;
+; Holo:holo|phase[37][0]                 ; Merged with Holo:holo|en[37]           ;
+; Holo:holo|phase[35][0]                 ; Merged with Holo:holo|en[35]           ;
+; Holo:holo|phase[31][0]                 ; Merged with Holo:holo|en[31]           ;
+; Holo:holo|phase[30][0]                 ; Merged with Holo:holo|en[30]           ;
+; Holo:holo|phase[29][0]                 ; Merged with Holo:holo|en[29]           ;
+; Holo:holo|phase[28][0]                 ; Merged with Holo:holo|en[28]           ;
+; Holo:holo|phase[27][0]                 ; Merged with Holo:holo|en[27]           ;
+; Holo:holo|phase[26][0]                 ; Merged with Holo:holo|en[26]           ;
+; Holo:holo|phase[25][0]                 ; Merged with Holo:holo|en[25]           ;
+; Holo:holo|phase[24][0]                 ; Merged with Holo:holo|en[24]           ;
+; Holo:holo|phase[23][0]                 ; Merged with Holo:holo|en[23]           ;
+; Holo:holo|phase[22][0]                 ; Merged with Holo:holo|en[22]           ;
+; Holo:holo|phase[21][0]                 ; Merged with Holo:holo|en[21]           ;
+; Holo:holo|phase[20][0]                 ; Merged with Holo:holo|en[20]           ;
+; Holo:holo|phase[19][0]                 ; Merged with Holo:holo|en[19]           ;
+; Holo:holo|phase[18][0]                 ; Merged with Holo:holo|en[18]           ;
+; Holo:holo|phase[17][0]                 ; Merged with Holo:holo|en[17]           ;
+; Holo:holo|phase[15][0]                 ; Merged with Holo:holo|en[15]           ;
+; Holo:holo|phase[14][0]                 ; Merged with Holo:holo|en[14]           ;
+; Holo:holo|phase[13][0]                 ; Merged with Holo:holo|en[13]           ;
+; Holo:holo|phase[12][0]                 ; Merged with Holo:holo|en[12]           ;
+; Holo:holo|phase[11][0]                 ; Merged with Holo:holo|en[11]           ;
+; Holo:holo|phase[10][0]                 ; Merged with Holo:holo|en[10]           ;
+; Holo:holo|phase[9][0]                  ; Merged with Holo:holo|en[9]            ;
+; Holo:holo|phase[7][0]                  ; Merged with Holo:holo|en[7]            ;
+; Holo:holo|phase[6][0]                  ; Merged with Holo:holo|en[6]            ;
+; Holo:holo|phase[5][0]                  ; Merged with Holo:holo|en[5]            ;
+; Holo:holo|phase[3][0]                  ; Merged with Holo:holo|en[3]            ;
+; Reset:reset|cnt[3]                     ; Stuck at VCC due to stuck port data_in ;
+; Total Number of Removed Registers = 51 ;                                        ;
++----------------------------------------+----------------------------------------+
 
 
 +------------------------------------------------------+
@@ -370,12 +441,12 @@ Note: For table entries with two numbers listed, the numbers in parentheses indi
 +----------------------------------------------+-------+
 ; Statistic                                    ; Value ;
 +----------------------------------------------+-------+
-; Total registers                              ; 1624  ;
-; Number of registers using Synchronous Clear  ; 103   ;
+; Total registers                              ; 4150  ;
+; Number of registers using Synchronous Clear  ; 529   ;
 ; Number of registers using Synchronous Load   ; 9     ;
 ; Number of registers using Asynchronous Clear ; 6     ;
 ; Number of registers using Asynchronous Load  ; 0     ;
-; Number of registers using Clock Enable       ; 1440  ;
+; Number of registers using Clock Enable       ; 3616  ;
 ; Number of registers using Preset             ; 0     ;
 +----------------------------------------------+-------+
 
@@ -385,12 +456,10 @@ Note: For table entries with two numbers listed, the numbers in parentheses indi
 +----------------------------+------------------+---------------------+
 ; Node                       ; Action           ; Reason              ;
 +----------------------------+------------------+---------------------+
-; Holo:holo|Add1~1           ; Modified         ; Timing optimization ;
-; Holo:holo|Add1~92          ; Modified         ; Timing optimization ;
-; Holo:holo|byteReady        ; Deleted          ; Timing optimization ;
-; Holo:holo|byteReady_OTERM1 ; Retimed Register ; Timing optimization ;
-; Holo:holo|byteReady_OTERM3 ; Retimed Register ; Timing optimization ;
-; Holo:holo|byteReady_OTERM5 ; Retimed Register ; Timing optimization ;
+; Holo:holo|byteValid        ; Deleted          ; Timing optimization ;
+; Holo:holo|byteValid_OTERM1 ; Retimed Register ; Timing optimization ;
+; Holo:holo|byteValid_OTERM3 ; Retimed Register ; Timing optimization ;
+; Holo:holo|byteValid_OTERM5 ; Retimed Register ; Timing optimization ;
 +----------------------------+------------------+---------------------+
 
 
@@ -399,9 +468,45 @@ Note: For table entries with two numbers listed, the numbers in parentheses indi
 +--------------------+-----------+---------------+----------------------+------------------------+------------+---------------------------------------+
 ; Multiplexer Inputs ; Bus Width ; Baseline Area ; Area if Restructured ; Saving if Restructured ; Registered ; Example Multiplexer Output            ;
 +--------------------+-----------+---------------+----------------------+------------------------+------------+---------------------------------------+
-; 3:1                ; 9 bits    ; 18 LEs        ; 18 LEs               ; 0 LEs                  ; Yes        ; |HoloTop|Holo:holo|PwmCtrl:pwm|cnt[5] ;
-; 3:1                ; 9 bits    ; 18 LEs        ; 9 LEs                ; 9 LEs                  ; Yes        ; |HoloTop|cnt[5]                       ;
-; 4:1                ; 32 bits   ; 64 LEs        ; 32 LEs               ; 32 LEs                 ; Yes        ; |HoloTop|Holo:holo|idx[4]             ;
+; 3:1                ; 9 bits    ; 18 LEs        ; 18 LEs               ; 0 LEs                  ; Yes        ; |HoloTop|Holo:holo|PwmCtrl:pwm|cnt[2] ;
+; 3:1                ; 9 bits    ; 18 LEs        ; 9 LEs                ; 9 LEs                  ; Yes        ; |HoloTop|cnt[3]                       ;
+; 5:1                ; 18 bits   ; 54 LEs        ; 54 LEs               ; 0 LEs                  ; Yes        ; |HoloTop|Holo:holo|en[48]             ;
+; 4:1                ; 8 bits    ; 16 LEs        ; 8 LEs                ; 8 LEs                  ; Yes        ; |HoloTop|Holo:holo|wptr[1]            ;
+; 17:1               ; 9 bits    ; 99 LEs        ; 72 LEs               ; 27 LEs                 ; Yes        ; |HoloTop|Holo:holo|phase[25][2]       ;
+; 17:1               ; 9 bits    ; 99 LEs        ; 72 LEs               ; 27 LEs                 ; Yes        ; |HoloTop|Holo:holo|en[24]             ;
+; 17:1               ; 18 bits   ; 198 LEs       ; 162 LEs              ; 36 LEs                 ; Yes        ; |HoloTop|Holo:holo|phase[20][8]       ;
+; 17:1               ; 9 bits    ; 99 LEs        ; 81 LEs               ; 18 LEs                 ; Yes        ; |HoloTop|Holo:holo|phase[21][5]       ;
+; 17:1               ; 9 bits    ; 99 LEs        ; 81 LEs               ; 18 LEs                 ; Yes        ; |HoloTop|Holo:holo|phase[17][6]       ;
+; 33:1               ; 18 bits   ; 396 LEs       ; 288 LEs              ; 108 LEs                ; Yes        ; |HoloTop|Holo:holo|phase[9][1]        ;
+; 33:1               ; 18 bits   ; 396 LEs       ; 306 LEs              ; 90 LEs                 ; Yes        ; |HoloTop|Holo:holo|phase[5][2]        ;
+; 33:1               ; 18 bits   ; 396 LEs       ; 324 LEs              ; 72 LEs                 ; Yes        ; |HoloTop|Holo:holo|en[1]              ;
+; 33:1               ; 18 bits   ; 396 LEs       ; 288 LEs              ; 108 LEs                ; Yes        ; |HoloTop|Holo:holo|phase[40][4]       ;
+; 33:1               ; 18 bits   ; 396 LEs       ; 306 LEs              ; 90 LEs                 ; Yes        ; |HoloTop|Holo:holo|phase[37][7]       ;
+; 33:1               ; 18 bits   ; 396 LEs       ; 324 LEs              ; 72 LEs                 ; Yes        ; |HoloTop|Holo:holo|phase[33][4]       ;
+; 33:1               ; 18 bits   ; 396 LEs       ; 306 LEs              ; 90 LEs                 ; Yes        ; |HoloTop|Holo:holo|phase[39][2]       ;
+; 33:1               ; 9 bits    ; 198 LEs       ; 153 LEs              ; 45 LEs                 ; Yes        ; |HoloTop|Holo:holo|en[42]             ;
+; 33:1               ; 18 bits   ; 396 LEs       ; 324 LEs              ; 72 LEs                 ; Yes        ; |HoloTop|Holo:holo|phase[46][3]       ;
+; 33:1               ; 27 bits   ; 594 LEs       ; 432 LEs              ; 162 LEs                ; Yes        ; |HoloTop|Holo:holo|phase[26][4]       ;
+; 33:1               ; 9 bits    ; 198 LEs       ; 153 LEs              ; 45 LEs                 ; Yes        ; |HoloTop|Holo:holo|phase[18][6]       ;
+; 33:1               ; 18 bits   ; 396 LEs       ; 306 LEs              ; 90 LEs                 ; Yes        ; |HoloTop|Holo:holo|en[30]             ;
+; 33:1               ; 9 bits    ; 198 LEs       ; 162 LEs              ; 36 LEs                 ; Yes        ; |HoloTop|Holo:holo|en[34]             ;
+; 33:1               ; 18 bits   ; 396 LEs       ; 306 LEs              ; 90 LEs                 ; Yes        ; |HoloTop|Holo:holo|phase[6][2]        ;
+; 33:1               ; 9 bits    ; 198 LEs       ; 153 LEs              ; 45 LEs                 ; Yes        ; |HoloTop|Holo:holo|phase[10][8]       ;
+; 33:1               ; 18 bits   ; 396 LEs       ; 324 LEs              ; 72 LEs                 ; Yes        ; |HoloTop|Holo:holo|phase[14][7]       ;
+; 33:1               ; 9 bits    ; 198 LEs       ; 162 LEs              ; 36 LEs                 ; Yes        ; |HoloTop|Holo:holo|phase[2][3]        ;
+; 65:1               ; 9 bits    ; 387 LEs       ; 306 LEs              ; 81 LEs                 ; Yes        ; |HoloTop|Holo:holo|phase[45][1]       ;
+; 65:1               ; 9 bits    ; 387 LEs       ; 306 LEs              ; 81 LEs                 ; Yes        ; |HoloTop|Holo:holo|en[44]             ;
+; 65:1               ; 9 bits    ; 387 LEs       ; 306 LEs              ; 81 LEs                 ; Yes        ; |HoloTop|Holo:holo|phase[29][1]       ;
+; 65:1               ; 9 bits    ; 387 LEs       ; 306 LEs              ; 81 LEs                 ; Yes        ; |HoloTop|Holo:holo|en[28]             ;
+; 65:1               ; 9 bits    ; 387 LEs       ; 306 LEs              ; 81 LEs                 ; Yes        ; |HoloTop|Holo:holo|phase[13][1]       ;
+; 65:1               ; 9 bits    ; 387 LEs       ; 306 LEs              ; 81 LEs                 ; Yes        ; |HoloTop|Holo:holo|en[12]             ;
+; 129:1              ; 9 bits    ; 774 LEs       ; 603 LEs              ; 171 LEs                ; Yes        ; |HoloTop|Holo:holo|phase[43][5]       ;
+; 129:1              ; 9 bits    ; 774 LEs       ; 603 LEs              ; 171 LEs                ; Yes        ; |HoloTop|Holo:holo|phase[35][2]       ;
+; 129:1              ; 9 bits    ; 774 LEs       ; 603 LEs              ; 171 LEs                ; Yes        ; |HoloTop|Holo:holo|phase[27][1]       ;
+; 129:1              ; 9 bits    ; 774 LEs       ; 603 LEs              ; 171 LEs                ; Yes        ; |HoloTop|Holo:holo|phase[19][8]       ;
+; 129:1              ; 9 bits    ; 774 LEs       ; 603 LEs              ; 171 LEs                ; Yes        ; |HoloTop|Holo:holo|phase[11][5]       ;
+; 129:1              ; 9 bits    ; 774 LEs       ; 603 LEs              ; 171 LEs                ; Yes        ; |HoloTop|Holo:holo|phase[3][7]        ;
+; 256:1              ; 2 bits    ; 340 LEs       ; 268 LEs              ; 72 LEs                 ; No         ; |HoloTop|Holo:holo|Mux0               ;
 +--------------------+-----------+---------------+----------------------+------------------------+------------+---------------------------------------+
 
 
@@ -1353,6 +1458,41 @@ Note: In order to hide this table in the UI and the text report file, please set
 Note: In order to hide this table in the UI and the text report file, please set the "Show Parameter Settings in Synthesis Report" option in "Analysis and Synthesis Settings -> More Settings" to "Off".
 
 
++--------------------------------------------------------------------------------------+
+; Parameter Settings for Inferred Entity Instance: Holo:holo|lpm_mult:Mult0            ;
++------------------------------------------------+---------------+---------------------+
+; Parameter Name                                 ; Value         ; Type                ;
++------------------------------------------------+---------------+---------------------+
+; AUTO_CARRY_CHAINS                              ; ON            ; AUTO_CARRY          ;
+; IGNORE_CARRY_BUFFERS                           ; OFF           ; IGNORE_CARRY        ;
+; AUTO_CASCADE_CHAINS                            ; ON            ; AUTO_CASCADE        ;
+; IGNORE_CASCADE_BUFFERS                         ; OFF           ; IGNORE_CASCADE      ;
+; LPM_WIDTHA                                     ; 2             ; Untyped             ;
+; LPM_WIDTHB                                     ; 6             ; Untyped             ;
+; LPM_WIDTHP                                     ; 8             ; Untyped             ;
+; LPM_WIDTHR                                     ; 8             ; Untyped             ;
+; LPM_WIDTHS                                     ; 1             ; Untyped             ;
+; LPM_REPRESENTATION                             ; UNSIGNED      ; Untyped             ;
+; LPM_PIPELINE                                   ; 0             ; Untyped             ;
+; LATENCY                                        ; 0             ; Untyped             ;
+; INPUT_A_IS_CONSTANT                            ; NO            ; Untyped             ;
+; INPUT_B_IS_CONSTANT                            ; YES           ; Untyped             ;
+; USE_EAB                                        ; OFF           ; Untyped             ;
+; MAXIMIZE_SPEED                                 ; 5             ; Untyped             ;
+; DEVICE_FAMILY                                  ; Cyclone 10 LP ; Untyped             ;
+; CARRY_CHAIN                                    ; MANUAL        ; Untyped             ;
+; APEX20K_TECHNOLOGY_MAPPER                      ; LUT           ; TECH_MAPPER_APEX20K ;
+; DEDICATED_MULTIPLIER_CIRCUITRY                 ; AUTO          ; Untyped             ;
+; DEDICATED_MULTIPLIER_MIN_INPUT_WIDTH_FOR_AUTO  ; 0             ; Untyped             ;
+; DEDICATED_MULTIPLIER_MIN_OUTPUT_WIDTH_FOR_AUTO ; 0             ; Untyped             ;
+; CBXI_PARAMETER                                 ; NOTHING       ; Untyped             ;
+; INPUT_A_FIXED_VALUE                            ; Bx            ; Untyped             ;
+; INPUT_B_FIXED_VALUE                            ; Bx            ; Untyped             ;
+; USE_AHDL_IMPLEMENTATION                        ; OFF           ; Untyped             ;
++------------------------------------------------+---------------+---------------------+
+Note: In order to hide this table in the UI and the text report file, please set the "Show Parameter Settings in Synthesis Report" option in "Analysis and Synthesis Settings -> More Settings" to "Off".
+
+
 +-----------------------------------------------------------------+
 ; altpll Parameter Settings by Entity Instance                    ;
 +-------------------------------+---------------------------------+
@@ -1370,6 +1510,35 @@ Note: In order to hide this table in the UI and the text report file, please set
 +-------------------------------+---------------------------------+
 
 
++------------------------------------------------------------------+
+; lpm_mult Parameter Settings by Entity Instance                   ;
++---------------------------------------+--------------------------+
+; Name                                  ; Value                    ;
++---------------------------------------+--------------------------+
+; Number of entity instances            ; 1                        ;
+; Entity Instance                       ; Holo:holo|lpm_mult:Mult0 ;
+;     -- LPM_WIDTHA                     ; 2                        ;
+;     -- LPM_WIDTHB                     ; 6                        ;
+;     -- LPM_WIDTHP                     ; 8                        ;
+;     -- LPM_REPRESENTATION             ; UNSIGNED                 ;
+;     -- INPUT_A_IS_CONSTANT            ; NO                       ;
+;     -- INPUT_B_IS_CONSTANT            ; YES                      ;
+;     -- USE_EAB                        ; OFF                      ;
+;     -- DEDICATED_MULTIPLIER_CIRCUITRY ; AUTO                     ;
+;     -- INPUT_A_FIXED_VALUE            ; Bx                       ;
+;     -- INPUT_B_FIXED_VALUE            ; Bx                       ;
++---------------------------------------+--------------------------+
+
+
++---------------------------------------------------------+
+; Port Connectivity Checks: "Holo:holo|PwmCtrl:pwm"       ;
++------------+--------+----------+------------------------+
+; Port       ; Type   ; Severity ; Details                ;
++------------+--------+----------+------------------------+
+; cycleStart ; Output ; Info     ; Explicitly unconnected ;
++------------+--------+----------+------------------------+
+
+
 +-------------------------------------------------------------------------------------------------------------------------------------+
 ; Port Connectivity Checks: "Pll:pll"                                                                                                 ;
 +------+--------+----------+----------------------------------------------------------------------------------------------------------+
@@ -1384,28 +1553,27 @@ Note: In order to hide this table in the UI and the text report file, please set
 +-----------------------+-----------------------------+
 ; Type                  ; Count                       ;
 +-----------------------+-----------------------------+
-; boundary_port         ; 59                          ;
-; cycloneiii_ff         ; 1624                        ;
+; boundary_port         ; 61                          ;
+; cycloneiii_ff         ; 4150                        ;
 ;     CLR               ; 6                           ;
-;     ENA               ; 1408                        ;
-;     ENA SCLR          ; 32                          ;
-;     SCLR              ; 62                          ;
+;     ENA               ; 3608                        ;
+;     ENA SCLR          ; 8                           ;
+;     SCLR              ; 512                         ;
 ;     SCLR SLD          ; 9                           ;
-;     plain             ; 107                         ;
-; cycloneiii_lcell_comb ; 687                         ;
-;     arith             ; 47                          ;
-;         2 data inputs ; 46                          ;
-;         3 data inputs ; 1                           ;
-;     normal            ; 640                         ;
+;     plain             ; 7                           ;
+; cycloneiii_lcell_comb ; 7113                        ;
+;     arith             ; 23                          ;
+;         2 data inputs ; 23                          ;
+;     normal            ; 7090                        ;
 ;         0 data inputs ; 2                           ;
 ;         1 data inputs ; 4                           ;
-;         2 data inputs ; 91                          ;
-;         3 data inputs ; 58                          ;
-;         4 data inputs ; 485                         ;
+;         2 data inputs ; 60                          ;
+;         3 data inputs ; 2303                        ;
+;         4 data inputs ; 4721                        ;
 ; cycloneiii_pll        ; 1                           ;
 ;                       ;                             ;
-; Max LUT depth         ; 6.10                        ;
-; Average LUT depth     ; 1.84                        ;
+; Max LUT depth         ; 8.00                        ;
+; Average LUT depth     ; 5.18                        ;
 +-----------------------+-----------------------------+
 
 
@@ -1414,7 +1582,7 @@ Note: In order to hide this table in the UI and the text report file, please set
 +----------------+--------------+
 ; Partition Name ; Elapsed Time ;
 +----------------+--------------+
-; Top            ; 00:00:01     ;
+; Top            ; 00:00:12     ;
 +----------------+--------------+
 
 
@@ -1424,7 +1592,7 @@ Note: In order to hide this table in the UI and the text report file, please set
 Info: *******************************************************************
 Info: Running Quartus Prime Analysis & Synthesis
     Info: Version 18.1.0 Build 625 09/12/2018 SJ Lite Edition
-    Info: Processing started: Fri Apr 24 15:00:12 2026
+    Info: Processing started: Fri Apr 24 15:44:53 2026
 Info: Command: quartus_map --read_settings_files=on --write_settings_files=off holo1 -c holo1
 Info (16303): Aggressive Performance optimization mode selected -- timing performance will be prioritized at the potential cost of increased logic area and compilation time
 Warning (18236): Number of processors has not been specified which may cause overloading on shared machines.  Set the global assignment NUM_PARALLEL_PROCESSORS in your QSF to an appropriate value for best performance.
@@ -1482,8 +1650,8 @@ Info (12021): Found 1 design units, including 1 entities, in source file coeffmu
 Info (12021): Found 1 design units, including 1 entities, in source file coeffadd.v
     Info (12023): Found entity 1: CoeffAdd File: C:/Users/Bored/OneDrive/Documents/GitHub/vdatp/fpga/CoeffAdd.v Line: 40
 Info (12127): Elaborating entity "HoloTop" for the top level hierarchy
-Warning (10230): Verilog HDL assignment warning at HoloTop.sv(46): truncated value with size 32 to match size of target (9) File: C:/Users/Bored/OneDrive/Documents/GitHub/vdatp/fpga/HoloTop.sv Line: 46
-Info (12128): Elaborating entity "Pll" for hierarchy "Pll:pll" File: C:/Users/Bored/OneDrive/Documents/GitHub/vdatp/fpga/HoloTop.sv Line: 28
+Warning (10230): Verilog HDL assignment warning at HoloTop.sv(49): truncated value with size 32 to match size of target (9) File: C:/Users/Bored/OneDrive/Documents/GitHub/vdatp/fpga/HoloTop.sv Line: 49
+Info (12128): Elaborating entity "Pll" for hierarchy "Pll:pll" File: C:/Users/Bored/OneDrive/Documents/GitHub/vdatp/fpga/HoloTop.sv Line: 31
 Info (12128): Elaborating entity "altpll" for hierarchy "Pll:pll|altpll:altpll_component" File: C:/Users/Bored/OneDrive/Documents/GitHub/vdatp/fpga/Pll.v Line: 95
 Info (12130): Elaborated megafunction instantiation "Pll:pll|altpll:altpll_component" File: C:/Users/Bored/OneDrive/Documents/GitHub/vdatp/fpga/Pll.v Line: 95
 Info (12133): Instantiated megafunction "Pll:pll|altpll:altpll_component" with the following parameter: File: C:/Users/Bored/OneDrive/Documents/GitHub/vdatp/fpga/Pll.v Line: 95
@@ -1548,13 +1716,32 @@ Info (12133): Instantiated megafunction "Pll:pll|altpll:altpll_component" with t
 Info (12021): Found 1 design units, including 1 entities, in source file db/pll_altpll.v
     Info (12023): Found entity 1: Pll_altpll File: C:/Users/Bored/OneDrive/Documents/GitHub/vdatp/fpga/db/pll_altpll.v Line: 29
 Info (12128): Elaborating entity "Pll_altpll" for hierarchy "Pll:pll|altpll:altpll_component|Pll_altpll:auto_generated" File: c:/intelfpga_lite/18.1/quartus/libraries/megafunctions/altpll.tdf Line: 897
-Info (12128): Elaborating entity "Reset" for hierarchy "Reset:reset" File: C:/Users/Bored/OneDrive/Documents/GitHub/vdatp/fpga/HoloTop.sv Line: 33
-Info (12128): Elaborating entity "Holo" for hierarchy "Holo:holo" File: C:/Users/Bored/OneDrive/Documents/GitHub/vdatp/fpga/HoloTop.sv Line: 74
-Warning (10230): Verilog HDL assignment warning at Holo.sv(43): truncated value with size 32 to match size of target (3) File: C:/Users/Bored/OneDrive/Documents/GitHub/vdatp/fpga/Holo.sv Line: 43
-Info (12128): Elaborating entity "PwmCtrl" for hierarchy "Holo:holo|PwmCtrl:pwm" File: C:/Users/Bored/OneDrive/Documents/GitHub/vdatp/fpga/Holo.sv Line: 126
+Info (12128): Elaborating entity "Reset" for hierarchy "Reset:reset" File: C:/Users/Bored/OneDrive/Documents/GitHub/vdatp/fpga/HoloTop.sv Line: 36
+Info (12128): Elaborating entity "Holo" for hierarchy "Holo:holo" File: C:/Users/Bored/OneDrive/Documents/GitHub/vdatp/fpga/HoloTop.sv Line: 79
+Warning (10230): Verilog HDL assignment warning at Holo.sv(40): truncated value with size 32 to match size of target (3) File: C:/Users/Bored/OneDrive/Documents/GitHub/vdatp/fpga/Holo.sv Line: 40
+Warning (10230): Verilog HDL assignment warning at Holo.sv(78): truncated value with size 32 to match size of target (8) File: C:/Users/Bored/OneDrive/Documents/GitHub/vdatp/fpga/Holo.sv Line: 78
+Warning (10230): Verilog HDL assignment warning at Holo.sv(116): truncated value with size 32 to match size of target (8) File: C:/Users/Bored/OneDrive/Documents/GitHub/vdatp/fpga/Holo.sv Line: 116
+Warning (10230): Verilog HDL assignment warning at Holo.sv(144): truncated value with size 16 to match size of target (9) File: C:/Users/Bored/OneDrive/Documents/GitHub/vdatp/fpga/Holo.sv Line: 144
+Info (12128): Elaborating entity "PwmCtrl" for hierarchy "Holo:holo|PwmCtrl:pwm" File: C:/Users/Bored/OneDrive/Documents/GitHub/vdatp/fpga/Holo.sv Line: 169
 Warning (10230): Verilog HDL assignment warning at PwmCtrl.sv(52): truncated value with size 32 to match size of target (9) File: C:/Users/Bored/OneDrive/Documents/GitHub/vdatp/fpga/PwmCtrl.sv Line: 52
 Info (12128): Elaborating entity "PWM" for hierarchy "Holo:holo|PwmCtrl:pwm|PWM:pwm[0]" File: C:/Users/Bored/OneDrive/Documents/GitHub/vdatp/fpga/PwmCtrl.sv Line: 64
 Warning (10230): Verilog HDL assignment warning at pwm.sv(15): truncated value with size 32 to match size of target (9) File: C:/Users/Bored/OneDrive/Documents/GitHub/vdatp/fpga/pwm.sv Line: 15
+Info (278001): Inferred 1 megafunctions from design logic
+    Info (278003): Inferred multiplier megafunction ("lpm_mult") from the following logic: "Holo:holo|Mult0" File: C:/Users/Bored/OneDrive/Documents/GitHub/vdatp/fpga/Holo.sv Line: 116
+Info (12130): Elaborated megafunction instantiation "Holo:holo|lpm_mult:Mult0" File: C:/Users/Bored/OneDrive/Documents/GitHub/vdatp/fpga/Holo.sv Line: 116
+Info (12133): Instantiated megafunction "Holo:holo|lpm_mult:Mult0" with the following parameter: File: C:/Users/Bored/OneDrive/Documents/GitHub/vdatp/fpga/Holo.sv Line: 116
+    Info (12134): Parameter "LPM_WIDTHA" = "2"
+    Info (12134): Parameter "LPM_WIDTHB" = "6"
+    Info (12134): Parameter "LPM_WIDTHP" = "8"
+    Info (12134): Parameter "LPM_WIDTHR" = "8"
+    Info (12134): Parameter "LPM_WIDTHS" = "1"
+    Info (12134): Parameter "LPM_REPRESENTATION" = "UNSIGNED"
+    Info (12134): Parameter "INPUT_A_IS_CONSTANT" = "NO"
+    Info (12134): Parameter "INPUT_B_IS_CONSTANT" = "YES"
+    Info (12134): Parameter "MAXIMIZE_SPEED" = "5"
+Info (12131): Elaborated megafunction instantiation "Holo:holo|lpm_mult:Mult0|multcore:mult_core", which is child of megafunction instantiation "Holo:holo|lpm_mult:Mult0" File: c:/intelfpga_lite/18.1/quartus/libraries/megafunctions/lpm_mult.tdf Line: 308
+Info (12131): Elaborated megafunction instantiation "Holo:holo|lpm_mult:Mult0|multcore:mult_core|mpar_add:padder", which is child of megafunction instantiation "Holo:holo|lpm_mult:Mult0" File: c:/intelfpga_lite/18.1/quartus/libraries/megafunctions/multcore.tdf Line: 228
+Info (12131): Elaborated megafunction instantiation "Holo:holo|lpm_mult:Mult0|altshift:external_latency_ffs", which is child of megafunction instantiation "Holo:holo|lpm_mult:Mult0" File: c:/intelfpga_lite/18.1/quartus/libraries/megafunctions/lpm_mult.tdf Line: 351
 Warning (12241): 1 hierarchies have connectivity warnings - see the Connectivity Checks report folder
 Warning (13024): Output pins are stuck at VCC or GND
     Warning (13410): Pin "blue" is stuck at VCC File: C:/Users/Bored/OneDrive/Documents/GitHub/vdatp/fpga/HoloTop.sv Line: 6
@@ -1580,20 +1767,20 @@ Info (128002): Starting physical synthesis algorithm register retiming
 Info (128003): Physical synthesis algorithm register retiming complete: estimated slack improvement of 0 ps
 Info (128002): Starting physical synthesis algorithm combinational resynthesis using boolean division
 Info (128003): Physical synthesis algorithm combinational resynthesis using boolean division complete: estimated slack improvement of 0 ps
-Info (128001): Physical synthesis optimizations for speed complete: elapsed time is 00:00:00
+Info (128001): Physical synthesis optimizations for speed complete: elapsed time is 00:00:02
 Info (144001): Generated suppressed messages file C:/Users/Bored/OneDrive/Documents/GitHub/vdatp/fpga/output_files/holo1.map.smsg
 Info (16010): Generating hard_block partition "hard_block:auto_generated_inst"
     Info (16011): Adding 1 node(s), including 0 DDIO, 1 PLL, 0 transceiver and 0 LCELL
-Info (21057): Implemented 2159 device resources after synthesis - the final resource count might be different
-    Info (21058): Implemented 5 input pins
+Info (21057): Implemented 10787 device resources after synthesis - the final resource count might be different
+    Info (21058): Implemented 7 input pins
     Info (21059): Implemented 54 output pins
-    Info (21061): Implemented 2099 logic cells
+    Info (21061): Implemented 10725 logic cells
     Info (21065): Implemented 1 PLLs
-Info: Quartus Prime Analysis & Synthesis was successful. 0 errors, 12 warnings
-    Info: Peak virtual memory: 4826 megabytes
-    Info: Processing ended: Fri Apr 24 15:00:23 2026
-    Info: Elapsed time: 00:00:11
-    Info: Total CPU time (on all processors): 00:00:05
+Info: Quartus Prime Analysis & Synthesis was successful. 0 errors, 15 warnings
+    Info: Peak virtual memory: 4894 megabytes
+    Info: Processing ended: Fri Apr 24 15:45:20 2026
+    Info: Elapsed time: 00:00:27
+    Info: Total CPU time (on all processors): 00:00:16
 
 
 +------------------------------------------+

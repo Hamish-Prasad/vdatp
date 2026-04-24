@@ -12,7 +12,10 @@ module HoloTop (
     input ncs,
 
     output syncout,
-    input syncin
+    input syncin,
+
+    input top,
+    input left
 );
 
     localparam CLK_FREQ = 20480000;
@@ -21,7 +24,7 @@ module HoloTop (
 
     logic clk, nReset;
 
-    // PLL generates system clock
+    // PLL
     Pll pll(
         .inclk0(CLK_24M576),
         .c0(clk)
@@ -33,7 +36,7 @@ module HoloTop (
     );
 
     // =============================
-    // SYNC GENERATOR (cycle start)
+    // SYNC GENERATOR
     // =============================
     localparam CNT_MAX = CLK_FREQ / OUT_FREQ;
     logic [$clog2(CNT_MAX)-1:0] cnt;
@@ -48,12 +51,11 @@ module HoloTop (
         end
     end
 
-    // LED output
     logic [2:0] LEDpwm;
     assign {red, green, blue} = LEDpwm;
 
     // =============================
-    // MAIN MODULE
+    // MAIN
     // =============================
     Holo #(
         .NUM_CHANNELS(NUM_CHANNELS),
@@ -70,7 +72,10 @@ module HoloTop (
         .sck(sck),
         .ncs(ncs),
 
-        .syncin(syncin)
+        .syncin(syncin),
+
+        .top(top),
+        .left(left)
     );
 
 endmodule

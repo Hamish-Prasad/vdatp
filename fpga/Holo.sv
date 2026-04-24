@@ -1,7 +1,8 @@
-module Holo #(parameter NUM_CHANNELS = 50,
-              parameter CLK_FREQ = 20480000,
-              parameter OUT_FREQ = 40000)
-(
+module Holo #(
+    parameter NUM_CHANNELS = 50,
+    parameter CLK_FREQ = 20480000,
+    parameter OUT_FREQ = 40000
+)(
     input clk,
     input nReset,
 
@@ -12,102 +13,144 @@ module Holo #(parameter NUM_CHANNELS = 50,
     input sck,
     input ncs,
 
-    input syncin
+    input syncin,
+    input top,
+    input left
 );
 
+    // =========================================================
+    // CONSTANTS
+    // =========================================================
+    localparam TOTAL = 200;
     localparam PHASE_BITS = $clog2(CLK_FREQ / OUT_FREQ);
-    localparam CMD_FRAME  = 8'hA5;
 
-    // =============================
-    // BUFFER (written by SPI, used by PWM)
-    // =============================
-    logic [PHASE_BITS-1:0] phase [NUM_CHANNELS];
-    logic en [NUM_CHANNELS];
-
-    logic [PHASE_BITS-1:0] phase_next [NUM_CHANNELS];
-    logic en_next [NUM_CHANNELS];
-
-    // =============================
-    // SPI BYTE RECEIVER
-    // =============================
+    // =========================================================
+    // FAST SPI SHIFT REGISTER (STREAM INPUT)
+    // =========================================================
     logic [7:0] shift;
     logic [2:0] bitCnt;
-    logic byteReady;
+    logic byteValid;
 
     always @(posedge sck or posedge ncs) begin
         if(ncs) begin
             bitCnt <= 0;
-            byteReady <= 0;
+            byteValid <= 0;
         end else begin
             shift <= {shift[6:0], mosi};
             bitCnt <= bitCnt + 1;
 
             if(bitCnt == 7) begin
-                byteReady <= 1;
+                byteValid <= 1;
                 bitCnt <= 0;
             end else begin
-                byteReady <= 0;
+                byteValid <= 0;
             end
         end
     end
 
-    // =============================
-    // FRAME PARSER
-    // =============================
-    logic [7:0] rx [NUM_CHANNELS*3];
-    integer idx;
+    // =========================================================
+    // DUAL FRAME BUFFER (HIGH SPEED DOUBLE BUFFER)
+    // =========================================================
+    logic [15:0] bufferA [0:TOTAL-1];
+    logic [15:0] bufferB [0:TOTAL-1];
 
-    typedef enum logic {WAIT, READ} state_t;
-    state_t state;
+    logic writeBank; // 0 = A, 1 = B
+    logic [$clog2(TOTAL)-1:0] wptr;
 
+    // write into active buffer
     always @(posedge clk) begin
         if(!nReset) begin
-            state <= WAIT;
-            idx <= 0;
+            wptr <= 0;
+            writeBank <= 0;
         end else begin
-            case(state)
 
-                WAIT:
-                    if(byteReady && shift == CMD_FRAME) begin
-                        idx <= 0;
-                        state <= READ;
-                    end
+            if(byteValid) begin
 
-                READ:
-                    if(byteReady) begin
-                        rx[idx] <= shift;
-                        idx <= idx + 1;
+                if(writeBank == 0)
+                    bufferA[wptr] <= {bufferA[wptr][7:0], shift};
+                else
+                    bufferB[wptr] <= {bufferB[wptr][7:0], shift};
 
-                        if(idx == NUM_CHANNELS*3-1)
-                            state <= WAIT;
-                    end
-            endcase
+                if(wptr == TOTAL-1) begin
+                    wptr <= 0;
+                    writeBank <= ~writeBank;
+                end else begin
+                    wptr <= wptr + 1;
+                end
+            end
+
         end
     end
 
-    // =============================
-    // COMMIT ON CYCLE START
-    // =============================
-    logic cycleStart;
+    // =========================================================
+    // READ BUFFER SELECTION (LOCKED FRAME)
+    // =========================================================
+    logic [15:0] bufferOut [0:TOTAL-1];
 
-		logic [15:0] tmp;
+    always @(*) begin
+        if(writeBank == 0)
+            bufferOut = bufferB; // read stable old frame
+        else
+            bufferOut = bufferA;
+    end
 
-		always @(posedge clk) begin
-			 if(cycleStart) begin
-				  for(int i=0;i<NUM_CHANNELS;i++) begin
-						tmp = {rx[i*3+1], rx[i*3]};
-						phase_next[i] <= tmp[PHASE_BITS-1:0];
-						en_next[i]    <= rx[i*3+2][0];
-				  end
+    // =========================================================
+    // QUADRANT SELECTION (TOP / LEFT)
+    // =========================================================
+    function automatic [1:0] board_id;
+        input top;
+        input left;
+        begin
+            case ({top, left})
+                2'b11: board_id = 2'd0;
+                2'b10: board_id = 2'd1;
+                2'b01: board_id = 2'd2;
+                2'b00: board_id = 2'd3;
+            endcase
+        end
+    endfunction
 
-				  phase <= phase_next;
-				  en    <= en_next;
-			 end
-		end
+    function automatic [7:0] base_offset;
+        input [1:0] id;
+        begin
+            base_offset = id * 50;
+        end
+    endfunction
 
-    // =============================
+    // =========================================================
+    // OUTPUT PIPELINE (FAST PARALLEL UPDATE)
+    // =========================================================
+    logic [PHASE_BITS-1:0] phase [NUM_CHANNELS];
+    logic en [NUM_CHANNELS];
+
+    logic [7:0] base;
+
+    always @(*) begin
+        base = base_offset(board_id(top, left));
+    end
+
+    integer i;
+
+    always @(posedge clk) begin
+        if(!nReset) begin
+            for(i=0;i<NUM_CHANNELS;i=i+1) begin
+                phase[i] <= 0;
+                en[i] <= 0;
+            end
+        end else begin
+            for(i=0;i<NUM_CHANNELS;i=i+1) begin
+
+                // safe indexing into flattened board segment
+                phase[i] <= bufferOut[base + i][15:0];
+                en[i]    <= bufferOut[base + i][0];
+
+            end
+        end
+    end
+
+    // =========================================================
     // PWM DRIVER
-    // =============================
+    // =========================================================
     PwmCtrl #(
         .NUM_CHANNELS(NUM_CHANNELS),
         .CLK_FREQ(CLK_FREQ),
@@ -120,11 +163,14 @@ module Holo #(parameter NUM_CHANNELS = 50,
         .en(en),
 
         .out(t),
-        .cycleStart(cycleStart),
+        .cycleStart(),
 
         .syncin(syncin)
     );
 
+    // =========================================================
+    // LED DEBUG
+    // =========================================================
     assign LEDpwm = 3'b001;
 
 endmodule

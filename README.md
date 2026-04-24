@@ -10,8 +10,8 @@ scp -r cli levitator@levitator.local:/home/levitator/pi_hamish
 terminal two:
 ssh levitator@levitator.local
 ls to see files, locate cli folder
-gcc cli.c -lm
-./a.out 145 2000
+gcc cli.c -o cli -lm
+./cli
 
 terminal three:
 locate to client.c (pc_cli) files.
