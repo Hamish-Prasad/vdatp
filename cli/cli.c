@@ -1,190 +1,144 @@
+// FULL physics restored: 200 transducers, masking, inversion
+
 #include <stdio.h>
-#include <stdlib.h>
-#include <string.h>
 #include <math.h>
+#include <stdint.h>
 #include <unistd.h>
-#include <arpa/inet.h>
 #include <fcntl.h>
 #include <sys/ioctl.h>
 #include <linux/spi/spidev.h>
 
-// ================= CONFIG =================
-#define NUM_CHANNELS 50
+#define NUM_CHANNELS 200
+#define BOARD_HALF 42.5f
+
 #define MAX_PHASE 512
 #define FREQ 40000.0f
-#define SPEED_OF_SOUND 343000.0f
+#define SOUND_SPEED 343000.0f
 
-#define SPI_DEVICE "/dev/spidev0.0"
-#define SPI_SPEED 500000
+#define SPI_DEV "/dev/spidev0.0"
+#define SPI_SPEED 1000000
 
-// ================= GLOBALS =================
+int spiFD;
+
 float tx_x[NUM_CHANNELS];
 float tx_y[NUM_CHANNELS];
 float tx_z[NUM_CHANNELS];
 
-uint16_t phases[NUM_CHANNELS];
+uint16_t phase[NUM_CHANNELS];
+uint8_t enable[NUM_CHANNELS];
 
-float phaseConst;
-
-// SPI
-int spiFD;
+float kConst;
 
 // ================= SPI =================
-// I literally do not know what is happening here, this is probably the source of all errors
-// but its better than nothing :)))
-void initSPI()
+void spi_init()
 {
-    uint8_t mode = 0;
-    uint8_t bits = 8;
-
-    spiFD = open(SPI_DEVICE, O_RDWR);
-    if (spiFD < 0) {
-        perror("SPI open");
-        exit(1);
-    }
+    uint8_t mode=0,bits=8;
+    spiFD = open(SPI_DEV, O_RDWR);
 
     ioctl(spiFD, SPI_IOC_WR_MODE, &mode);
     ioctl(spiFD, SPI_IOC_WR_BITS_PER_WORD, &bits);
     ioctl(spiFD, SPI_IOC_WR_MAX_SPEED_HZ, &(uint32_t){SPI_SPEED});
 }
 
-void transfer(uint16_t *data, int len)
+void spi_send(uint8_t *data, int len)
 {
     struct spi_ioc_transfer tr = {
         .tx_buf = (unsigned long)data,
-        .rx_buf = 0,
         .len = len,
         .speed_hz = SPI_SPEED,
         .bits_per_word = 8,
     };
-
     ioctl(spiFD, SPI_IOC_MESSAGE(1), &tr);
 }
 
-// ================= ARRAY INIT =================
-void initArray(float boardDistance)
+// ================= GEOMETRY =================
+void init_array()
 {
-    phaseConst = (FREQ * MAX_PHASE) / SPEED_OF_SOUND;
+    int idx=0;
 
-    int idx = 0;
-    float half = boardDistance / 2.0f;
+    for(int plate=0;plate<2;plate++) {
+        float y = (plate==0) ? BOARD_HALF : -BOARD_HALF;
 
-    for(int r=0;r<5;r++)
-    {
-        for(int c=0;c<10;c++)
-        {
-            tx_x[idx] = -45 + r*10;
-            tx_z[idx] = -45 + c*10;
-            tx_y[idx] = half;
-            idx++;
+        for(int side=0;side<2;side++) {
+            for(int r=0;r<5;r++) {
+                for(int c=0;c<10;c++) {
+
+                    float x = (side==0) ? (50 + r*100) : (-50 - r*100);
+                    float z = -450 + c*100;
+
+                    tx_x[idx]=x;
+                    tx_y[idx]=y;
+                    tx_z[idx]=z;
+                    idx++;
+                }
+            }
         }
     }
+
+    kConst = (2*M_PI*FREQ / SOUND_SPEED) * (MAX_PHASE/(2*M_PI));
 }
 
-// ================= PHASE COMPUTE STUFF =================
-void computePhases(float x, float y, float z)
+// ================= PHASE =================
+void compute(float x, float y, float z)
 {
     for(int i=0;i<NUM_CHANNELS;i++)
     {
-        float dx = x - tx_x[i];
-        float dy = y - tx_y[i];
-        float dz = z - tx_z[i];
+        float dx=x-tx_x[i];
+        float dy=y-tx_y[i];
+        float dz=z-tx_z[i];
 
-        float r = sqrtf(dx*dx + dy*dy + dz*dz);
+        float r=sqrtf(dx*dx+dy*dy+dz*dz);
 
-        float ph = -r * phaseConst;
+        float ph = -r*kConst;
 
         int p = ((int)ph) % MAX_PHASE;
-        if(p < 0) p += MAX_PHASE;
+        if(p<0) p+=MAX_PHASE;
 
-        phases[i] = (uint16_t)p;
+        // TOP/BOTTOM inversion
+        if(tx_y[i] < 0)
+            p = (p + MAX_PHASE/2) % MAX_PHASE;
+
+        phase[i]=p;
+
+        // radius mask
+        enable[i] = (dx*dx + dz*dz < 40000) ? 1 : 0;
     }
 }
 
-// ================= SEND TO FPGA =================
-void sendPhases()
+// ================= SEND =================
+void send_frame()
 {
-    uint16_t tx[NUM_CHANNELS + 1];
-
-    tx[0] = (11 << 9); // CMD_SET_PHASES
+    uint8_t buf[1 + NUM_CHANNELS*3];
+    buf[0]=0xA5;
 
     for(int i=0;i<NUM_CHANNELS;i++)
-        tx[i+1] = phases[i];
+    {
+        buf[1+i*3+0]=phase[i]&0xFF;
+        buf[1+i*3+1]=phase[i]>>8;
+        buf[1+i*3+2]=enable[i];
+    }
 
-    transfer(tx, sizeof(tx));
+    spi_send(buf,sizeof(buf));
 }
 
-// ================= COMMAND HANDLER =================
-void handleCommand(char *cmd)
-{
-    float x,y,z;
-
-    if(sscanf(cmd, "move %f %f %f", &x,&y,&z)==3)
-    {
-        computePhases(x,y,z);
-        sendPhases();
-        printf("Move %.2f %.2f %.2f\n", x,y,z);
-    }
-    else if(strncmp(cmd,"circle",6)==0)
-    {
-        printf("Circle\n");
-
-        float t=0;
-        for(int i=0;i<200;i++)
-        {
-            float x = 10*cosf(t);
-            float z = 10*sinf(t);
-
-            computePhases(x,0,z);
-            sendPhases();
-
-            usleep(10000);
-            t += 0.1f;
-        }
-    }
-    else
-    {
-        printf("Unknown command: %s\n", cmd);
-    }
-}
-
-// ================= MAIN SERVER =================
+// ================= MAIN =================
 int main()
 {
-    int server_fd, client;
-    struct sockaddr_in addr;
+    spi_init();
+    init_array();
 
-    initSPI();
-    initArray(85.0f);
-
-    server_fd = socket(AF_INET, SOCK_STREAM, 0);
-
-    addr.sin_family = AF_INET;
-    addr.sin_port = htons(1234);
-    addr.sin_addr.s_addr = INADDR_ANY;
-
-    bind(server_fd, (struct sockaddr*)&addr, sizeof(addr));
-    listen(server_fd, 1);
-
-    printf("Server listening on port 1234...\n");
+    float t=0;
 
     while(1)
     {
-        client = accept(server_fd, NULL, NULL);
-        printf("Client connected\n");
+        float x = 0;
+        float y = 0;
+        float z = 10*cosf(t);
 
-        char buffer[256];
+        compute(x,y,z);
+        send_frame();
 
-        while(1)
-        {
-            int len = read(client, buffer, sizeof(buffer)-1);
-            if(len <= 0) break;
-
-            buffer[len] = 0;
-            handleCommand(buffer);
-        }
-
-        close(client);
-        printf("Client disconnected\n");
+        usleep(2000);
+        t+=0.05;
     }
 }

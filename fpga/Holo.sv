@@ -1,6 +1,6 @@
-module Holo #(parameter CLK_FREQ=20480000,
-              parameter OUT_FREQ=40000,
-              parameter NUM_CHANNELS=50)
+module Holo #(parameter NUM_CHANNELS = 50,
+              parameter CLK_FREQ = 20480000,
+              parameter OUT_FREQ = 40000)
 (
     input clk,
     input nReset,
@@ -15,24 +15,22 @@ module Holo #(parameter CLK_FREQ=20480000,
     input syncin
 );
 
-    localparam PHASE_BITS = $clog2(CLK_FREQ/OUT_FREQ);
-    localparam CMD_SET_PHASES = 4'd11;
+    // =============================
+    // Phase format
+    // =============================
+    localparam PHASE_BITS = $clog2(CLK_FREQ / OUT_FREQ);
 
-    // =========================
-    // Phase storage
-    // =========================
-    logic [PHASE_BITS-1:0] phase [NUM_CHANNELS];
-    logic phaseEnabled [NUM_CHANNELS];
+    // Double buffering prevents tearing mid-cycle
+    logic [PHASE_BITS-1:0] phaseBuf [NUM_CHANNELS];
+    logic [PHASE_BITS-1:0] phaseActive [NUM_CHANNELS];
 
-    initial begin
-        for(int i=0;i<NUM_CHANNELS;i++)
-            phaseEnabled[i] = 1;
-    end
+    logic phaseEnabledBuf [NUM_CHANNELS];
+    logic phaseEnabledActive [NUM_CHANNELS];
 
-    // =========================
-    // SPI receiver
-    // =========================
-    logic [7:0] spiByte;
+    // =============================
+    // SPI (BYTE-BASED)
+    // =============================
+    logic [7:0] spiShift;
     logic [2:0] bitCnt;
     logic byteReady;
 
@@ -41,30 +39,27 @@ module Holo #(parameter CLK_FREQ=20480000,
             bitCnt <= 0;
             byteReady <= 0;
         end else begin
-            spiByte <= {spiByte[6:0], mosi};
+            spiShift <= {spiShift[6:0], mosi};
             bitCnt <= bitCnt + 1;
-            byteReady <= 0;
 
             if(bitCnt == 7) begin
                 byteReady <= 1;
                 bitCnt <= 0;
+            end else begin
+                byteReady <= 0;
             end
         end
     end
 
-    // =========================
-    // SPI command parser
-    // =========================
-    logic [3:0] cmd;
-    logic [7:0] buffer [NUM_CHANNELS*2];
+    // =============================
+    // Command parser
+    // =============================
+    localparam CMD_SET_FRAME = 8'hA5;
+
     integer idx;
+    logic [7:0] rxBuf [NUM_CHANNELS*3]; // phaseL, phaseH, enable
 
-    typedef enum logic [1:0] {
-        IDLE,
-        CMD,
-        DATA
-    } state_t;
-
+    typedef enum logic [1:0] {IDLE, DATA} state_t;
     state_t state;
 
     always @(posedge clk) begin
@@ -74,43 +69,40 @@ module Holo #(parameter CLK_FREQ=20480000,
         end else begin
             case(state)
                 IDLE:
-                    if(!ncs)
-                        state <= CMD;
-
-                CMD:
-                    if(byteReady) begin
-                        cmd <= spiByte[4:1];
+                    if(byteReady && spiShift == CMD_SET_FRAME) begin
                         idx <= 0;
                         state <= DATA;
                     end
 
                 DATA:
                     if(byteReady) begin
-                        buffer[idx] <= spiByte;
+                        rxBuf[idx] <= spiShift;
                         idx <= idx + 1;
 
-                        if(idx == NUM_CHANNELS*2-1) begin
+                        if(idx == NUM_CHANNELS*3-1)
                             state <= IDLE;
-
-                            if(cmd == CMD_SET_PHASES) begin
-										logic [15:0] temp;  // adjust width if needed
-
-										for(int i = 0; i < NUM_CHANNELS; i++) begin
-											 temp = {buffer[i*2+1], buffer[i*2]};
-											 phase[i] <= temp[PHASE_BITS-1:0];
-										end
-                            end
-                        end
                     end
             endcase
         end
     end
 
-    // =========================
-    // PWM output
-    // =========================
+    // =============================
+    // Load buffer → active at safe time
+    // =============================
     logic cycleStart;
 
+    always @(posedge clk) begin
+        if(cycleStart) begin
+            for(int i=0;i<NUM_CHANNELS;i++) begin
+                phaseActive[i] <= {rxBuf[i*3+1], rxBuf[i*3]}[PHASE_BITS-1:0];
+                phaseEnabledActive[i] <= rxBuf[i*3+2][0];
+            end
+        end
+    end
+
+    // =============================
+    // PWM driver
+    // =============================
     PwmCtrl #(
         .NUM_CHANNELS(NUM_CHANNELS),
         .CLK_FREQ(CLK_FREQ),
@@ -118,16 +110,13 @@ module Holo #(parameter CLK_FREQ=20480000,
     ) pwm (
         .clk(clk),
         .nReset(nReset),
-        .phase(phase),
-        .en(phaseEnabled),
+        .phase(phaseActive),
+        .en(phaseEnabledActive),
         .out(t),
         .cycleStart(cycleStart),
         .syncin(syncin)
     );
 
-    // =========================
-    // Simple LED
-    // =========================
-    assign LEDpwm = 3'b101;
+    assign LEDpwm = 3'b010;
 
 endmodule
