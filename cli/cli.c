@@ -1,16 +1,23 @@
-// server.c
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
 #include <math.h>
 #include <unistd.h>
 #include <arpa/inet.h>
+#include <fcntl.h>
+#include <sys/ioctl.h>
+#include <linux/spi/spidev.h>
 
+// ================= CONFIG =================
 #define NUM_CHANNELS 50
 #define MAX_PHASE 512
 #define FREQ 40000.0f
 #define SPEED_OF_SOUND 343000.0f
 
+#define SPI_DEVICE "/dev/spidev0.0"
+#define SPI_SPEED 500000
+
+// ================= GLOBALS =================
 float tx_x[NUM_CHANNELS];
 float tx_y[NUM_CHANNELS];
 float tx_z[NUM_CHANNELS];
@@ -19,9 +26,40 @@ uint16_t phases[NUM_CHANNELS];
 
 float phaseConst;
 
-// =========================
-// INIT ARRAY
-// =========================
+// SPI
+int spiFD;
+
+// ================= SPI =================
+void initSPI()
+{
+    uint8_t mode = 0;
+    uint8_t bits = 8;
+
+    spiFD = open(SPI_DEVICE, O_RDWR);
+    if (spiFD < 0) {
+        perror("SPI open");
+        exit(1);
+    }
+
+    ioctl(spiFD, SPI_IOC_WR_MODE, &mode);
+    ioctl(spiFD, SPI_IOC_WR_BITS_PER_WORD, &bits);
+    ioctl(spiFD, SPI_IOC_WR_MAX_SPEED_HZ, &(uint32_t){SPI_SPEED});
+}
+
+void transfer(uint16_t *data, int len)
+{
+    struct spi_ioc_transfer tr = {
+        .tx_buf = (unsigned long)data,
+        .rx_buf = 0,
+        .len = len,
+        .speed_hz = SPI_SPEED,
+        .bits_per_word = 8,
+    };
+
+    ioctl(spiFD, SPI_IOC_MESSAGE(1), &tr);
+}
+
+// ================= ARRAY INIT =================
 void initArray(float boardDistance)
 {
     phaseConst = (FREQ * MAX_PHASE) / SPEED_OF_SOUND;
@@ -41,9 +79,7 @@ void initArray(float boardDistance)
     }
 }
 
-// =========================
-// PHASE COMPUTE
-// =========================
+// ================= PHASE COMPUTE =================
 void computePhases(float x, float y, float z)
 {
     for(int i=0;i<NUM_CHANNELS;i++)
@@ -59,21 +95,24 @@ void computePhases(float x, float y, float z)
         int p = ((int)ph) % MAX_PHASE;
         if(p < 0) p += MAX_PHASE;
 
-        phases[i] = p;
+        phases[i] = (uint16_t)p;
     }
 }
 
-// =========================
-// DUMMY SEND (replace with SPI)
-// =========================
+// ================= SEND TO FPGA =================
 void sendPhases()
 {
-    // TODO: connect your SPI here
+    uint16_t tx[NUM_CHANNELS + 1];
+
+    tx[0] = (11 << 9); // CMD_SET_PHASES
+
+    for(int i=0;i<NUM_CHANNELS;i++)
+        tx[i+1] = phases[i];
+
+    transfer(tx, sizeof(tx));
 }
 
-// =========================
-// COMMAND HANDLER
-// =========================
+// ================= COMMAND HANDLER =================
 void handleCommand(char *cmd)
 {
     float x,y,z;
@@ -82,11 +121,11 @@ void handleCommand(char *cmd)
     {
         computePhases(x,y,z);
         sendPhases();
-        printf("Moved to %.2f %.2f %.2f\n", x,y,z);
+        printf("Move %.2f %.2f %.2f\n", x,y,z);
     }
     else if(strncmp(cmd,"circle",6)==0)
     {
-        printf("Running circle...\n");
+        printf("Circle\n");
 
         float t=0;
         for(int i=0;i<200;i++)
@@ -103,30 +142,29 @@ void handleCommand(char *cmd)
     }
     else
     {
-        printf("Unknown command\n");
+        printf("Unknown command: %s\n", cmd);
     }
 }
 
-// =========================
-// MAIN SERVER
-// =========================
+// ================= MAIN SERVER =================
 int main()
 {
     int server_fd, client;
     struct sockaddr_in addr;
 
+    initSPI();
     initArray(85.0f);
 
     server_fd = socket(AF_INET, SOCK_STREAM, 0);
 
     addr.sin_family = AF_INET;
-    addr.sin_port = htons(5677);
+    addr.sin_port = htons(1234);
     addr.sin_addr.s_addr = INADDR_ANY;
 
     bind(server_fd, (struct sockaddr*)&addr, sizeof(addr));
     listen(server_fd, 1);
 
-    printf("Server listening on port 5677...\n");
+    printf("Server listening on port 1234...\n");
 
     while(1)
     {
@@ -141,7 +179,6 @@ int main()
             if(len <= 0) break;
 
             buffer[len] = 0;
-
             handleCommand(buffer);
         }
 
