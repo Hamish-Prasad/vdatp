@@ -1,4 +1,5 @@
 #include <stdio.h>
+#include <string.h>
 #include <winsock2.h>
 
 #pragma comment(lib,"ws2_32.lib")
@@ -23,6 +24,7 @@ int main()
 
     while(1)
     {
+        printf("> ");
         fgets(cmd, sizeof(cmd), stdin);
         send(s, cmd, strlen(cmd), 0);
     }

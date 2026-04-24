@@ -5,8 +5,8 @@ module Holo #(parameter NUM_CHANNELS = 50,
     input clk,
     input nReset,
 
-    output [NUM_CHANNELS-1:0] t,
-    output [2:0] LEDpwm,
+    output logic [NUM_CHANNELS-1:0] t,
+    output logic [2:0] LEDpwm,
 
     input mosi,
     input sck,
@@ -15,22 +15,22 @@ module Holo #(parameter NUM_CHANNELS = 50,
     input syncin
 );
 
-    // =============================
-    // Phase format
-    // =============================
     localparam PHASE_BITS = $clog2(CLK_FREQ / OUT_FREQ);
-
-    // Double buffering prevents tearing mid-cycle
-    logic [PHASE_BITS-1:0] phaseBuf [NUM_CHANNELS];
-    logic [PHASE_BITS-1:0] phaseActive [NUM_CHANNELS];
-
-    logic phaseEnabledBuf [NUM_CHANNELS];
-    logic phaseEnabledActive [NUM_CHANNELS];
+    localparam CMD_FRAME  = 8'hA5;
 
     // =============================
-    // SPI (BYTE-BASED)
+    // BUFFER (written by SPI, used by PWM)
     // =============================
-    logic [7:0] spiShift;
+    logic [PHASE_BITS-1:0] phase [NUM_CHANNELS];
+    logic en [NUM_CHANNELS];
+
+    logic [PHASE_BITS-1:0] phase_next [NUM_CHANNELS];
+    logic en_next [NUM_CHANNELS];
+
+    // =============================
+    // SPI BYTE RECEIVER
+    // =============================
+    logic [7:0] shift;
     logic [2:0] bitCnt;
     logic byteReady;
 
@@ -39,7 +39,7 @@ module Holo #(parameter NUM_CHANNELS = 50,
             bitCnt <= 0;
             byteReady <= 0;
         end else begin
-            spiShift <= {spiShift[6:0], mosi};
+            shift <= {shift[6:0], mosi};
             bitCnt <= bitCnt + 1;
 
             if(bitCnt == 7) begin
@@ -52,56 +52,58 @@ module Holo #(parameter NUM_CHANNELS = 50,
     end
 
     // =============================
-    // Command parser
+    // FRAME PARSER
     // =============================
-    localparam CMD_SET_FRAME = 8'hA5;
-
+    logic [7:0] rx [NUM_CHANNELS*3];
     integer idx;
-    logic [7:0] rxBuf [NUM_CHANNELS*3]; // phaseL, phaseH, enable
 
-    typedef enum logic [1:0] {IDLE, DATA} state_t;
+    typedef enum logic {WAIT, READ} state_t;
     state_t state;
 
     always @(posedge clk) begin
         if(!nReset) begin
-            state <= IDLE;
+            state <= WAIT;
             idx <= 0;
         end else begin
             case(state)
-                IDLE:
-                    if(byteReady && spiShift == CMD_SET_FRAME) begin
+
+                WAIT:
+                    if(byteReady && shift == CMD_FRAME) begin
                         idx <= 0;
-                        state <= DATA;
+                        state <= READ;
                     end
 
-                DATA:
+                READ:
                     if(byteReady) begin
-                        rxBuf[idx] <= spiShift;
+                        rx[idx] <= shift;
                         idx <= idx + 1;
 
                         if(idx == NUM_CHANNELS*3-1)
-                            state <= IDLE;
+                            state <= WAIT;
                     end
             endcase
         end
     end
 
     // =============================
-    // Load buffer → active at safe time
+    // COMMIT ON CYCLE START
     // =============================
     logic cycleStart;
 
     always @(posedge clk) begin
         if(cycleStart) begin
             for(int i=0;i<NUM_CHANNELS;i++) begin
-                phaseActive[i] <= {rxBuf[i*3+1], rxBuf[i*3]}[PHASE_BITS-1:0];
-                phaseEnabledActive[i] <= rxBuf[i*3+2][0];
+                phase_next[i] <= {rx[i*3+1], rx[i*3]}[PHASE_BITS-1:0];
+                en_next[i]    <= rx[i*3+2][0];
             end
+
+            phase <= phase_next;
+            en    <= en_next;
         end
     end
 
     // =============================
-    // PWM driver
+    // PWM DRIVER
     // =============================
     PwmCtrl #(
         .NUM_CHANNELS(NUM_CHANNELS),
@@ -110,13 +112,16 @@ module Holo #(parameter NUM_CHANNELS = 50,
     ) pwm (
         .clk(clk),
         .nReset(nReset),
-        .phase(phaseActive),
-        .en(phaseEnabledActive),
+
+        .phase(phase),
+        .en(en),
+
         .out(t),
         .cycleStart(cycleStart),
+
         .syncin(syncin)
     );
 
-    assign LEDpwm = 3'b010;
+    assign LEDpwm = 3'b001;
 
 endmodule

@@ -1,7 +1,6 @@
 module HoloTop (
     input  CLK_24M576,
 
-    // 4 boards × 50 channels (we replicate this module per board)
     output [49:0] t,
 
     output blue,
@@ -18,24 +17,26 @@ module HoloTop (
 
     localparam CLK_FREQ = 20480000;
     localparam OUT_FREQ = 40000;
+    localparam NUM_CHANNELS = 50;
 
     logic clk, nReset;
 
-    // PLL generates internal clock
+    // PLL generates system clock
     Pll pll(
         .inclk0(CLK_24M576),
         .c0(clk)
     );
 
-    // Reset synchronisation
     Reset reset(
         .clk(clk),
         .nReset(nReset)
     );
 
-    // Generate 40kHz sync signal
+    // =============================
+    // SYNC GENERATOR (cycle start)
+    // =============================
     localparam CNT_MAX = CLK_FREQ / OUT_FREQ;
-    reg [$clog2(CNT_MAX)-1:0] cnt;
+    logic [$clog2(CNT_MAX)-1:0] cnt;
 
     always @(posedge clk) begin
         if(!nReset) begin
@@ -47,10 +48,18 @@ module HoloTop (
         end
     end
 
+    // LED output
     logic [2:0] LEDpwm;
     assign {red, green, blue} = LEDpwm;
 
-    Holo holo (
+    // =============================
+    // MAIN MODULE
+    // =============================
+    Holo #(
+        .NUM_CHANNELS(NUM_CHANNELS),
+        .CLK_FREQ(CLK_FREQ),
+        .OUT_FREQ(OUT_FREQ)
+    ) holo (
         .clk(clk),
         .nReset(nReset),
 
