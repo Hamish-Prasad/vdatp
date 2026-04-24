@@ -13,9 +13,9 @@ int main()
 
     s = socket(AF_INET, SOCK_STREAM, 0);
 
-    server.sin_addr.s_addr = inet_addr("169.254.103.217"); // Pi IP
+    server.sin_addr.s_addr = inet_addr("169.254.103.217"); // Pi IP CAN PROBS CHANGE??? idk my experience with ips is rough
     server.sin_family = AF_INET;
-    server.sin_port = htons(1234);
+    server.sin_port = htons(1234); // port, idk if 1234 is safe but cool beans
 
     if(connect(s, (struct sockaddr *)&server, sizeof(server)) < 0)
     {

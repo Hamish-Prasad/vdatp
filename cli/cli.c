@@ -30,6 +30,8 @@ float phaseConst;
 int spiFD;
 
 // ================= SPI =================
+// I literally do not know what is happening here, this is probably the source of all errors
+// but its better than nothing :)))
 void initSPI()
 {
     uint8_t mode = 0;
@@ -79,7 +81,7 @@ void initArray(float boardDistance)
     }
 }
 
-// ================= PHASE COMPUTE =================
+// ================= PHASE COMPUTE STUFF =================
 void computePhases(float x, float y, float z)
 {
     for(int i=0;i<NUM_CHANNELS;i++)

@@ -1,14 +1,20 @@
-# VDATP
-## Volumetric Display using an Acoustically Trapped Particle
+# HOW TO RUN THE DANG THING
 
-<a href="http://www.youtube.com/watch?feature=player_embedded&v=hCC1C5KIeUA" target="_blank"><img src="media/colorballsm.JPG" alt="VDATP video" width="583" height="640" border="10" /></a>
+quartus:
+programming -> blast top and bottom
 
-This was such a fun project - I still giggle (maniacally) when watching this thing go.  There's something truly magical about watching something levitate in mid-air and then start zipping around so fast, you can't see it.  In any case, I hope these project files help someone!
+terminal one:
+locate to vdatp files
+scp -r cli levitator@levitator.local:/home/levitator/pi_hamish
 
-Video: https://www.youtube.com/watch?v=hCC1C5KIeUA
+terminal two:
+ssh levitator@levitator.local
+ls to see files, locate cli folder
+gcc cli.c -lm
+./a.out 145 2000
 
-References:
-- PhysicsGirl acoustic levitator: https://www.youtube.com/watch?v=ABjRnSYw-4k
-- Acoustic levitator Instructable: https://www.instructables.com/Acoustic-Levitator/
-- University of Sussex video: https://www.youtube.com/watch?v=Tm8JRlJ1q50
-- University of Sussex paper: http://sro.sussex.ac.uk/id/eprint/86930/
+terminal three:
+locate to client.c (pc_cli) files.
+gcc client.c -o client.exe -lws2_32
+client.exe
+(client.exe just runs the exe file)
