@@ -90,17 +90,20 @@ module Holo #(parameter NUM_CHANNELS = 50,
     // =============================
     logic cycleStart;
 
-    always @(posedge clk) begin
-        if(cycleStart) begin
-            for(int i=0;i<NUM_CHANNELS;i++) begin
-                phase_next[i] <= {rx[i*3+1], rx[i*3]}[PHASE_BITS-1:0];
-                en_next[i]    <= rx[i*3+2][0];
-            end
+		logic [15:0] tmp;
 
-            phase <= phase_next;
-            en    <= en_next;
-        end
-    end
+		always @(posedge clk) begin
+			 if(cycleStart) begin
+				  for(int i=0;i<NUM_CHANNELS;i++) begin
+						tmp = {rx[i*3+1], rx[i*3]};
+						phase_next[i] <= tmp[PHASE_BITS-1:0];
+						en_next[i]    <= rx[i*3+2][0];
+				  end
+
+				  phase <= phase_next;
+				  en    <= en_next;
+			 end
+		end
 
     // =============================
     // PWM DRIVER

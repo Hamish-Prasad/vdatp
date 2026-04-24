@@ -208,15 +208,15 @@
 					"strict" : false
 				},
 				{
+					"name" : "mosi",
+					"strict" : false
+				},
+				{
 					"name" : "sck",
 					"strict" : false
 				},
 				{
 					"name" : "ncs",
-					"strict" : false
-				},
-				{
-					"name" : "mosi",
 					"strict" : false
 				},
 				{
