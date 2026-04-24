@@ -204,18 +204,6 @@
 					"strict" : false
 				},
 				{
-					"name" : "blue",
-					"strict" : false
-				},
-				{
-					"name" : "green",
-					"strict" : false
-				},
-				{
-					"name" : "red",
-					"strict" : false
-				},
-				{
 					"name" : "syncout",
 					"strict" : false
 				},
@@ -229,14 +217,6 @@
 				},
 				{
 					"name" : "mosi",
-					"strict" : false
-				},
-				{
-					"name" : "left",
-					"strict" : false
-				},
-				{
-					"name" : "top",
 					"strict" : false
 				},
 				{
