@@ -18,3 +18,7 @@ locate to client.c (pc_cli) files.
 gcc client.c -o client.exe -lws2_32
 client.exe
 (client.exe just runs the exe file)
+
+
+Current setup:
+Laptop -> TCP → Raspberry Pi -> SPI -> FPGA -> PWM?? idrk -> Transducers -> Acoustic field WOOHOO
