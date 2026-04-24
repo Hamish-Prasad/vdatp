@@ -9,6 +9,7 @@ int main()
     SOCKET s;
     struct sockaddr_in server;
 
+    // Initialises Windows Networking Stuff
     WSAStartup(MAKEWORD(2,2), &wsa);
 
     s = socket(AF_INET, SOCK_STREAM, 0);
@@ -17,6 +18,7 @@ int main()
     server.sin_family = AF_INET;
     server.sin_port = htons(1234); // port, idk if 1234 is safe but cool beans
 
+    // Connects to server (opens TCP stream to pi I think).
     if(connect(s, (struct sockaddr *)&server, sizeof(server)) < 0)
     {
         printf("Connection failed\n");
@@ -31,6 +33,7 @@ int main()
     {
         printf("> ");
         fgets(cmd, sizeof(cmd), stdin);
+        // sends to pi.
         send(s, cmd, strlen(cmd), 0);
     }
 

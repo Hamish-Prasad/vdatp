@@ -1,23 +1,37 @@
 module HoloTop (
-    input CLK_24M576,
-    output [49:0] t,
+	// This module acts as a "hardware" connection point
 
+	// There is a clock somewhere, 24.576 mHz
+    input CLK_24M576,
+	 // 50 outputs (one per transducer)
+	 // wait what 50? don't we have 200??
+    output [49:0] t,
+	
+	// to look at later
     output blue,
     output green,
     output red,
 
+	 // I dont get it but:
+	 // mosi -> master slave data
+	 // sck -> clock
+	 // ncs -> chip
     input mosi,
     input sck,
     input ncs,
-
+	
+	// used to sync timing across arrays
     output syncout,
     input syncin
 );
-
+	// FPGA clock frequency
     localparam CLK_FREQ = 20480000;
+	 // output update rate
     localparam OUT_FREQ = 40000;
+	 // amount of transducers TO LOOK AT AS WELL
     localparam NUM_CHANNELS = 50;
 
+	 // I think this part is deprecated
     logic clk;
     logic mathClk;
     logic nReset;
@@ -28,6 +42,7 @@ module HoloTop (
         .c1(mathClk)
     );
 
+	 // resets clock
     Reset reset(
         .clk(clk),
         .nReset(nReset)
