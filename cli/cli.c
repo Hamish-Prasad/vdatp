@@ -682,132 +682,136 @@ void runFlyAround()
 	}
 }
 
+/* Read exactly len bytes from a TCP socket unless the client disconnects or an error occurs. */
 static int readFull(int fd, void *buf, size_t len)
 {
-	uint8_t *p = (uint8_t *)buf;
-	size_t off = 0;
+	uint8_t *p = (uint8_t *)buf;          /* uint8_t is one unsigned byte; this lets us fill buf byte-by-byte. */
+	size_t off = 0;                       /* Number of bytes already received into buf. */
 
-	while(off < len) {
-		ssize_t n = recv(fd, p + off, len - off, 0);
-		if(n == 0)
-			return 0;
-		if(n < 0) {
-			if(errno == EINTR)
-				continue;
-			return -1;
+	while(off < len) {                    /* Keep reading until the whole fixed-size frame is present. */
+		ssize_t n = recv(fd, p + off, len - off, 0); /* Receive the remaining bytes from the laptop. */
+		if(n == 0)                        /* recv returns 0 when the peer cleanly disconnects. */
+			return 0;                     /* Tell caller the connection closed. */
+		if(n < 0) {                       /* Negative return means a socket error happened. */
+			if(errno == EINTR)            /* EINTR means a signal interrupted recv before it finished. */
+				continue;                 /* Retry interrupted reads. */
+			return -1;                    /* Any other socket error is fatal for this frame. */
 		}
-		off += (size_t)n;
+		off += (size_t)n;                 /* Advance by the number of bytes received this call. */
 	}
 
-	return 1;
+	return 1;                             /* Success: exactly len bytes are now in buf. */
 }
 
+/* Convert a validated laptop phase frame into the SPI byte stream expected by Holo.sv. */
 static void sendPhaseFrameToFpga(const HoloPhaseFrame *frame)
 {
-	uint8_t tx[1 + HOLO_PHASE_COUNT * 2];
+	uint8_t tx[1 + HOLO_PHASE_COUNT * 2]; /* One command byte plus 200 unsigned 16-bit phase words. */
 
-	tx[0] = HOLO_CMD_SET_PHASE_FRAME << 1;
-	for(int i = 0; i < HOLO_PHASE_COUNT; i++) {
-		tx[1 + i * 2] = frame->phases[i] & 0xff;
-		tx[2 + i * 2] = frame->phases[i] >> 8;
+	tx[0] = HOLO_CMD_SET_PHASE_FRAME << 1; /* Existing FPGA SPI decoder reads command from bits [4:1]. */
+	for(int i = 0; i < HOLO_PHASE_COUNT; i++) { /* Copy all 200 phases into the SPI packet. */
+		tx[1 + i * 2] = frame->phases[i] & 0xff; /* Low byte first, matching the old spiParameter byte order. */
+		tx[2 + i * 2] = frame->phases[i] >> 8;   /* High byte second. */
 	}
 
-	struct spi_ioc_transfer tr = {
-		.tx_buf = (unsigned long)tx,
-		.rx_buf = 0,
-		.len = sizeof(tx),
-		.delay_usecs = delay,
-		.speed_hz = spiSpeed,
-		.bits_per_word = bits,
+	struct spi_ioc_transfer tr = {        /* Linux spidev transfer descriptor. */
+		.tx_buf = (unsigned long)tx,      /* Address of the bytes to transmit to the FPGA. */
+		.rx_buf = 0,                      /* No receive buffer; the FPGA command is write-only. */
+		.len = sizeof(tx),                /* Send the entire command plus 400-byte phase payload. */
+		.delay_usecs = delay,             /* Reuse the existing project SPI delay setting. */
+		.speed_hz = spiSpeed,             /* Reuse the existing 500 kHz SPI speed. */
+		.bits_per_word = bits,            /* Reuse the existing 8 bits per SPI word. */
 	};
 
-	int ret = ioctl(spiFD, SPI_IOC_MESSAGE(1), &tr);
-	if(ret < 1)
-		pabort("can't send phase frame spi message");
+	int ret = ioctl(spiFD, SPI_IOC_MESSAGE(1), &tr); /* Perform one SPI transaction. */
+	if(ret < 1)                                      /* spidev returns < 1 if the transfer failed. */
+		pabort("can't send phase frame spi message"); /* Abort like the original SPI helper does. */
 }
 
+/* Validate a full laptop-to-Pi phase frame before forwarding it to the FPGA. */
 static int validPhaseFrame(const HoloPhaseFrame *frame)
 {
-	if(frame->magic != HOLO_PHASE_MAGIC)
-		return 0;
-	if(frame->version != HOLO_PHASE_VERSION)
-		return 0;
-	if(frame->phase_count != HOLO_PHASE_COUNT)
-		return 0;
-	if(frame->phase_max != HOLO_PHASE_MAX)
-		return 0;
-	if(frame->crc32 != holo_phase_frame_crc(frame))
-		return 0;
+	if(frame->magic != HOLO_PHASE_MAGIC)             /* Reject packets that do not start with "HOLO". */
+		return 0;                                    /* Invalid frame. */
+	if(frame->version != HOLO_PHASE_VERSION)         /* Reject packet formats this bridge does not understand. */
+		return 0;                                    /* Invalid frame. */
+	if(frame->phase_count != HOLO_PHASE_COUNT)       /* Require exactly 200 phases. */
+		return 0;                                    /* Invalid frame. */
+	if(frame->phase_max != HOLO_PHASE_MAX)           /* Require the current 512-tick phase scale. */
+		return 0;                                    /* Invalid frame. */
+	if(frame->crc32 != holo_phase_frame_crc(frame))  /* Reject corrupted or partial packet contents. */
+		return 0;                                    /* Invalid frame. */
 
-	for(int i = 0; i < HOLO_PHASE_COUNT; i++) {
-		if(frame->phases[i] >= HOLO_PHASE_MAX)
-			return 0;
+	for(int i = 0; i < HOLO_PHASE_COUNT; i++) {      /* Check every phase value before sending to FPGA. */
+		if(frame->phases[i] >= HOLO_PHASE_MAX)       /* Valid phases are 0..511 only. */
+			return 0;                                /* Invalid frame. */
 	}
 
-	return 1;
+	return 1;                                        /* Frame is safe to forward. */
 }
 
+/* Run the Raspberry Pi as a TCP-to-SPI bridge for laptop-calculated phase frames. */
 static int runPhaseBridge(uint16_t port)
 {
-	int serverFD = socket(AF_INET, SOCK_STREAM, 0);
-	if(serverFD < 0)
-		pabort("can't create bridge socket");
+	int serverFD = socket(AF_INET, SOCK_STREAM, 0);  /* Create an IPv4 TCP listening socket. */
+	if(serverFD < 0)                                 /* Negative fd means socket creation failed. */
+		pabort("can't create bridge socket");        /* Abort with perror-style message. */
 
-	int yes = 1;
-	setsockopt(serverFD, SOL_SOCKET, SO_REUSEADDR, &yes, sizeof(yes));
+	int yes = 1;                                     /* Integer option value used by setsockopt. */
+	setsockopt(serverFD, SOL_SOCKET, SO_REUSEADDR, &yes, sizeof(yes)); /* Allow quick restart after exit. */
 
-	struct sockaddr_in addr;
-	memset(&addr, 0, sizeof(addr));
-	addr.sin_family = AF_INET;
-	addr.sin_addr.s_addr = htonl(INADDR_ANY);
-	addr.sin_port = htons(port);
+	struct sockaddr_in addr;                         /* IPv4 address structure for bind(). */
+	memset(&addr, 0, sizeof(addr));                  /* Clear every field before setting the important ones. */
+	addr.sin_family = AF_INET;                       /* Use IPv4. */
+	addr.sin_addr.s_addr = htonl(INADDR_ANY);        /* Listen on all Pi network interfaces. */
+	addr.sin_port = htons(port);                     /* Convert port from CPU byte order to network byte order. */
 
-	if(bind(serverFD, (struct sockaddr *)&addr, sizeof(addr)) < 0)
-		pabort("can't bind bridge socket");
-	if(listen(serverFD, 1) < 0)
-		pabort("can't listen on bridge socket");
+	if(bind(serverFD, (struct sockaddr *)&addr, sizeof(addr)) < 0) /* Claim the TCP port. */
+		pabort("can't bind bridge socket");          /* Abort if port is unavailable. */
+	if(listen(serverFD, 1) < 0)                      /* Start accepting incoming laptop connections. */
+		pabort("can't listen on bridge socket");     /* Abort if listen failed. */
 
-	printf("phase bridge listening on TCP port %u\n", port);
-	printf("forwarding %u laptop phases to FPGA command 0x%X\n", HOLO_PHASE_COUNT, HOLO_CMD_SET_PHASE_FRAME);
+	printf("phase bridge listening on TCP port %u\n", port); /* Tell user which port to point laptop at. */
+	printf("forwarding %u laptop phases to FPGA command 0x%X\n", HOLO_PHASE_COUNT, HOLO_CMD_SET_PHASE_FRAME); /* Log bridge mode. */
 
-	while(1) {
-		struct sockaddr_in clientAddr;
-		socklen_t clientLen = sizeof(clientAddr);
-		int clientFD = accept(serverFD, (struct sockaddr *)&clientAddr, &clientLen);
-		if(clientFD < 0) {
-			if(errno == EINTR)
-				continue;
-			pabort("can't accept bridge client");
+	while(1) {                                       /* Keep bridge alive forever until user stops program. */
+		struct sockaddr_in clientAddr;              /* Stores the laptop client's IP/port. */
+		socklen_t clientLen = sizeof(clientAddr);   /* accept() needs the size of clientAddr. */
+		int clientFD = accept(serverFD, (struct sockaddr *)&clientAddr, &clientLen); /* Wait for laptop. */
+		if(clientFD < 0) {                          /* accept failed. */
+			if(errno == EINTR)                      /* Interrupted by signal. */
+				continue;                           /* Retry accept. */
+			pabort("can't accept bridge client");   /* Abort on real accept error. */
 		}
 
-		printf("phase client connected: %s\n", inet_ntoa(clientAddr.sin_addr));
+		printf("phase client connected: %s\n", inet_ntoa(clientAddr.sin_addr)); /* Log laptop IP. */
 
-		while(1) {
-			HoloPhaseFrame frame;
-			int rd = readFull(clientFD, &frame, sizeof(frame));
-			if(rd == 0) {
-				printf("phase client disconnected\n");
-				break;
+		while(1) {                                   /* Read frames until this laptop disconnects. */
+			HoloPhaseFrame frame;                    /* Stack buffer for one full laptop phase packet. */
+			int rd = readFull(clientFD, &frame, sizeof(frame)); /* Receive exactly one complete frame. */
+			if(rd == 0) {                            /* Laptop closed connection cleanly. */
+				printf("phase client disconnected\n"); /* Log disconnect. */
+				break;                               /* Return to accept() for another laptop. */
 			}
-			if(rd < 0) {
-				perror("phase client read failed");
-				break;
-			}
-
-			if(!validPhaseFrame(&frame)) {
-				printf("dropping invalid phase frame\n");
-				continue;
+			if(rd < 0) {                             /* Socket read error. */
+				perror("phase client read failed");  /* Print OS error. */
+				break;                               /* Drop this client. */
 			}
 
-			sendPhaseFrameToFpga(&frame);
-			printf("forwarded phase frame %u\n", frame.frame_id);
+			if(!validPhaseFrame(&frame)) {           /* Validate header, CRC, and phase ranges. */
+				printf("dropping invalid phase frame\n"); /* Warn but keep connection open. */
+				continue;                            /* Wait for the next frame. */
+			}
+
+			sendPhaseFrameToFpga(&frame);            /* Forward the validated frame to FPGA over SPI. */
+			printf("forwarded phase frame %u\n", frame.frame_id); /* Log successful forwarding. */
 		}
 
-		close(clientFD);
+		close(clientFD);                             /* Close this laptop connection before accepting another. */
 	}
 
-	close(serverFD);
-	return 0;
+	close(serverFD);                                 /* Unreachable in normal use, but tidy if loop changes later. */
+	return 0;                                        /* Report success. */
 }
 
 int main(int argc, char const *argv[]) 
@@ -830,22 +834,22 @@ int main(int argc, char const *argv[])
 	cenScale[1] = scale;
 	cenScale[2] = scale;
 
-	if(argc >= 2 && strcmp(argv[1], "--phase-bridge") == 0) {
-		uint16_t port = HOLO_PHASE_TCP_PORT;
-		if(argc >= 3)
-			port = atoi(argv[2]);
+	if(argc >= 2 && strcmp(argv[1], "--phase-bridge") == 0) { /* New mode: Pi forwards laptop phases to FPGA. */
+		uint16_t port = HOLO_PHASE_TCP_PORT;                 /* uint16_t is the standard 16-bit TCP port type. */
+		if(argc >= 3)                                        /* Optional user-specified port. */
+			port = atoi(argv[2]);                            /* Convert port string to integer. */
 
-		initSPI();
-		runPhaseBridge(port);
-		closeSPI();
-		return 0;
+		initSPI();                                           /* Open and configure /dev/spidev0.0 as before. */
+		runPhaseBridge(port);                                /* Listen for laptop frames and forward them. */
+		closeSPI();                                          /* Close SPI if bridge ever returns. */
+		return 0;                                            /* Do not enter old keyboard coordinate CLI. */
 	}
 
-	if(argc < 3) {
-		printf("usage:\n");
-		printf("  %s [board separation distance] [radius]\n", argv[0]);
-		printf("  %s --phase-bridge [tcp port]\n", argv[0]);
-		return 1;
+	if(argc < 3) {                                           /* Old mode still needs distance and radius args. */
+		printf("usage:\n");                                  /* Print usage heading. */
+		printf("  %s [board separation distance] [radius]\n", argv[0]); /* Existing coordinate/FIFO mode. */
+		printf("  %s --phase-bridge [tcp port]\n", argv[0]); /* New laptop phase bridge mode. */
+		return 1;                                            /* Refuse to continue with missing arguments. */
 	}
 
     initSPI();
