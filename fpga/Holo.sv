@@ -49,6 +49,10 @@
 	localparam CMD_FLASH_WRITE 		= 4'd8;
 	localparam CMD_FLASH_BLOCK_ERASE = 4'd9;
 	localparam CMD_SET_MATRIX			= 4'd10;
+	localparam CMD_SET_PHASE_FRAME	= 4'd11;
+	
+	localparam PHASE_FRAME_CHANNELS = NUM_CHANNELS * 4;
+	localparam PHASE_FRAME_BYTES = PHASE_FRAME_CHANNELS * 2;
 	
 	localparam FLASH_NOOP 				= 3'd0;
 	localparam FLASH_WRITE 				= 3'd2;
@@ -63,6 +67,7 @@
 	logic [POS_BIT_SIZE-1:0] y;
 	logic [POS_BIT_SIZE-1:0] z;
 	logic [PHASE_BIT_SIZE-1:0] calculatedPhase [NUM_CHANNELS];
+	logic [PHASE_BIT_SIZE-1:0] phaseFrameShadow [NUM_CHANNELS];
 	logic calcDone;
 	logic [POS_BIT_SIZE*3-1 + 7:0] ramWriteData;
 	logic [POS_BIT_SIZE*3-1 + 7:0] ramReadData;
@@ -75,13 +80,17 @@
 	logic loadCalcPhases;
 	logic calcStart;
 	logic processFifo;
+	logic [15:0] spiParameter[8];
 	logic [FIFO_BIT_SIZE-1:0] rdaddress;
 	logic [FIFO_BIT_SIZE-1:0] wraddress;
 	logic blinkEnabled;
 	logic LEDen;
 	logic LEDoverride;
 
-	logic phaseEnabled [NUM_CHANNELS];
+	logic calcPhaseEnabled [NUM_CHANNELS];
+	logic pwmPhaseEnabled [NUM_CHANNELS];
+	logic directPhaseMode;
+	logic directFramePending;
 	logic [POS_BIT_SIZE-1:0] halfHeight;
 	logic [5:0] speed;
 	logic [5:0] speedCnt;
@@ -103,9 +112,52 @@
 	logic [ROT_BIT_SIZE-1:0] RotBuf[9];
 	logic [POS_BIT_SIZE-1:0] CalcPosBuf[3];
 	
-	always@(posedge clk)
-		if(loadCalcPhases)
-			phase <= calculatedPhase;
+	logic [3:0] spiBitCnt;
+	logic [7:0] spiByteBuffer;
+	logic [7:0] spiByte;
+	logic spiByteAvailable;
+	
+	logic [8:0] phaseFrameBase;
+	logic [15:0] phaseFrameWord;
+	logic [7:0] phaseFrameLowByte;
+	assign phaseFrameWord = {spiByteBuffer, phaseFrameLowByte};
+	
+	always_comb begin
+		if(!top)
+			phaseFrameBase = left ? 9'd0 : 9'd50;
+		else
+			phaseFrameBase = left ? 9'd100 : 9'd150;
+	end
+	
+	genvar phaseEnableIdx;
+	generate
+		for(phaseEnableIdx = 0; phaseEnableIdx < NUM_CHANNELS; phaseEnableIdx++) begin : phaseEnableMux
+			assign pwmPhaseEnabled[phaseEnableIdx] = directPhaseMode ? 1'b1 : calcPhaseEnabled[phaseEnableIdx];
+		end
+	endgenerate
+	
+	always@(posedge clk) begin
+		if(!nReset) begin
+			directPhaseMode <= '0;
+			directFramePending <= '0;
+		end else begin
+			if(cmdReceived == CMD_SET_PHASE_FRAME) begin
+				directPhaseMode <= '1;
+				directFramePending <= '1;
+			end else if(cmdReceived == CMD_ENABLE_FIFO_PROC && spiParameter[0][0]) begin
+				directPhaseMode <= '0;
+				directFramePending <= '0;
+			end
+			
+			if(directPhaseMode && directFramePending && cycleStart) begin
+				for(int i = 0; i < NUM_CHANNELS; i++)
+					phase[i] <= phaseFrameShadow[i];
+				directFramePending <= '0;
+			end else if(loadCalcPhases && !directPhaseMode) begin
+				phase <= calculatedPhase;
+			end
+		end
+	end
 	
 	//0x1 process color commands
 	always@(posedge clk) begin
@@ -115,7 +167,7 @@
 			colors[2] <= spiParameter[2][7:0];
 			blinkEnabled <= spiParameter[3][0];
 			LEDoverride  <= spiParameter[3][1];
-		end else if(loadCalcPhases & !LEDoverride) begin
+		end else if(loadCalcPhases & !LEDoverride & !directPhaseMode) begin
 			colors[0] <= {1'd0,fifoColors[6:5],5'd0};
 			colors[1] <= {1'd0,fifoColors[4:2], 4'd0};
 			colors[2] <= {fifoColors[1:0], 6'd0};
@@ -396,8 +448,7 @@
 	
 	logic [3:0] spiState;
 	logic [3:0] cmdReceived_buf;
-	logic [3:0] spiByteCnt;
-	logic [15:0] spiParameter[8];
+	logic [8:0] spiByteCnt;
 	//SPI processing
 	always@(posedge clk) begin
 		if(!nReset) begin
@@ -432,17 +483,30 @@
 							spiState <= 0;
 						
 						if(spiByteAvailableSyncEdge == 1) begin
-							if(!spiByteCnt[0])
-								spiParameter[spiByteCnt[3:1]][7:0] <= spiByteBuffer;
-							else
-								spiParameter[spiByteCnt[3:1]][15:8] <= spiByteBuffer;
-							
-							spiByteCnt <= spiByteCnt + 1;
+							if(cmdReceived_buf == CMD_SET_PHASE_FRAME) begin
+								if(!spiByteCnt[0]) begin
+									phaseFrameLowByte <= spiByteBuffer;
+								end else begin
+									if(spiByteCnt[8:1] >= phaseFrameBase && spiByteCnt[8:1] < phaseFrameBase + NUM_CHANNELS)
+										phaseFrameShadow[spiByteCnt[8:1] - phaseFrameBase] <= phaseFrameWord[PHASE_BIT_SIZE-1:0];
+								end
+								
+								spiByteCnt <= spiByteCnt + 1;
+								if(spiByteCnt == PHASE_FRAME_BYTES-1)
+									spiState <= 3;
+							end else begin
+								if(!spiByteCnt[0])
+									spiParameter[spiByteCnt[3:1]][7:0] <= spiByteBuffer;
+								else
+									spiParameter[spiByteCnt[3:1]][15:8] <= spiByteBuffer;
+								
+								spiByteCnt <= spiByteCnt + 1;
 
-							if(cmdReceived_buf != CMD_SET_MATRIX && spiByteCnt == 7)
-								spiState <= 3;
-							if(cmdReceived_buf == CMD_SET_MATRIX && spiByteCnt == 15)
-								spiState <= 3;
+								if(cmdReceived_buf != CMD_SET_MATRIX && spiByteCnt == 7)
+									spiState <= 3;
+								if(cmdReceived_buf == CMD_SET_MATRIX && spiByteCnt == 15)
+									spiState <= 3;
+							end
 
 						end
 					end
@@ -471,11 +535,6 @@
 		end
 	end
 		
-	logic [3:0] spiBitCnt;
-	logic [7:0] spiByteBuffer;
-	logic [7:0] spiByte;
-	logic spiByteAvailable;
-	
 	always @(posedge sck or posedge ncs) begin
 		if(ncs) begin
 			spiByteAvailable <= 0;
@@ -507,7 +566,7 @@
 		.start(calcStart),
 		
 		.phase(calculatedPhase),
-		.phaseEnabled,
+		.phaseEnabled(calcPhaseEnabled),
 		.done(calcDone),
 		
 		.top,
@@ -519,7 +578,7 @@
 		.clk,
 		.nReset,
 		.phase,
-		.en(phaseEnabled),
+		.en(pwmPhaseEnabled),
 		
 		.out(t),
 		.cycleStart,

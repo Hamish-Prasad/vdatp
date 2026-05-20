@@ -3,6 +3,8 @@
 #include <sys/socket.h> 
 #include <stdlib.h> 
 #include <netinet/in.h> 
+#include <arpa/inet.h>
+#include <errno.h>
 #include <string.h> 
 #include <getopt.h>
 #include <fcntl.h>
@@ -12,6 +14,8 @@
 #include <termios.h>
 #include <unistd.h>
 #include <math.h>
+
+#include "phase_protocol.h"
 
 
 #define BUF_SIZE_BYTES (17)
@@ -678,6 +682,134 @@ void runFlyAround()
 	}
 }
 
+static int readFull(int fd, void *buf, size_t len)
+{
+	uint8_t *p = (uint8_t *)buf;
+	size_t off = 0;
+
+	while(off < len) {
+		ssize_t n = recv(fd, p + off, len - off, 0);
+		if(n == 0)
+			return 0;
+		if(n < 0) {
+			if(errno == EINTR)
+				continue;
+			return -1;
+		}
+		off += (size_t)n;
+	}
+
+	return 1;
+}
+
+static void sendPhaseFrameToFpga(const HoloPhaseFrame *frame)
+{
+	uint8_t tx[1 + HOLO_PHASE_COUNT * 2];
+
+	tx[0] = HOLO_CMD_SET_PHASE_FRAME << 1;
+	for(int i = 0; i < HOLO_PHASE_COUNT; i++) {
+		tx[1 + i * 2] = frame->phases[i] & 0xff;
+		tx[2 + i * 2] = frame->phases[i] >> 8;
+	}
+
+	struct spi_ioc_transfer tr = {
+		.tx_buf = (unsigned long)tx,
+		.rx_buf = 0,
+		.len = sizeof(tx),
+		.delay_usecs = delay,
+		.speed_hz = spiSpeed,
+		.bits_per_word = bits,
+	};
+
+	int ret = ioctl(spiFD, SPI_IOC_MESSAGE(1), &tr);
+	if(ret < 1)
+		pabort("can't send phase frame spi message");
+}
+
+static int validPhaseFrame(const HoloPhaseFrame *frame)
+{
+	if(frame->magic != HOLO_PHASE_MAGIC)
+		return 0;
+	if(frame->version != HOLO_PHASE_VERSION)
+		return 0;
+	if(frame->phase_count != HOLO_PHASE_COUNT)
+		return 0;
+	if(frame->phase_max != HOLO_PHASE_MAX)
+		return 0;
+	if(frame->crc32 != holo_phase_frame_crc(frame))
+		return 0;
+
+	for(int i = 0; i < HOLO_PHASE_COUNT; i++) {
+		if(frame->phases[i] >= HOLO_PHASE_MAX)
+			return 0;
+	}
+
+	return 1;
+}
+
+static int runPhaseBridge(uint16_t port)
+{
+	int serverFD = socket(AF_INET, SOCK_STREAM, 0);
+	if(serverFD < 0)
+		pabort("can't create bridge socket");
+
+	int yes = 1;
+	setsockopt(serverFD, SOL_SOCKET, SO_REUSEADDR, &yes, sizeof(yes));
+
+	struct sockaddr_in addr;
+	memset(&addr, 0, sizeof(addr));
+	addr.sin_family = AF_INET;
+	addr.sin_addr.s_addr = htonl(INADDR_ANY);
+	addr.sin_port = htons(port);
+
+	if(bind(serverFD, (struct sockaddr *)&addr, sizeof(addr)) < 0)
+		pabort("can't bind bridge socket");
+	if(listen(serverFD, 1) < 0)
+		pabort("can't listen on bridge socket");
+
+	printf("phase bridge listening on TCP port %u\n", port);
+	printf("forwarding %u laptop phases to FPGA command 0x%X\n", HOLO_PHASE_COUNT, HOLO_CMD_SET_PHASE_FRAME);
+
+	while(1) {
+		struct sockaddr_in clientAddr;
+		socklen_t clientLen = sizeof(clientAddr);
+		int clientFD = accept(serverFD, (struct sockaddr *)&clientAddr, &clientLen);
+		if(clientFD < 0) {
+			if(errno == EINTR)
+				continue;
+			pabort("can't accept bridge client");
+		}
+
+		printf("phase client connected: %s\n", inet_ntoa(clientAddr.sin_addr));
+
+		while(1) {
+			HoloPhaseFrame frame;
+			int rd = readFull(clientFD, &frame, sizeof(frame));
+			if(rd == 0) {
+				printf("phase client disconnected\n");
+				break;
+			}
+			if(rd < 0) {
+				perror("phase client read failed");
+				break;
+			}
+
+			if(!validPhaseFrame(&frame)) {
+				printf("dropping invalid phase frame\n");
+				continue;
+			}
+
+			sendPhaseFrameToFpga(&frame);
+			printf("forwarded phase frame %u\n", frame.frame_id);
+		}
+
+		close(clientFD);
+	}
+
+	close(serverFD);
+	return 0;
+}
+
 int main(int argc, char const *argv[]) 
 { 
 	FILE *fp;
@@ -697,6 +829,24 @@ int main(int argc, char const *argv[])
 	cenScale[0] = scale;
 	cenScale[1] = scale;
 	cenScale[2] = scale;
+
+	if(argc >= 2 && strcmp(argv[1], "--phase-bridge") == 0) {
+		uint16_t port = HOLO_PHASE_TCP_PORT;
+		if(argc >= 3)
+			port = atoi(argv[2]);
+
+		initSPI();
+		runPhaseBridge(port);
+		closeSPI();
+		return 0;
+	}
+
+	if(argc < 3) {
+		printf("usage:\n");
+		printf("  %s [board separation distance] [radius]\n", argv[0]);
+		printf("  %s --phase-bridge [tcp port]\n", argv[0]);
+		return 1;
+	}
 
     initSPI();
 	pauseFifoProcessing(true);
