@@ -1,0 +1,30 @@
+quartus:
+programming -> blast top and bottom
+
+terminal one:
+locate to vdatp files
+scp -r cli levitator@levitator.local:/home/levitator/pi_hamish
+
+terminal two:
+ssh levitator@levitator.local
+ls to see files, locate cli folder
+On the Pi:
+
+```
+cd cli
+gcc cli.c -lm -o holo_pi_cli
+./holo_pi_cli --phase-bridge 5656
+```
+
+terminal three:
+On the Laptop: (not the pi, this is locally or whatever)
+"-lm -lws2_32" is smth to look into, is not needed on pc but is needed on laptop.
+```
+cd cli
+gcc laptop_phase_sender.c -o laptop_phase_sender -lm -lws2_32
+laptop_phase_sender.exe 169.254.9.129 5656 135
+```
+
+if needed to get ip:
+ssh levitator@levitator.local
+hostname -I
