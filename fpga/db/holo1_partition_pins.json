@@ -220,11 +220,11 @@
 					"strict" : false
 				},
 				{
-					"name" : "sck",
+					"name" : "left",
 					"strict" : false
 				},
 				{
-					"name" : "ncs",
+					"name" : "top",
 					"strict" : false
 				},
 				{
@@ -232,11 +232,11 @@
 					"strict" : false
 				},
 				{
-					"name" : "left",
+					"name" : "sck",
 					"strict" : false
 				},
 				{
-					"name" : "top",
+					"name" : "ncs",
 					"strict" : false
 				},
 				{

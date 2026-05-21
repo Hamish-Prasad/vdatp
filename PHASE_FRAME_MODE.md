@@ -165,8 +165,8 @@ On the laptop:
 
 ```bash
 cd cli
-gcc laptop_phase_sender.c -lm -o laptop_phase_sender
-./laptop_phase_sender <pi-ip-address> 5656 135
+gcc laptop_phase_sender.c -o laptop_phase_sender -lm -lws2_32
+laptop_phase_sender.exe 169.254.9.129 5656 135
 ```
 
 The last argument is board separation in millimeters. `135` matches the value

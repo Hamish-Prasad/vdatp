@@ -10,8 +10,13 @@
  * close_socket so the rest of the file can stay platform-neutral.
  */
 #ifdef _WIN32
+#undef _WIN32_WINNT
+#define _WIN32_WINNT 0x0600
 #include <winsock2.h>                         /* Windows socket API. */
 #include <ws2tcpip.h>                         /* inet_pton on Windows. */
+#ifndef INET_PTON
+WINSOCK_API_LINKAGE INT WSAAPI inet_pton(INT Family, PCSTR pszAddrString, PVOID pAddrBuf);
+#endif
 typedef SOCKET socket_t;                      /* SOCKET is the native Windows socket handle type. */
 #define close_socket closesocket              /* Windows closes sockets with closesocket(). */
 #else
