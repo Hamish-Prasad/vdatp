@@ -4,6 +4,21 @@
 #include <string.h>   /* memset/memcpy are used for packet and socket address setup. */
 #include <math.h>     /* sqrt is used for transducer-to-focus distance. */
 
+#ifdef _WIN32
+#include <windows.h>
+#else
+#include <unistd.h>
+#endif
+
+static void delay_ms(unsigned int ms)
+{
+#ifdef _WIN32
+    Sleep(ms);
+#else
+    usleep(ms * 1000);
+#endif
+}
+
 /*
  * Windows and Linux/macOS expose sockets through slightly different headers and
  * close functions. This block hides those differences behind socket_t and
@@ -263,6 +278,12 @@ int main(int argc, char **argv)
 	uint16_t frameID = 0;                             /* 16-bit frame counter sent in packet header. */
 	HoloPhaseFrame frame;                             /* Local packet buffer for one 200-phase frame. */
 
+	double centre_x = 0;
+	double centre_y = 0;
+	double radius = 2;
+	double theta = 0;
+	double PI = 3.14159265358979323846;
+
 	printHelp();                                      /* Show controls once at startup. */
 	while(1) {                                        /* Main interactive send loop. */
 		fillPhaseFrame(&frame, frameID++, x, y, z, boardDistanceMm); /* Calculate and pack all 200 phases. */
@@ -303,6 +324,27 @@ int main(int argc, char **argv)
 			case 'p':                                 /* Print command. */
 				printf("position %.1f, %.1f, %.1f mm\n", x, y, z); /* Show current position. */
 				break;                                /* Finish command. */
+			case 'o': {
+			    for (int i = 0; i < 300; i++) {
+			        theta = 2.0 * PI * i / 30.0;
+
+			        x = centre_x + radius * cos(theta);
+			        y = centre_y + radius * sin(theta);
+
+			        fillPhaseFrame(&frame, frameID++, x, y, z, boardDistanceMm);
+
+			        if (sendAll(sock, &frame, sizeof(frame)) < 0) {
+			            printf("send failed\n");
+			            break;
+			        }
+
+			        printf("sent circle frame %u at %.1f, %.1f, %.1f mm\n",
+			               frame.frame_id, x, y, z);
+			    	delay_ms(25);
+			    }
+
+			    break;
+			}
 			case '\n':                                /* Ignore blank line on Unix terminals. */
 			case '\r':                                /* Ignore blank line on Windows-style terminals. */
 				break;                                /* Finish command. */

@@ -3,6 +3,17 @@
   <component name="AutoImportSettings">
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
+  <component name="BackendCodeEditorMiscSettings">
+    <option name="/Default/Housekeeping/FeatureSuggestion/FeatureSuggestionManager/DisabledSuggesters/=SwitchToGoToActionSuggester/@EntryIndexedValue" value="true" type="bool" />
+  </component>
+  <component name="CMakeProjectFlavorService">
+    <option name="flavorId" value="CMakePlainProjectFlavor" />
+  </component>
+  <component name="CMakeSettings">
+    <configurations>
+      <configuration PROFILE_NAME="Debug" ENABLED="true" CONFIG_NAME="Debug" />
+    </configurations>
+  </component>
   <component name="ChangeListManager">
     <list default="true" id="87c3cac7-3cdd-450a-908d-d5923d6aa46d" name="Changes" comment="" />
     <option name="SHOW_DIALOG" value="false" />
@@ -13,23 +24,94 @@
   <component name="ClangdSettings">
     <option name="formatViaClangd" value="false" />
   </component>
+  <component name="EmbeddingIndexingInfo">
+    <option name="cachedIndexableFilesCount" value="1167" />
+    <option name="fileBasedEmbeddingIndicesEnabled" value="true" />
+  </component>
   <component name="Git.Settings">
     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
   </component>
   <component name="MacroExpansionManager">
     <option name="directoryName" value="gZispL1Y" />
   </component>
+  <component name="McpProjectServerCommands">
+    <commands />
+    <urls />
+  </component>
+  <component name="NextEditCompletionFeaturesState">
+    <decayedCancelled>
+      <entry key="MS100" value="1.5714107097796073" />
+      <entry key="MS500" value="4.7869580247070935" />
+      <entry key="S2" value="9.769680375380165" />
+      <entry key="S5" value="12.022999928359473" />
+      <entry key="S10" value="12.956925079700023" />
+      <entry key="S30" value="14.267453612816979" />
+      <entry key="S60" value="16.888546688685985" />
+      <entry key="M2" value="20.69532372599945" />
+      <entry key="M5" value="24.885773958523522" />
+      <entry key="M10" value="26.78151752395878" />
+      <entry key="M15" value="27.48259234996815" />
+      <entry key="M30" value="28.221403576670323" />
+      <entry key="H1" value="28.605596312551867" />
+      <entry key="H2" value="28.801504861380884" />
+      <entry key="H4" value="28.90042696666968" />
+      <entry key="D1" value="28.983359108294625" />
+      <entry key="W1" value="28.997621615867136" />
+    </decayedCancelled>
+    <decayedSelected>
+      <entry key="MS100" value="0.0" />
+      <entry key="MS500" value="0.0" />
+      <entry key="S2" value="0.0" />
+      <entry key="S5" value="0.0" />
+      <entry key="S10" value="0.0" />
+      <entry key="S30" value="0.0" />
+      <entry key="S60" value="0.0" />
+      <entry key="M2" value="0.0" />
+      <entry key="M5" value="0.0" />
+      <entry key="M10" value="0.0" />
+      <entry key="M15" value="0.0" />
+      <entry key="M30" value="0.0" />
+      <entry key="H1" value="0.0" />
+      <entry key="H2" value="0.0" />
+      <entry key="H4" value="0.0" />
+      <entry key="D1" value="0.0" />
+      <entry key="W1" value="0.0" />
+    </decayedSelected>
+    <decayedShown>
+      <entry key="MS100" value="1.4801110408753406" />
+      <entry key="MS500" value="4.733482757791214" />
+      <entry key="S2" value="9.74311865267491" />
+      <entry key="S5" value="12.009988062927087" />
+      <entry key="S10" value="12.949921302966578" />
+      <entry key="S30" value="14.264409459264327" />
+      <entry key="S60" value="16.88584695239386" />
+      <entry key="M2" value="20.693079250854485" />
+      <entry key="M5" value="24.884477014226476" />
+      <entry key="M10" value="26.780778313618676" />
+      <entry key="M15" value="27.482077138005977" />
+      <entry key="M30" value="28.221134156374948" />
+      <entry key="H1" value="28.605458528923332" />
+      <entry key="H2" value="28.801435185737308" />
+      <entry key="H4" value="28.900391930927963" />
+      <entry key="D1" value="28.983353241347462" />
+      <entry key="W1" value="28.997620777052305" />
+    </decayedShown>
+  </component>
   <component name="ProjectColorInfo">{
   &quot;customColor&quot;: &quot;&quot;,
   &quot;associatedIndex&quot;: 4
 }</component>
   <component name="ProjectId" id="3E3MUy9gmzHvTIMthB9NoO1vA2U" />
+  <component name="ProjectStatusUIService">{
+  &quot;uiKindId&quot;: &quot;Widget&quot;
+}</component>
   <component name="ProjectViewState">
     <option name="hideEmptyMiddlePackages" value="true" />
     <option name="showLibraryContents" value="true" />
   </component>
   <component name="PropertiesComponent"><![CDATA[{
   "keyToString": {
+    "RunOnceActivity.MCP Project settings loaded": "true",
     "RunOnceActivity.RadMigrateCodeStyle": "true",
     "RunOnceActivity.ShowReadmeOnStart": "true",
     "RunOnceActivity.cidr.known.project.marker": "true",
@@ -43,6 +125,10 @@
     "ignore.virus.scanning.warn.message": "true",
     "kotlin-language-version-configured": "true",
     "last_opened_file_path": "C:/Users/Bored/OneDrive/Documents/GitHub/vdatp",
+    "node.js.detected.package.eslint": "true",
+    "node.js.detected.package.tslint": "true",
+    "node.js.selected.package.eslint": "(autodetect)",
+    "node.js.selected.package.tslint": "(autodetect)",
     "nodejs_package_manager_path": "npm",
     "vue.rearranger.settings.migration": "true"
   }
@@ -68,7 +154,8 @@
       <option name="number" value="Default" />
       <option name="presentableId" value="Default" />
       <updated>1779402822588</updated>
-      <workItem from="1779412528971" duration="1771000" />
+      <workItem from="1779412528971" duration="3465000" />
+      <workItem from="1779416019932" duration="2478000" />
     </task>
     <servers />
   </component>
