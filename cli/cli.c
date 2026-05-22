@@ -834,7 +834,7 @@ int main(int argc, char const *argv[])
 	cenScale[1] = scale;
 	cenScale[2] = scale;
 
-	if(argc >= 2 && strcmp(argv[1], "--phase-bridge") == 0) { /* New mode: Pi forwards laptop phases to FPGA. */
+	if(argc >= 2 && strcmp(argv[1], "--phase-bridge") == 0) { /* Pi forwards laptop phases to FPGA. */
 		uint16_t port = HOLO_PHASE_TCP_PORT;                 /* uint16_t is the standard 16-bit TCP port type. */
 		if(argc >= 3)                                        /* Optional user-specified port. */
 			port = atoi(argv[2]);                            /* Convert port string to integer. */
