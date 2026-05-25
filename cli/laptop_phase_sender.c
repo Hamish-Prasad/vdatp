@@ -155,7 +155,7 @@ static uint16_t normalizePhase(int32_t phase)
 // halfHeight0p1mm is the half height from top board to bottom board.
 static uint16_t calculatePhase(double targetXmm, double targetYmm, double targetZmm,
 	enum BoardIndex board, int channel, double halfHeight0p1mm)
-{
+{   
     // these two seem to be hardcoded into the FPGA boards, should look into for changing them but for now they are constant
 	const double negWaveKDiv10 = -0.07327329;    /* Float value of CalcPhase.sv NEG_WAVE_K_DIV10. */
 	const double scaleConstant = 81.48733;       /* Float value of CalcPhase.sv SCALE_CNST for 512 ticks. */
@@ -174,7 +174,7 @@ static uint16_t calculatePhase(double targetXmm, double targetYmm, double target
 	int32_t phase = (int32_t)(distance0p1mm * negWaveKDiv10 * scaleConstant); /* Convert distance into phase ticks. */
 
 	if(boardIsBottom(board))                       /* CalcPhase offsets bottom boards by half a cycle. */
-		phase += HOLO_PHASE_MAX / 2;               /* Half of 512 ticks is 256 ticks. */
+		phase += HOLO_PHASE_MAX / 2;               /* Half of 512 ticks is 256 ticks. Offset by "pi" I think*/
 
 	return normalizePhase(phase);                  /* Return the wrapped 0..511 phase. */
 }
