@@ -15,7 +15,10 @@
     </configurations>
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="87c3cac7-3cdd-450a-908d-d5923d6aa46d" name="Changes" comment="" />
+    <list default="true" id="87c3cac7-3cdd-450a-908d-d5923d6aa46d" name="Changes" comment="">
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/cli/laptop_phase_sender.c" beforeDir="false" afterPath="$PROJECT_DIR$/cli/laptop_phase_sender.c" afterDir="false" />
+    </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
@@ -35,8 +38,22 @@
     <option name="directoryName" value="gZispL1Y" />
   </component>
   <component name="McpProjectServerCommands">
-    <commands />
-    <urls />
+    <McpServerCommand>
+      <option name="enabled" value="true" />
+      <option name="name" />
+      <option name="programPath" />
+      <option name="arguments" />
+      <option name="workingDirectory" />
+      <envs />
+    </McpServerCommand>
+    <McpServerCommand>
+      <option name="enabled" value="true" />
+      <option name="name" />
+      <option name="programPath" />
+      <option name="arguments" />
+      <option name="workingDirectory" />
+      <envs />
+    </McpServerCommand>
   </component>
   <component name="NextEditCompletionFeaturesState">
     <decayedCancelled>
@@ -135,16 +152,22 @@
 }]]></component>
   <component name="RunManager">
     <configuration default="true" type="JetRunConfigurationType">
-      <module name="vdatp" />
       <method v="2">
         <option name="Make" enabled="true" />
       </method>
     </configuration>
     <configuration default="true" type="KotlinStandaloneScriptRunConfigurationType">
-      <module name="vdatp" />
       <option name="filePath" />
       <method v="2" />
     </configuration>
+  </component>
+  <component name="SharedIndexes">
+    <attachedChunks>
+      <set>
+        <option value="bundled-jdk-9823dce3aa75-fbdcb00ec9e3-intellij.indexing.shared.core-IU-251.25410.109" />
+        <option value="bundled-js-predefined-d6986cc7102b-6a121458b545-JavaScript-IU-251.25410.109" />
+      </set>
+    </attachedChunks>
   </component>
   <component name="SpellCheckerSettings" RuntimeDictionaries="0" Folders="0" CustomDictionaries="0" DefaultDictionary="application-level" UseSingleDictionary="true" transferred="true" />
   <component name="TaskManager">
@@ -156,6 +179,9 @@
       <updated>1779402822588</updated>
       <workItem from="1779412528971" duration="3465000" />
       <workItem from="1779416019932" duration="2478000" />
+      <workItem from="1779673822519" duration="93000" />
+      <workItem from="1779673929316" duration="1000" />
+      <workItem from="1779673968483" duration="2567000" />
     </task>
     <servers />
   </component>

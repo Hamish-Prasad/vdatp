@@ -149,17 +149,28 @@ static uint16_t normalizePhase(int32_t phase)
 	return (uint16_t)phase;                      /* Return an unsigned 16-bit value for the protocol frame. */
 }
 
+// Targetmm is the target point
+// board is the FPGA board, no clue about that still
+// channel is the specific transducer (this is used to read the big transducer position arrays)
+// halfHeight0p1mm is the half height from top board to bottom board.
 static uint16_t calculatePhase(double targetXmm, double targetYmm, double targetZmm,
 	enum BoardIndex board, int channel, double halfHeight0p1mm)
 {
+    // these two seem to be hardcoded into the FPGA boards, should look into for changing them but for now they are constant
 	const double negWaveKDiv10 = -0.07327329;    /* Float value of CalcPhase.sv NEG_WAVE_K_DIV10. */
 	const double scaleConstant = 81.48733;       /* Float value of CalcPhase.sv SCALE_CNST for 512 ticks. */
+
 	const int16_t *xTable = boardXTable(board);  /* Pick the board-specific x-coordinate table. */
 	double transducerY = boardIsBottom(board) ? -halfHeight0p1mm : halfHeight0p1mm; /* Match top/bottom yDiff logic. */
 	double dx = targetXmm * SCALE_0P1MM - xTable[channel];       /* X distance in 0.1 mm units. */
 	double dy = targetYmm * SCALE_0P1MM - transducerY;           /* Y distance in 0.1 mm units. */
 	double dz = targetZmm * SCALE_0P1MM - zTransducer[channel];  /* Z distance in 0.1 mm units. */
 	double distance0p1mm = sqrt(dx * dx + dy * dy + dz * dz);    /* Euclidean distance, same geometry as CalcPhase. */
+
+    // divided by 10 in negwaveKDiv10 bc units in mm, should convert but this is what the original code does
+    // distance0p1mm = conventional r.
+    // negWaveKDiv10 is (-2pi)/(λ*10) = -0.07327329
+	// scaleConstant is range/2pi = 512/2pi = 81.48733
 	int32_t phase = (int32_t)(distance0p1mm * negWaveKDiv10 * scaleConstant); /* Convert distance into phase ticks. */
 
 	if(boardIsBottom(board))                       /* CalcPhase offsets bottom boards by half a cycle. */
