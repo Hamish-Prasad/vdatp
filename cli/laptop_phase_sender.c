@@ -209,6 +209,7 @@ static void printHelp(void)
 	printf("  x/s    decrease/increase X\n");         /* x/s move through X. */
 	printf("  c/d    decrease/increase Y\n");         /* c/d move through Y. */
 	printf("  p      print current position\n");       /* p prints without moving. */
+	printf("  o      circle command\n");			      /* circle command. */
 	printf("  q      quit\n");                         /* q exits program. */
 }
 

@@ -17,7 +17,10 @@
     </configurations>
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="87c3cac7-3cdd-450a-908d-d5923d6aa46d" name="Changes" comment="" />
+    <list default="true" id="87c3cac7-3cdd-450a-908d-d5923d6aa46d" name="Changes" comment="">
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/cli/laptop_phase_sender.c" beforeDir="false" afterPath="$PROJECT_DIR$/cli/laptop_phase_sender.c" afterDir="false" />
+    </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
@@ -124,7 +127,7 @@
     "cidr.known.project.marker": "true",
     "codeWithMe.voiceChat.enabledByDefault": "false",
     "com.intellij.ml.llm.matterhorn.ej.ui.settings.DefaultModelSelectionForGA.v1": "true",
-    "git-widget-placeholder": "test__restructure",
+    "git-widget-placeholder": "test__simplify",
     "ignore.virus.scanning.warn.message": "true",
     "junie.onboarding.icon.badge.shown": "true",
     "kotlin-language-version-configured": "true",
@@ -171,7 +174,7 @@
       <workItem from="1779673822519" duration="93000" />
       <workItem from="1779673929316" duration="1000" />
       <workItem from="1779673968483" duration="5324000" />
-      <workItem from="1779775615944" duration="158000" />
+      <workItem from="1779775615944" duration="438000" />
     </task>
     <servers />
   </component>
