@@ -80,103 +80,57 @@ enum BoardIndex {
  * 0.1 mm units. For example, 450 means 45.0 mm and -50 means -5.0 mm.
  */
 
-static const int16_t xLeftTop[CHANNELS_PER_BOARD] = {
-	450, 450, 450, 450, 450, 450, 450, 450, 450, 450,        /* x = 45 mm column. */
-	350, 350, 350, 350, 350, 350, 350, 350, 350, 350,        /* x = 35 mm column. */
-	250, 250, 250, 250, 250, 250, 250, 250, 250, 250,        /* x = 25 mm column. */
-	150, 150, 150, 150, 150, 150, 150, 150, 150, 150,        /* x = 15 mm column. */
-	50, 50, 50, 50, 50, 50, 50, 50, 50, 50                  /* x = 5 mm column. */
-};
+static const int16_t xCols[5] = {450, 350, 250, 150, 50};
+static const int16_t zRows[10] = {-450, -350, -250, -150, -50, 50, 150, 250, 350, 450};
 
-static const int16_t xRightTop[CHANNELS_PER_BOARD] = {
-	-50, -50, -50, -50, -50, -50, -50, -50, -50, -50,        /* x = -5 mm column. */
-	-150, -150, -150, -150, -150, -150, -150, -150, -150, -150, /* x = -15 mm column. */
-	-250, -250, -250, -250, -250, -250, -250, -250, -250, -250, /* x = -25 mm column. */
-	-350, -350, -350, -350, -350, -350, -350, -350, -350, -350, /* x = -35 mm column. */
-	-450, -450, -450, -450, -450, -450, -450, -450, -450, -450  /* x = -45 mm column. */
-};
-
-static const int16_t xRightBottom[CHANNELS_PER_BOARD] = {
-	-450, -450, -450, -450, -450, -450, -450, -450, -450, -450, /* x = -45 mm column. */
-	-350, -350, -350, -350, -350, -350, -350, -350, -350, -350, /* x = -35 mm column. */
-	-250, -250, -250, -250, -250, -250, -250, -250, -250, -250, /* x = -25 mm column. */
-	-150, -150, -150, -150, -150, -150, -150, -150, -150, -150, /* x = -15 mm column. */
-	-50, -50, -50, -50, -50, -50, -50, -50, -50, -50         /* x = -5 mm column. */
-};
-
-static const int16_t xLeftBottom[CHANNELS_PER_BOARD] = {
-	50, 50, 50, 50, 50, 50, 50, 50, 50, 50,                  /* x = 5 mm column. */
-	150, 150, 150, 150, 150, 150, 150, 150, 150, 150,        /* x = 15 mm column. */
-	250, 250, 250, 250, 250, 250, 250, 250, 250, 250,        /* x = 25 mm column. */
-	350, 350, 350, 350, 350, 350, 350, 350, 350, 350,        /* x = 35 mm column. */
-	450, 450, 450, 450, 450, 450, 450, 450, 450, 450         /* x = 45 mm column. */
-};
-
-static const int16_t zTransducer[CHANNELS_PER_BOARD] = {
-	-450, -350, -250, -150, -50, 50, 150, 250, 350, 450,     /* row 1 z positions. */
-	-450, -350, -250, -150, -50, 50, 150, 250, 350, 450,     /* row 2 z positions. */
-	-450, -350, -250, -150, -50, 50, 150, 250, 350, 450,     /* row 3 z positions. */
-	-450, -350, -250, -150, -50, 50, 150, 250, 350, 450,     /* row 4 z positions. */
-	-450, -350, -250, -150, -50, 50, 150, 250, 350, 450      /* row 5 z positions. */
-};
-
-static const int16_t *boardXTable(enum BoardIndex board)
+static double getTransducerX(enum BoardIndex board, int channel)
 {
-	switch(board) {                               /* Select the copied CalcPhase x-coordinate table. */
-		case BOARD_LEFT_TOP:                     /* top=0, left=1 board. */
-			return xLeftTop;                     /* Return left/top x coordinates. */
-		case BOARD_RIGHT_TOP:                    /* top=0, left=0 board. */
-			return xRightTop;                    /* Return right/top x coordinates. */
-		case BOARD_LEFT_BOTTOM:                  /* top=1, left=1 board. */
-			return xLeftBottom;                  /* Return left/bottom x coordinates. */
-		case BOARD_RIGHT_BOTTOM:                 /* top=1, left=0 board. */
-			return xRightBottom;                 /* Return right/bottom x coordinates. */
-		default:                                 /* Defensive fallback for impossible enum values. */
-			return xLeftTop;                     /* Return a valid table so callers never get NULL. */
+	int col = channel / 10;
+	int16_t x0 = xCols[col];
+	switch(board) {
+		case BOARD_LEFT_TOP:     return x0;
+		case BOARD_RIGHT_TOP:    return -x0;
+		case BOARD_LEFT_BOTTOM:  return x0;
+		case BOARD_RIGHT_BOTTOM: return -x0;
+		default: return 0;
 	}
+}
+
+static double getTransducerZ(int channel)
+{
+	return zRows[channel % 10];
 }
 
 static int boardIsBottom(enum BoardIndex board)
 {
-	return board == BOARD_LEFT_BOTTOM || board == BOARD_RIGHT_BOTTOM; /* Bottom boards get negative Y and phase inversion. */
+	return board == BOARD_LEFT_BOTTOM || board == BOARD_RIGHT_BOTTOM;
 }
 
 static uint16_t normalizePhase(int32_t phase)
 {
-	phase %= (int32_t)HOLO_PHASE_MAX;            /* Wrap the signed phase into one 512-tick period. */
-	if(phase < 0)                                /* C modulo can leave negative remainders. */
-		phase += HOLO_PHASE_MAX;                 /* Shift negative values into the 0..511 range. */
-	return (uint16_t)phase;                      /* Return an unsigned 16-bit value for the protocol frame. */
+	phase %= (int32_t)HOLO_PHASE_MAX;
+	if(phase < 0) phase += HOLO_PHASE_MAX;
+	return (uint16_t)phase;
 }
 
-// Targetmm is the target point
-// board is the FPGA board, no clue about that still
-// channel is the specific transducer (this is used to read the big transducer position arrays)
-// halfHeight0p1mm is the half height from top board to bottom board.
-static uint16_t calculatePhase(double targetXmm, double targetYmm, double targetZmm,
-	enum BoardIndex board, int channel, double halfHeight0p1mm)
-{   
-    // these two seem to be hardcoded into the FPGA boards, should look into for changing them but for now they are constant
-	const double negWaveKDiv10 = -0.07327329;    /* Float value of CalcPhase.sv NEG_WAVE_K_DIV10. */
-	const double scaleConstant = 81.48733;       /* Float value of CalcPhase.sv SCALE_CNST for 512 ticks. */
+static uint16_t calculatePhase(double tx, double ty, double tz, enum BoardIndex board, int ch, double halfHeight)
+{
+	const double K = -0.07327329;    /* NEG_WAVE_K_DIV10 */
+	const double S = 81.48733;       /* SCALE_CNST */
 
-	const int16_t *xTable = boardXTable(board);  /* Pick the board-specific x-coordinate table. */
-	double transducerY = boardIsBottom(board) ? -halfHeight0p1mm : halfHeight0p1mm; /* Match top/bottom yDiff logic. */
-	double dx = targetXmm * SCALE_0P1MM - xTable[channel];       /* X distance in 0.1 mm units. */
-	double dy = targetYmm * SCALE_0P1MM - transducerY;           /* Y distance in 0.1 mm units. */
-	double dz = targetZmm * SCALE_0P1MM - zTransducer[channel];  /* Z distance in 0.1 mm units. */
-	double distance0p1mm = sqrt(dx * dx + dy * dy + dz * dz);    /* Euclidean distance, same geometry as CalcPhase. */
+	double x = getTransducerX(board, ch);
+	double y = boardIsBottom(board) ? -halfHeight : halfHeight;
+	double z = getTransducerZ(ch);
 
-    // divided by 10 in negwaveKDiv10 bc units in mm, should convert but this is what the original code does
-    // distance0p1mm = conventional r.
-    // negWaveKDiv10 is (-2pi)/(λ*10) = -0.07327329
-	// scaleConstant is range/2pi = 512/2pi = 81.48733
-	int32_t phase = (int32_t)(distance0p1mm * negWaveKDiv10 * scaleConstant); /* Convert distance into phase ticks. */
+	double dx = tx * SCALE_0P1MM - x;
+	double dy = ty * SCALE_0P1MM - y;
+	double dz = tz * SCALE_0P1MM - z;
+	double dist = sqrt(dx*dx + dy*dy + dz*dz);
 
-	if(boardIsBottom(board))                       /* CalcPhase offsets bottom boards by half a cycle. */
-		phase += HOLO_PHASE_MAX / 2;               /* Half of 512 ticks is 256 ticks. Offset by "pi" I think*/
+	int32_t phase = (int32_t)(dist * K * S);
+	if(boardIsBottom(board)) phase += HOLO_PHASE_MAX / 2;
 
-	return normalizePhase(phase);                  /* Return the wrapped 0..511 phase. */
+	return normalizePhase(phase);
 }
 
 static void fillPhaseFrame(HoloPhaseFrame *frame, uint16_t frameID,
@@ -258,119 +212,80 @@ static void printHelp(void)
 	printf("  q      quit\n");                         /* q exits program. */
 }
 
+static void handleCircleCommand(socket_t sock, HoloPhaseFrame *frame, uint16_t *frameID, double z, double boardDistanceMm)
+{
+	const double radius = 2.0;
+	const double PI = 3.141592653589793;
+	for(int i = 0; i < 300; i++) {
+		double theta = 2.0 * PI * i / 30.0;
+		double x = radius * cos(theta);
+		double y = radius * sin(theta);
+
+		fillPhaseFrame(frame, (*frameID)++, x, y, z, boardDistanceMm);
+		if(sendAll(sock, frame, sizeof(*frame)) < 0) {
+			printf("circle send failed\n");
+			break;
+		}
+		printf("sent circle frame %u at %.1f, %.1f, %.1f mm\n", frame->frame_id, x, y, z);
+		delay_ms(25);
+	}
+}
+
 int main(int argc, char **argv)
 {
-	if(argc < 2) {                                    /* Require at least the Pi host/IP argument. */
-		printf("usage: %s <pi-ip-or-host> [port] [board-distance-mm]\n", argv[0]); /* Show usage. */
-		return 1;                                    /* Return nonzero for incorrect command line. */
+	if(argc < 2) {
+		printf("usage: %s <pi-ip-or-host> [port] [board-distance-mm]\n", argv[0]);
+		return 1;
 	}
 
-	const char *host = argv[1];                       /* Pi IP address or hostname. */
-	uint16_t port = argc >= 3 ? (uint16_t)atoi(argv[2]) : HOLO_PHASE_TCP_PORT; /* TCP port, default 5656. */
-	double boardDistanceMm = argc >= 4 ? atof(argv[3]) : 135.0; /* Board separation in mm, default old CLI value. */
+	const char *host = argv[1];
+	uint16_t port = argc >= 3 ? (uint16_t)atoi(argv[2]) : HOLO_PHASE_TCP_PORT;
+	double boardDistanceMm = argc >= 4 ? atof(argv[3]) : 135.0;
 
 #ifdef _WIN32
-	WSADATA wsa;                                      /* Windows socket library startup data. */
-	if(WSAStartup(MAKEWORD(2, 2), &wsa) != 0) {       /* Windows requires this before socket calls. */
-		printf("WSAStartup failed\n");                /* Explain startup failure. */
-		return 1;                                    /* Stop because sockets will not work. */
-	}
+	WSADATA wsa;
+	if(WSAStartup(MAKEWORD(2, 2), &wsa) != 0) return 1;
 #endif
 
-	socket_t sock = connectToPi(host, port);          /* Connect to the Raspberry Pi phase bridge. */
-	if(sock == INVALID_SOCKET) {                      /* Check connection failure. */
-		printf("could not connect to %s:%u\n", host, port); /* Tell user what target failed. */
-		return 1;                                    /* Stop because there is nowhere to send frames. */
+	socket_t sock = connectToPi(host, port);
+	if(sock == INVALID_SOCKET) {
+		printf("could not connect to %s:%u\n", host, port);
+		return 1;
 	}
 
-	double x = 0.0;                                   /* Current target X position in millimeters. */
-	double y = 0.0;                                   /* Current target Y position in millimeters. */
-	double z = 0.0;                                   /* Current target Z position in millimeters. */
-	uint16_t frameID = 0;                             /* 16-bit frame counter sent in packet header. */
-	HoloPhaseFrame frame;                             /* Local packet buffer for one 200-phase frame. */
+	double x = 0.0, y = 0.0, z = 0.0;
+	uint16_t frameID = 0;
+	HoloPhaseFrame frame;
 
-	double centre_x = 0;
-	double centre_y = 0;
-	double radius = 2;
-	double theta = 0;
-	double PI = 3.14159265358979323846;
+	printHelp();
+	while(1) {
+		fillPhaseFrame(&frame, frameID++, x, y, z, boardDistanceMm);
+		if(sendAll(sock, &frame, sizeof(frame)) < 0) break;
 
-	printHelp();                                      /* Show controls once at startup. */
-	while(1) {                                        /* Main interactive send loop. */
-		fillPhaseFrame(&frame, frameID++, x, y, z, boardDistanceMm); /* Calculate and pack all 200 phases. */
-		if(sendAll(sock, &frame, sizeof(frame)) < 0) { /* Send the complete packet to the Pi. */
-			printf("send failed\n");                  /* Tell user the TCP send failed. */
-			break;                                    /* Leave the loop and shut down. */
+		printf("sent frame %u at %.1f, %.1f, %.1f mm\n", frame.frame_id, x, y, z);
+		int ch = getchar();
+		if(ch == EOF || ch == 'q') break;
+
+		switch(ch) {
+			case 'h': x = 0.0; y = 0.0; z = 0.0; break;
+			case 'z': z -= MOVE_INC_MM; break;
+			case 'a': z += MOVE_INC_MM; break;
+			case 'x': x -= MOVE_INC_MM; break;
+			case 's': x += MOVE_INC_MM; break;
+			case 'c': y -= MOVE_INC_MM; break;
+			case 'd': y += MOVE_INC_MM; break;
+			case 'p': printf("position %.1f, %.1f, %.1f mm\n", x, y, z); break;
+			case 'o': handleCircleCommand(sock, &frame, &frameID, z, boardDistanceMm); break;
+			case '\n': case '\r': break;
+			default: printHelp(); break;
 		}
 
-		printf("sent frame %u at %.1f, %.1f, %.1f mm\n", frame.frame_id, x, y, z); /* Log sent frame. */
-		int ch = getchar();                          /* Read the next keyboard command. */
-		if(ch == EOF || ch == 'q')                   /* EOF or q means quit. */
-			break;                                   /* Leave the loop. */
-
-		switch(ch) {                                  /* Update target position based on key. */
-			case 'h':                                 /* Home command. */
-				x = 0.0;                              /* Reset X. */
-				y = 0.0;                              /* Reset Y. */
-				z = 0.0;                              /* Reset Z. */
-				break;                                /* Finish command. */
-			case 'z':                                 /* Move negative Z. */
-				z -= MOVE_INC_MM;                     /* Decrease Z by 1 mm. */
-				break;                                /* Finish command. */
-			case 'a':                                 /* Move positive Z. */
-				z += MOVE_INC_MM;                     /* Increase Z by 1 mm. */
-				break;                                /* Finish command. */
-			case 'x':                                 /* Move negative X. */
-				x -= MOVE_INC_MM;                     /* Decrease X by 1 mm. */
-				break;                                /* Finish command. */
-			case 's':                                 /* Move positive X. */
-				x += MOVE_INC_MM;                     /* Increase X by 1 mm. */
-				break;                                /* Finish command. */
-			case 'c':                                 /* Move negative Y. */
-				y -= MOVE_INC_MM;                     /* Decrease Y by 1 mm. */
-				break;                                /* Finish command. */
-			case 'd':                                 /* Move positive Y. */
-				y += MOVE_INC_MM;                     /* Increase Y by 1 mm. */
-				break;                                /* Finish command. */
-			case 'p':                                 /* Print command. */
-				printf("position %.1f, %.1f, %.1f mm\n", x, y, z); /* Show current position. */
-				break;                                /* Finish command. */
-			case 'o': {
-			    for (int i = 0; i < 300; i++) {
-			        theta = 2.0 * PI * i / 30.0;
-
-			        x = centre_x + radius * cos(theta);
-			        y = centre_y + radius * sin(theta);
-
-			        fillPhaseFrame(&frame, frameID++, x, y, z, boardDistanceMm);
-
-			        if (sendAll(sock, &frame, sizeof(frame)) < 0) {
-			            printf("send failed\n");
-			            break;
-			        }
-
-			        printf("sent circle frame %u at %.1f, %.1f, %.1f mm\n",
-			               frame.frame_id, x, y, z);
-			    	delay_ms(25);
-			    }
-
-			    break;
-			}
-			case '\n':                                /* Ignore blank line on Unix terminals. */
-			case '\r':                                /* Ignore blank line on Windows-style terminals. */
-				break;                                /* Finish command. */
-			default:                                  /* Unknown key. */
-				printHelp();                          /* Remind user of available commands. */
-				break;                                /* Finish command. */
-		}
-
-		while(ch != '\n' && ch != '\r' && ch != EOF)  /* Discard the rest of the typed line. */
-			ch = getchar();                           /* Read until line ending. */
+		while(ch != '\n' && ch != '\r' && ch != EOF) ch = getchar();
 	}
 
-	close_socket(sock);                               /* Close the TCP connection. */
+	close_socket(sock);
 #ifdef _WIN32
-	WSACleanup();                                     /* Shut down Windows socket library. */
+	WSACleanup();
 #endif
-	return 0;                                         /* Normal program exit. */
+	return 0;
 }
