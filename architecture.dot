@@ -1,0 +1,88 @@
+digraph VDATP_Architecture {
+    rankdir=LR;
+    node [shape="box", style="filled", fillcolor="lightblue"];
+    compound=true;
+
+    subgraph cluster_laptop {
+        label = "Laptop (Control Unit)";
+        style = dashed;
+        color = blue;
+        
+        subgraph cluster_sender {
+            label = "laptop_phase_sender.c";
+            fillcolor = lightyellow;
+            style = filled;
+
+            input [label="Keyboard Input\n(h, z, a, x, s, c, d, o, p, q)", shape=parallelogram, fillcolor=white];
+            coords [label="Target Coordinates\n(x, y, z)", shape=ellipse, fillcolor=white];
+            packer [label="fillPhaseFrame()\n(HoloPhaseFrame Generator)", fillcolor=white];
+            comm [label="sendAll()\n(TCP Client)", fillcolor=white];
+            circle [label="Circle Animation\nLoop ('o' key)", fillcolor=white, style=dotted];
+
+            input -> coords [label="Update"];
+            coords -> packer [label="Input to Calc"];
+            circle -> packer [label="Auto-gen Path"];
+            packer -> comm [label="HoloPhaseFrame"];
+        }
+    }
+
+    subgraph cluster_pi {
+        label = "Raspberry Pi (Controller)";
+        style = dashed;
+        color = red;
+        
+        subgraph cluster_bridge_sw {
+            label = "cli.c (Bridge Mode)";
+            fillcolor = lightyellow;
+            style = filled;
+
+            bridge_server [label="runPhaseBridge()\n(TCP Server)", fillcolor=white];
+            validator [label="validPhaseFrame()\n(CRC & Sanity Check)", fillcolor=white];
+            spi_sender [label="sendPhaseFrameToFpga()\n(SPI Master)", fillcolor=white];
+
+            bridge_server -> validator [label="Received Frame"];
+            validator -> spi_sender [label="Validated Frame"];
+        }
+        
+        cli [label="cli.c\n(Interactive CLI)", fillcolor=lightyellow];
+        cli -> bridge_server [label="Bridge Mode\n(Command Line)", style=dotted];
+    }
+
+    subgraph cluster_hardware {
+        label = "Hardware Layer";
+        style = dashed;
+        color = green;
+
+        fpga [label="Altera FPGA\n(PWM Generator)", fillcolor=lightorange];
+        
+        subgraph cluster_boards {
+            label = "Transducer Boards";
+            board1 [label="Board 0\n(50 ch)", fillcolor=lightgrey];
+            board2 [label="Board 1\n(50 ch)", fillcolor=lightgrey];
+            board3 [label="Board 2\n(50 ch)", fillcolor=lightgrey];
+            board4 [label="Board 3\n(50 ch)", fillcolor=lightgrey];
+        }
+        
+        fpga -> board1;
+        fpga -> board2;
+        fpga -> board3;
+        fpga -> board4;
+    }
+
+    // Communication links
+    comm -> bridge_server [label="TCP (Port 5656)\n[HoloPhaseFrame]", color=blue, fontcolor=blue];
+    spi_sender -> fpga [label="SPI (500kHz)\n[CMD 0x0B]", color=red, fontcolor=red];
+    cli -> fpga [label="SPI\n(Direct Commands)", color=red, style=dotted];
+
+    // Particle
+    particle [label="Acoustically\nTrapped Particle", shape=circle, fillcolor=white, style="filled,bold"];
+    {board1 board2 board3 board4} -> particle [label="Ultrasonic Waves", color=cyan4, style=dashed];
+
+    // Key/Legend
+    subgraph cluster_legend {
+        label = "Legend";
+        key1 [label="Software Component", fillcolor=lightyellow];
+        key2 [label="Hardware Component", fillcolor=lightgrey];
+        key3 [label="Physical Interaction", style=dashed, shape=none];
+    }
+}
