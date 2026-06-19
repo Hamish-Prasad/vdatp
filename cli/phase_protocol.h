@@ -30,13 +30,7 @@
 #define HOLO_CMD_SET_PHASE_FRAME 0x0Bu     /* FPGA SPI command number for direct phase-frame mode. */
 
 /*
- * Force byte packing so the struct has no compiler-inserted padding bytes.
- * That matters because the laptop sends this struct directly over TCP and the
- * Pi validates the bytes using the same struct definition.
- */
-#pragma pack(push, 1)
-
-typedef struct HoloPhaseFrame {
+ * Force byte packing so the strtypedef struct HoloPhaseFrame {
 	uint32_t magic;                         /* 32-bit marker used to reject non-HOLO packets. */
 	uint16_t version;                       /* 16-bit protocol version, currently HOLO_PHASE_VERSION. */
 	uint16_t frame_id;                      /* 16-bit counter so logs can show which frame was sent. */
@@ -45,6 +39,12 @@ typedef struct HoloPhaseFrame {
 	uint16_t phases[HOLO_PHASE_COUNT];      /* 200 unsigned 16-bit phase values, valid range 0..511. */
 	uint32_t crc32;                         /* 32-bit CRC covering every earlier byte in this struct. */
 } HoloPhaseFrame;                           /* Named packet type used by sender and bridge code. */
+uct has no compiler-inserted padding bytes.
+ * That matters because the laptop sends this struct directly over TCP and the
+ * Pi validates the bytes using the same struct definition.
+ */
+#pragma pack(push, 1)
+
 
 #pragma pack(pop)
 
