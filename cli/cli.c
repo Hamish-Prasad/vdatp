@@ -1055,4 +1055,4 @@ int main(int argc, char const *argv[])
 	
 	closeSPI();
     return 0; 
-} 
+}
