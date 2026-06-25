@@ -30,7 +30,7 @@
     <option name="formatViaClangd" value="false" />
   </component>
   <component name="EmbeddingIndexingInfo">
-    <option name="cachedIndexableFilesCount" value="1167" />
+    <option name="cachedIndexableFilesCount" value="1168" />
     <option name="fileBasedEmbeddingIndicesEnabled" value="true" />
   </component>
   <component name="Git.Settings">
@@ -119,6 +119,7 @@
     "RunOnceActivity.MCP Project settings loaded": "true",
     "RunOnceActivity.RadMigrateCodeStyle": "true",
     "RunOnceActivity.ShowReadmeOnStart": "true",
+    "RunOnceActivity.TerminalTabsStorage.copyFrom.TerminalArrangementManager.252": "true",
     "RunOnceActivity.cidr.known.project.marker": "true",
     "RunOnceActivity.git.unshallow": "true",
     "RunOnceActivity.readMode.enableVisualFormatting": "true",
@@ -175,6 +176,7 @@
       <workItem from="1779673929316" duration="1000" />
       <workItem from="1779673968483" duration="5324000" />
       <workItem from="1779775615944" duration="438000" />
+      <workItem from="1782354663828" duration="726000" />
     </task>
     <servers />
   </component>

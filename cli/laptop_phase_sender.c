@@ -1,32 +1,3 @@
-
-/*
- * laptop_phase_sender_morse_traplets.c
- *
- * Optimised C sender using the solo asynchronous Morse traplet method from
- * standalone_solo_async_morse_traplets_random_hardened.py, while preserving the
- * same HoloPhaseFrame network output as the original laptop_phase_sender.c.
- *
- * What is ported from the Python method:
- *   - one-bead-at-a-time asynchronous traplet schedule
- *   - private x/y/z nodal-gradient trap frames for every particle
- *   - nearby-pair barrier frames with sampled line/tube wall constraints
- *   - min-norm complex solve: G = J J^H, alpha = solve(G+lambda I, y),
- *     u = J^H alpha, then phase-only projection angle(u)
- *   - same default temporal/barrier weights that affect the phase solve
- *
- * What is necessarily adapted for your FPGA protocol:
- *   - the Python method can model independent tone amplitudes/powers; the
- *     current phase_protocol.h packet carries one phase value per transducer.
- *     Positive power balancing scales amplitudes only and therefore does not
- *     change phase angles, so this sender keeps the same phase outputs and
- *     cycles the trap/barrier channels as fast stroboscopic frames.
- *
- * Compile:
- *   gcc -std=gnu99 -O3 laptop_phase_sender.c -o laptop_phase_sender -lm
- * Windows/MinGW:
- *   gcc -std=gnu99 -O3 laptop_phase_sender.c -o laptop_phase_sender.exe -lm -lws2_32
- */
-
 #include <stdio.h>
 #include <stdint.h>
 #include <stdlib.h>
@@ -94,7 +65,8 @@ typedef int socket_t;
 #define MAX_EDGES_PER_BARRIER_FRAME 10
 #define BARRIER_SAMPLES_PER_PAIR 9
 #define MAX_CONSTRAINT_ROWS 360
-#define MAX_SCHEDULE_FRAMES (MAX_PARTICLES * 3 + MAX_BARRIER_FRAMES)
+#define MAX_WIDE_FRAMES_PER_PARTICLE (WIDE_CENTER_REPEATS + 4 + (WIDE_INCLUDE_DIAGONALS ? 4 : 0))
+#define MAX_SCHEDULE_FRAMES (MAX_PARTICLES * (MAX_WIDE_FRAMES_PER_PARTICLE + 3) + MAX_BARRIER_FRAMES)
 
 /* Python defaults ported from the final script. */
 #define DEFAULT_BASE_WAVELENGTH_MM 8.5740       /* Hardware default. Pass 20.0 as argv[4] to match the Python visual model. */
@@ -118,6 +90,17 @@ typedef int socket_t;
 #define SOLVE_REGULARIZATION 1e-10
 #define ROW_EPS 1e-300
 #define GEOM_EPS_M 0.0005263157894736842 /* Python dx/2 for 0.1m/96 grid. */
+
+/* Hardware catch-trap defaults.  The old Morse solver is mathematically neat,
+   but a 1.5 mm EPS/styrofoam bead usually needs a high-power pressure-node
+   catch field first.  This mode is deliberately simpler and stronger: each
+   particle gets classic opposed-array node frames, plus small X/Z dithers that
+   widen the capture basin. */
+#define WIDE_CENTER_REPEATS 4
+#define WIDE_DEFAULT_RADIUS_MM 1.50
+#define WIDE_MAX_RADIUS_MM 4.00
+#define WIDE_RADIUS_STEP_MM 0.50
+#define WIDE_INCLUDE_DIAGONALS 0
 
 static const int16_t xCols[5] = {450, 350, 250, 150, 50};
 static const int16_t zRows[10] = {-450, -350, -250, -150, -50, 50, 150, 250, 350, 450};
@@ -148,8 +131,15 @@ typedef struct {
 
 typedef enum {
     FRAME_TRAP_AXIS = 0,
-    FRAME_BARRIER = 1
+    FRAME_BARRIER = 1,
+    FRAME_WIDE_NODE = 2
 } ScheduleKind;
+
+typedef enum {
+    MODE_WIDE_CATCH = 0,
+    MODE_MORSE_FINE = 1,
+    MODE_HYBRID = 2
+} TrapMode;
 
 typedef struct {
     ScheduleKind kind;
@@ -175,7 +165,9 @@ typedef struct {
 static Vec3 g_emitters[NUM_EMITTERS];
 static double g_base_wavelength_m = DEFAULT_BASE_WAVELENGTH_MM / 1000.0;
 static double g_half_height_m = 0.0675;
-static double g_frame_delay_ms = 3.0;
+static double g_frame_delay_ms = 2.0;
+static double g_wide_radius_m = WIDE_DEFAULT_RADIUS_MM / 1000.0;
+static TrapMode g_trap_mode = MODE_WIDE_CATCH;
 
 /* Solver work buffers are static to avoid stack churn and malloc/free per solve. */
 static double complex g_J[MAX_CONSTRAINT_ROWS][NUM_EMITTERS];
@@ -218,6 +210,16 @@ static uint16_t phaseFromAngle(double angle)
 {
     int32_t tick = (int32_t)llround(angle * ((double)HOLO_PHASE_MAX) / (2.0 * M_PI));
     return normalizePhaseInt(tick);
+}
+
+static const char *trapModeName(TrapMode mode)
+{
+    switch(mode) {
+        case MODE_WIDE_CATCH: return "wide-catch geometric node";
+        case MODE_MORSE_FINE: return "Morse fine solver";
+        case MODE_HYBRID: return "hybrid wide+Morse";
+        default: return "unknown";
+    }
 }
 
 static double dot3(Vec3 a, Vec3 b) { return a.x*b.x + a.y*b.y + a.z*b.z; }
@@ -470,6 +472,74 @@ static int solveMinNormPhase(int rows, uint16_t out_phases[NUM_EMITTERS])
 }
 
 /* ------------------------------------------------------------------------- */
+/* Wide geometric pressure-node catch frames                                  */
+/* ------------------------------------------------------------------------- */
+
+static void buildGeometricNodePhases(Vec3 target, uint16_t out_phases[NUM_EMITTERS])
+{
+    /* This is the original hardware phase convention, rewritten in metres:
+       drive phase = -k*r, with a deliberate pi flip on the bottom array.
+       At the target, top and bottom contributions cancel pressure, producing
+       the classic strong standing-wave pressure node used to catch EPS beads. */
+    const double k = 2.0 * M_PI / g_base_wavelength_m;
+    for(int board = 0; board < NUM_BOARDS; ++board) {
+        for(int ch = 0; ch < CHANNELS_PER_BOARD; ++ch) {
+            int idx = board * CHANNELS_PER_BOARD + ch;
+            Vec3 d = sub3(target, g_emitters[idx]);
+            double r = norm3(d);
+            double angle = -k * r;
+            if(boardIsBottom((enum BoardIndex)board)) angle += M_PI;
+            out_phases[idx] = phaseFromAngle(angle);
+        }
+    }
+}
+
+static int appendWideNodeFrame(PhaseSchedule *sched, Vec3 target, int owner, const char *label_suffix)
+{
+    if(sched->count >= MAX_SCHEDULE_FRAMES) return -1;
+    ScheduleFrame *fr = &sched->frame[sched->count];
+    memset(fr, 0, sizeof(*fr));
+    fr->kind = FRAME_WIDE_NODE;
+    fr->owner = owner;
+    fr->axis = -1;
+    snprintf(fr->label, sizeof(fr->label), "W%d %s", owner, label_suffix ? label_suffix : "node");
+    buildGeometricNodePhases(target, fr->phases);
+    sched->count++;
+    return 0;
+}
+
+static int appendWideCatchFramesForParticle(PhaseSchedule *sched, const ParticleState *ps, int owner)
+{
+    Vec3 p = ps->p[owner];
+    for(int r = 0; r < WIDE_CENTER_REPEATS; ++r) {
+        if(appendWideNodeFrame(sched, p, owner, "centre") != 0) return -1;
+    }
+
+    if(g_wide_radius_m > 1e-9) {
+        Vec3 offsets[8];
+        int n = 0;
+        offsets[n++] = (Vec3){ g_wide_radius_m, 0.0, 0.0};
+        offsets[n++] = (Vec3){-g_wide_radius_m, 0.0, 0.0};
+        offsets[n++] = (Vec3){0.0, 0.0,  g_wide_radius_m};
+        offsets[n++] = (Vec3){0.0, 0.0, -g_wide_radius_m};
+#if WIDE_INCLUDE_DIAGONALS
+        const double q = 0.7071067811865475 * WIDE_DEFAULT_RADIUS_MM / 1000.0;
+        offsets[n++] = (Vec3){ q, 0.0, q};
+        offsets[n++] = (Vec3){-q, 0.0, q};
+        offsets[n++] = (Vec3){ q, 0.0,-q};
+        offsets[n++] = (Vec3){-q, 0.0,-q};
+#endif
+        for(int i = 0; i < n; ++i) {
+            Vec3 q = add3(p, offsets[i]);
+            char buf[32];
+            snprintf(buf, sizeof(buf), "wide%+0.1f,%+0.1f", offsets[i].x * 1000.0, offsets[i].z * 1000.0);
+            if(appendWideNodeFrame(sched, q, owner, buf) != 0) return -1;
+        }
+    }
+    return 0;
+}
+
+/* ------------------------------------------------------------------------- */
 /* Barrier selection / edge colouring from the Python final method            */
 /* ------------------------------------------------------------------------- */
 
@@ -602,16 +672,25 @@ static int rebuildSchedule(PhaseSchedule *sched, const ParticleState *ps)
     int pair_count = selectBarrierPairs(ps, pairs);
     int bframe_count = greedyEdgeColors(pairs, pair_count, bframes);
 
-    printf("rebuilding Morse traplet schedule: particles=%d, barrier_pairs=%d, barrier_frames=%d, wavelength=%.4f mm\n",
-           ps->count, pair_count, bframe_count, g_base_wavelength_m * 1000.0);
+    printf("rebuilding phase schedule: mode=%s particles=%d barrier_pairs=%d barrier_frames=%d wavelength=%.4f mm wide_radius=%.2f mm\n",
+           trapModeName(g_trap_mode), ps->count, pair_count, bframe_count,
+           g_base_wavelength_m * 1000.0, g_wide_radius_m * 1000.0);
 
-    for(int owner = 0; owner < ps->count; ++owner) {
-        for(int axis = 0; axis < 3; ++axis) {
-            if(appendTrapAxisFrame(sched, ps, owner, axis) != 0) return -1;
+    if(g_trap_mode == MODE_WIDE_CATCH || g_trap_mode == MODE_HYBRID) {
+        for(int owner = 0; owner < ps->count; ++owner) {
+            if(appendWideCatchFramesForParticle(sched, ps, owner) != 0) return -1;
         }
     }
-    for(int b = 0; b < bframe_count; ++b) {
-        if(appendBarrierFrame(sched, ps, &bframes[b], b) != 0) return -1;
+
+    if(g_trap_mode == MODE_MORSE_FINE || g_trap_mode == MODE_HYBRID) {
+        for(int owner = 0; owner < ps->count; ++owner) {
+            for(int axis = 0; axis < 3; ++axis) {
+                if(appendTrapAxisFrame(sched, ps, owner, axis) != 0) return -1;
+            }
+        }
+        for(int b = 0; b < bframe_count; ++b) {
+            if(appendBarrierFrame(sched, ps, &bframes[b], b) != 0) return -1;
+        }
     }
 
     printf("schedule ready: %d phase frames\n", sched->count);
@@ -739,13 +818,16 @@ static void printHelp(void)
     printf("  h/H    home active / create the 10-particle final lattice\n");
     printf("  p      print particles and current schedule frame\n");
     printf("  [/]    slow down / speed up stroboscopic frame delay\n");
+    printf("  w/e    widen / shrink the catch trap radius\n");
+    printf("  m      cycle mode: wide catch -> Morse fine -> hybrid\n");
     printf("  ?      help\n");
     printf("  q      quit\n");
 }
 
 static void printParticles(const ParticleState *ps, const PhaseSchedule *sched)
 {
-    printf("particles: count=%d active=%d schedule=%d frames delay=%.2f ms\n", ps->count, ps->active + 1, sched->count, g_frame_delay_ms);
+    printf("particles: count=%d active=%d schedule=%d frames delay=%.2f ms mode=%s wide_radius=%.2f mm\n",
+           ps->count, ps->active + 1, sched->count, g_frame_delay_ms, trapModeName(g_trap_mode), g_wide_radius_m * 1000.0);
     for(int i = 0; i < ps->count; ++i) {
         printf("  %c%2d: %+7.2f %+7.2f %+7.2f mm\n", i == ps->active ? '*' : ' ', i + 1,
                ps->p[i].x * 1000.0, ps->p[i].y * 1000.0, ps->p[i].z * 1000.0);
@@ -819,6 +901,23 @@ static int processKey(int ch, ParticleState *ps, PhaseSchedule *sched)
             break;
         case '[': g_frame_delay_ms += 1.0; if(g_frame_delay_ms > 50.0) g_frame_delay_ms = 50.0; printf("delay %.2f ms\n", g_frame_delay_ms); break;
         case ']': g_frame_delay_ms -= 1.0; if(g_frame_delay_ms < 1.0) g_frame_delay_ms = 1.0; printf("delay %.2f ms\n", g_frame_delay_ms); break;
+        case 'w':
+            g_wide_radius_m += WIDE_RADIUS_STEP_MM / 1000.0;
+            if(g_wide_radius_m > WIDE_MAX_RADIUS_MM / 1000.0) g_wide_radius_m = WIDE_MAX_RADIUS_MM / 1000.0;
+            printf("wide catch radius %.2f mm\n", g_wide_radius_m * 1000.0);
+            dirty = 1;
+            break;
+        case 'e':
+            g_wide_radius_m -= WIDE_RADIUS_STEP_MM / 1000.0;
+            if(g_wide_radius_m < 0.0) g_wide_radius_m = 0.0;
+            printf("wide catch radius %.2f mm\n", g_wide_radius_m * 1000.0);
+            dirty = 1;
+            break;
+        case 'm':
+            g_trap_mode = (TrapMode)(((int)g_trap_mode + 1) % 3);
+            printf("trap mode now %s\n", trapModeName(g_trap_mode));
+            dirty = 1;
+            break;
         case '\n': case '\r': break;
         default: break;
     }
@@ -835,6 +934,7 @@ int main(int argc, char **argv)
     if(argc < 2) {
         printf("usage: %s <pi-ip-or-host> [port] [board-distance-mm] [synthesis-wavelength-mm]\n", argv[0]);
         printf("  default synthesis wavelength is %.4f mm for the real 40 kHz hardware geometry.\n", DEFAULT_BASE_WAVELENGTH_MM);
+        printf("  default mode is wide-catch geometric node, which is the practical first test for a 1.5 mm EPS bead.\n");
         printf("  pass 20.0 as the 4th argument to reproduce the Python visualisation's wavelength.\n");
         return 1;
     }
