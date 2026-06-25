@@ -29,8 +29,7 @@
     <option name="formatViaClangd" value="false" />
   </component>
   <component name="EmbeddingIndexingInfo">
-    <option name="cachedIndexableFilesCount" value="1167" />
-    <option name="fileBasedEmbeddingIndicesEnabled" value="true" />
+    <option name="cachedIndexableFilesCount" value="1168" />
   </component>
   <component name="Git.Settings">
     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
@@ -44,23 +43,23 @@
   </component>
   <component name="NextEditCompletionFeaturesState">
     <decayedCancelled>
-      <entry key="MS100" value="1.5714107097796073" />
-      <entry key="MS500" value="4.7869580247070935" />
-      <entry key="S2" value="9.769680375380165" />
-      <entry key="S5" value="12.022999928359473" />
-      <entry key="S10" value="12.956925079700023" />
-      <entry key="S30" value="14.267453612816979" />
-      <entry key="S60" value="16.888546688685985" />
-      <entry key="M2" value="20.69532372599945" />
-      <entry key="M5" value="24.885773958523522" />
-      <entry key="M10" value="26.78151752395878" />
-      <entry key="M15" value="27.48259234996815" />
-      <entry key="M30" value="28.221403576670323" />
-      <entry key="H1" value="28.605596312551867" />
-      <entry key="H2" value="28.801504861380884" />
-      <entry key="H4" value="28.90042696666968" />
-      <entry key="D1" value="28.983359108294625" />
-      <entry key="W1" value="28.997621615867136" />
+      <entry key="MS100" value="1.2573957786059482" />
+      <entry key="MS500" value="4.333665047146403" />
+      <entry key="S2" value="9.924747567852279" />
+      <entry key="S5" value="12.595756279566974" />
+      <entry key="S10" value="13.724627119124902" />
+      <entry key="S30" value="15.181674339957386" />
+      <entry key="S60" value="17.837701200550494" />
+      <entry key="M2" value="21.664147063787382" />
+      <entry key="M5" value="25.87077141400254" />
+      <entry key="M10" value="27.773443604227303" />
+      <entry key="M15" value="28.477068555556578" />
+      <entry key="M30" value="29.21856728918866" />
+      <entry key="H1" value="29.60415882675994" />
+      <entry key="H2" value="29.800781187004123" />
+      <entry key="H4" value="29.900063884428818" />
+      <entry key="D1" value="29.983298420621097" />
+      <entry key="W1" value="29.99761294192542" />
     </decayedCancelled>
     <decayedSelected>
       <entry key="MS100" value="0.0" />
@@ -82,23 +81,23 @@
       <entry key="W1" value="0.0" />
     </decayedSelected>
     <decayedShown>
-      <entry key="MS100" value="1.4801110408753406" />
-      <entry key="MS500" value="4.733482757791214" />
-      <entry key="S2" value="9.74311865267491" />
-      <entry key="S5" value="12.009988062927087" />
-      <entry key="S10" value="12.949921302966578" />
-      <entry key="S30" value="14.264409459264327" />
-      <entry key="S60" value="16.88584695239386" />
-      <entry key="M2" value="20.693079250854485" />
-      <entry key="M5" value="24.884477014226476" />
-      <entry key="M10" value="26.780778313618676" />
-      <entry key="M15" value="27.482077138005977" />
-      <entry key="M30" value="28.221134156374948" />
-      <entry key="H1" value="28.605458528923332" />
-      <entry key="H2" value="28.801435185737308" />
-      <entry key="H4" value="28.900391930927963" />
-      <entry key="D1" value="28.983353241347462" />
-      <entry key="W1" value="28.997620777052305" />
+      <entry key="MS100" value="0.40624014359991817" />
+      <entry key="MS500" value="3.9928303046347815" />
+      <entry key="S2" value="9.813997836431565" />
+      <entry key="S5" value="12.547671269791227" />
+      <entry key="S10" value="13.699820430349849" />
+      <entry key="S30" value="15.17263625434775" />
+      <entry key="S60" value="17.831998943102427" />
+      <entry key="M2" value="21.66039951058573" />
+      <entry key="M5" value="25.86887239532029" />
+      <entry key="M10" value="27.77240314316833" />
+      <entry key="M15" value="28.476352454667467" />
+      <entry key="M30" value="29.218197394679784" />
+      <entry key="H1" value="29.603970798147373" />
+      <entry key="H2" value="29.800686386841612" />
+      <entry key="H4" value="29.90001628591353" />
+      <entry key="D1" value="29.9832904598063" />
+      <entry key="W1" value="29.99761180398487" />
     </decayedShown>
   </component>
   <component name="ProblemsViewState">
@@ -130,7 +129,7 @@
     "cidr.known.project.marker": "true",
     "codeWithMe.voiceChat.enabledByDefault": "false",
     "com.intellij.ml.llm.matterhorn.ej.ui.settings.DefaultModelSelectionForGA.v1": "true",
-    "git-widget-placeholder": "test__restructure",
+    "git-widget-placeholder": "bazooga",
     "ignore.virus.scanning.warn.message": "true",
     "junie.onboarding.icon.badge.shown": "true",
     "kotlin-language-version-configured": "true",
@@ -177,6 +176,7 @@
       <workItem from="1779673929316" duration="1000" />
       <workItem from="1779673968483" duration="5324000" />
       <workItem from="1779974526024" duration="323000" />
+      <workItem from="1782351392418" duration="855000" />
     </task>
     <servers />
   </component>

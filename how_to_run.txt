@@ -23,6 +23,9 @@ On the Laptop: (not the pi, this is locally or whatever)
 cd cli
 gcc laptop_phase_sender.c -o laptop_phase_sender -lm -lws2_32
 ./laptop_phase_sender.exe 169.254.179.117 5656 135
+
+NEW COMMAND:
+gcc -std=gnu99 -O3 laptop_phase_sender.c -o laptop_phase_sender.exe -lm -lws2_32
 ```
 
 if needed to get ip:
