@@ -1,0 +1,35 @@
+[01:09:44] start: methods=('replicate-wgs', 'shadow-nullspace', 'curvature-boost'), grid=(49, 31, 41), points=62,279, block=2048, max_seconds=120.0
+[01:09:44] replicate-wgs: synthesizing phases
+[01:09:44] replicate-wgs: evaluating 62,279 grid points in blocks of 2048
+[01:09:44] replicate-wgs: 2,048/62,279 points (3.3%), elapsed 0.3s
+[01:09:45] replicate-wgs: 12,288/62,279 points (19.7%), elapsed 1.5s
+[01:09:46] replicate-wgs: 22,528/62,279 points (36.2%), elapsed 2.6s
+[01:09:47] replicate-wgs: 32,768/62,279 points (52.6%), elapsed 3.7s
+[01:09:48] replicate-wgs: 43,008/62,279 points (69.1%), elapsed 4.9s
+[01:09:50] replicate-wgs: 53,248/62,279 points (85.5%), elapsed 6.0s
+[01:09:51] replicate-wgs: 62,279/62,279 points (100.0%), elapsed 7.0s
+[01:09:51] replicate-wgs: display percentile 88.0, cutoff 0.89777
+[01:09:51] replicate-wgs: wrote replicate_wgs_pyvista_volume.npz and metrics
+[01:09:52] shadow-nullspace: synthesizing phases
+[01:09:52] shadow-nullspace: evaluating 62,279 grid points in blocks of 2048
+[01:09:52] shadow-nullspace: 2,048/62,279 points (3.3%), elapsed 8.6s
+[01:09:53] shadow-nullspace: 12,288/62,279 points (19.7%), elapsed 9.8s
+[01:09:54] shadow-nullspace: 22,528/62,279 points (36.2%), elapsed 10.8s
+[01:09:56] shadow-nullspace: 32,768/62,279 points (52.6%), elapsed 12.0s
+[01:09:57] shadow-nullspace: 43,008/62,279 points (69.1%), elapsed 13.1s
+[01:09:58] shadow-nullspace: 53,248/62,279 points (85.5%), elapsed 14.2s
+[01:09:59] shadow-nullspace: 62,279/62,279 points (100.0%), elapsed 15.2s
+[01:09:59] shadow-nullspace: display percentile 88.0, cutoff 0.80543
+[01:09:59] shadow-nullspace: wrote shadow_nullspace_pyvista_volume.npz and metrics
+[01:09:59] curvature-boost: synthesizing phases
+[01:09:59] curvature-boost: evaluating 62,279 grid points in blocks of 2048
+[01:10:00] curvature-boost: 2,048/62,279 points (3.3%), elapsed 16.1s
+[01:10:01] curvature-boost: 12,288/62,279 points (19.7%), elapsed 17.2s
+[01:10:02] curvature-boost: 22,528/62,279 points (36.2%), elapsed 18.3s
+[01:10:03] curvature-boost: 32,768/62,279 points (52.6%), elapsed 19.4s
+[01:10:04] curvature-boost: 43,008/62,279 points (69.1%), elapsed 20.5s
+[01:10:05] curvature-boost: 53,248/62,279 points (85.5%), elapsed 21.5s
+[01:10:06] curvature-boost: 62,279/62,279 points (100.0%), elapsed 22.5s
+[01:10:06] curvature-boost: display percentile 88.0, cutoff 0.81568
+[01:10:06] curvature-boost: wrote curvature_boost_pyvista_volume.npz and metrics
+[01:10:07] done in 23.1s

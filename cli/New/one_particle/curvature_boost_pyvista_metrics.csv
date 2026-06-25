@@ -1,0 +1,2 @@
+method,trap,x_mm,y_mm,z_mm,pressure2,grad2,gorkov_like,curvature_score
+curvature-boost,0,0.0,0.0,0.0,0.03498401931374062,1.6071504031652666,-0.8971632145221139,3.8760129352474713
