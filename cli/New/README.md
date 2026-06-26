@@ -34,14 +34,14 @@ Linux/macOS:
 gcc -O2 -std=c99 -Wall -Wextra acoustic_solver.c validate_traps.c -lm -o validate_traps
 gcc -O2 -std=c99 -Wall -Wextra acoustic_solver.c laptop_phase_sender_new.c -lm -o laptop_phase_sender_new
 ```
-
+gcc -O2 -std=c99 -Wall -Wextra acoustic_solver.c laptop_phase_sender_new.c -lws2_32 -lm -o laptop_phase_sender_new.exe
 ## Run
 
 ```sh
 ./validate_traps
 python quick_validate.py
 python pyvista_visualize_vdatp.py --method all --grid 49,31,41 --max-seconds 120 --screenshot
-./laptop_phase_sender_new 169.254.181.37 5656 135 1
+./laptop_phase_sender_new 169.254.181.37 5656 135
 ```
 
 Inside the sender, `1` selects the literature-style twin-trap solver, `2`
