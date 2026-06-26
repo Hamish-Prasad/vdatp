@@ -45,23 +45,23 @@
   </component>
   <component name="NextEditCompletionFeaturesState">
     <decayedCancelled>
-      <entry key="MS100" value="1.0" />
-      <entry key="MS500" value="1.0" />
-      <entry key="S2" value="1.0" />
-      <entry key="S5" value="1.0000000000758205" />
-      <entry key="S10" value="1.000010033409669" />
-      <entry key="S30" value="1.0529822885556783" />
-      <entry key="S60" value="1.6099972123959532" />
-      <entry key="M2" value="4.217030361957148" />
-      <entry key="M5" value="14.250073762572699" />
-      <entry key="M10" value="23.938763216019474" />
-      <entry key="M15" value="28.746782771573315" />
-      <entry key="M30" value="34.67536829164745" />
-      <entry key="H1" value="38.1434250829187" />
-      <entry key="H2" value="40.02042758791895" />
-      <entry key="H4" value="40.99703545773473" />
-      <entry key="D1" value="41.83097777937168" />
-      <entry key="W1" value="41.97580796985634" />
+      <entry key="MS100" value="1.0000000000069462" />
+      <entry key="MS500" value="1.0078158804922557" />
+      <entry key="S2" value="1.6399121737370805" />
+      <entry key="S5" value="2.9593853327765616" />
+      <entry key="S10" value="4.051501647972002" />
+      <entry key="S30" value="5.255205274169097" />
+      <entry key="S60" value="6.1172007400023025" />
+      <entry key="M2" value="8.786784567167272" />
+      <entry key="M5" value="18.796491481239336" />
+      <entry key="M10" value="28.575134709935487" />
+      <entry key="M15" value="33.458940052899706" />
+      <entry key="M30" value="39.50338770312871" />
+      <entry key="H1" value="43.04921588070749" />
+      <entry key="H2" value="44.971097181328176" />
+      <entry key="H4" value="45.97179099022636" />
+      <entry key="D1" value="46.826687908317055" />
+      <entry key="W1" value="46.97519308506126" />
     </decayedCancelled>
     <decayedSelected>
       <entry key="MS100" value="0.0" />
@@ -83,23 +83,23 @@
       <entry key="W1" value="0.0" />
     </decayedSelected>
     <decayedShown>
-      <entry key="MS100" value="0.8888426811665702" />
-      <entry key="MS500" value="0.9767085289622274" />
-      <entry key="S2" value="0.9941255712940557" />
-      <entry key="S5" value="0.997646074499952" />
-      <entry key="S10" value="0.9988323683616088" />
-      <entry key="S30" value="1.0525753643277704" />
-      <entry key="S60" value="1.6097059387557642" />
-      <entry key="M2" value="4.216542603193527" />
-      <entry key="M5" value="14.24917823379773" />
-      <entry key="M10" value="23.937947845755254" />
-      <entry key="M15" value="28.746114645581176" />
-      <entry key="M30" value="34.674956566363555" />
-      <entry key="H1" value="38.14319632575591" />
-      <entry key="H2" value="40.02030699014428" />
-      <entry key="H4" value="40.99697353788394" />
-      <entry key="D1" value="41.83096722843943" />
-      <entry key="W1" value="41.975806456846804" />
+      <entry key="MS100" value="0.8585654364436744" />
+      <entry key="MS500" value="0.9774764238145294" />
+      <entry key="S2" value="1.6189317940139618" />
+      <entry key="S5" value="2.9198302488955266" />
+      <entry key="S10" value="4.012152172413837" />
+      <entry key="S30" value="5.233869011400281" />
+      <entry key="S60" value="6.105046881181529" />
+      <entry key="M2" value="8.77999729439477" />
+      <entry key="M5" value="18.792991057317668" />
+      <entry key="M10" value="28.572999317739093" />
+      <entry key="M15" value="33.45738684744149" />
+      <entry key="M30" value="39.502530383774044" />
+      <entry key="H1" value="43.04876343210497" />
+      <entry key="H2" value="44.97086449431867" />
+      <entry key="H4" value="45.97167296213356" />
+      <entry key="D1" value="46.826667996928485" />
+      <entry key="W1" value="46.97519023461794" />
     </decayedShown>
   </component>
   <component name="ProjectColorInfo">{
@@ -128,7 +128,7 @@
     "cidr.known.project.marker": "true",
     "codeWithMe.voiceChat.enabledByDefault": "false",
     "com.intellij.ml.llm.matterhorn.ej.ui.settings.DefaultModelSelectionForGA.v1": "true",
-    "git-widget-placeholder": "test__simplify",
+    "git-widget-placeholder": "e",
     "ignore.virus.scanning.warn.message": "true",
     "junie.onboarding.icon.badge.shown": "true",
     "kotlin-language-version-configured": "true",
@@ -158,6 +158,12 @@
       <option name="filePath" />
       <method v="2" />
     </configuration>
+    <configuration name="laptop_phase_sender_new.c" type="CppFileRunConfiguration" factoryName="CppFileRunConfiguration" REDIRECT_INPUT="false" ELEVATE="false" USE_EXTERNAL_CONSOLE="false" EMULATE_TERMINAL="false" PASS_PARENT_ENVS_2="true" PROJECT_NAME="vdatp" TARGET_NAME="laptop_phase_sender_new.c" CONFIG_NAME="laptop_phase_sender_new.c">
+      <option name="sourceFile" value="cli\New\laptop_phase_sender_new.c" />
+      <method v="2">
+        <option name="com.jetbrains.cidr.cpp.runfile.CppFileBuildBeforeRunTaskProvider$BasicBuildBeforeRunTask" enabled="true" />
+      </method>
+    </configuration>
   </component>
   <component name="SharedIndexes">
     <attachedChunks>
@@ -183,6 +189,7 @@
       <workItem from="1779775615944" duration="438000" />
       <workItem from="1782354663828" duration="726000" />
       <workItem from="1782356299844" duration="1556000" />
+      <workItem from="1782431801836" duration="1723000" />
     </task>
     <servers />
   </component>

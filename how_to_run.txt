@@ -22,14 +22,14 @@ On the Laptop: (not the pi, this is locally or whatever)
 ```
 cd cli
 gcc laptop_phase_sender.c -o laptop_phase_sender -lm -lws2_32
-./laptop_phase_sender.exe 169.254.126.242 5656 135
+./laptop_phase_sender.exe 169.254.181.37 5656 135
 
 NEW COMMAND:
 gcc -std=gnu99 -O3 laptop_phase_sender.c -o laptop_phase_sender.exe -lm -lws2_32
 
 POWER ANCHOR COMMANDS:
 gcc -std=gnu99 -O3 -Wall -Wextra laptop_phase_sender_power_anchor.c -o sender.exe -lm -lws2_32
-laptop_phase_sender_power_anchor.exe 169.254.126.242 5656 135
+laptop_phase_sender_power_anchor.exe 169.254.181.37 5656 135
 
 4MM EPS COMMANDS:
 gcc -std=gnu99 -O3 -Wall -Wextra laptop_phase_sender_4mm_eps_anchor.c -o sender.exe -lm -lws2_32

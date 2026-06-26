@@ -29,19 +29,43 @@ static socket_t connect_to_pi(const char *host, uint16_t port)
 {
 	socket_t sock = socket(AF_INET, SOCK_STREAM, 0);
 	if(sock == INVALID_SOCKET) return INVALID_SOCKET;
+
 	struct sockaddr_in addr;
 	memset(&addr, 0, sizeof(addr));
 	addr.sin_family = AF_INET;
 	addr.sin_port = htons(port);
-	if(inet_pton(AF_INET, host, &addr.sin_addr) != 1) {
+
+#ifdef _WIN32
+	/*
+	 * Older MinGW often does not expose/link inet_pton correctly.
+	 * inet_addr works fine for IPv4 dotted addresses like 192.168.1.50.
+	 * If that fails, fall back to gethostbyname for hostnames.
+	 */
+	addr.sin_addr.s_addr = inet_addr(host);
+	if(addr.sin_addr.s_addr == INADDR_NONE) {
 		struct hostent *he = gethostbyname(host);
-		if(!he) { close_socket(sock); return INVALID_SOCKET; }
+		if(!he) {
+			close_socket(sock);
+			return INVALID_SOCKET;
+		}
 		memcpy(&addr.sin_addr, he->h_addr_list[0], he->h_length);
 	}
+#else
+	if(inet_pton(AF_INET, host, &addr.sin_addr) != 1) {
+		struct hostent *he = gethostbyname(host);
+		if(!he) {
+			close_socket(sock);
+			return INVALID_SOCKET;
+		}
+		memcpy(&addr.sin_addr, he->h_addr_list[0], he->h_length);
+	}
+#endif
+
 	if(connect(sock, (struct sockaddr *)&addr, sizeof(addr)) == SOCKET_ERROR) {
 		close_socket(sock);
 		return INVALID_SOCKET;
 	}
+
 	return sock;
 }
 
