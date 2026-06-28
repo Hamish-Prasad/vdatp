@@ -1,0 +1,26 @@
+{
+  "case": "circle",
+  "interpretation": "closed-loop vector-to-local-hologram policy; arrows are not simultaneous",
+  "lookahead_mm": 2.0,
+  "mean_direction_cosine": 0.7752109304659445,
+  "minimum_direction_cosine": 0.46026624150408724,
+  "inward_fraction": 1.0,
+  "strong_alignment_fraction_cos_gt_0_8": 0.4684147794994041,
+  "trajectory_capture_fraction_1p2mm": 1.0,
+  "trajectory_final_distances_mm": [
+    1.1357695010268172,
+    0.6487273121329309,
+    1.1371620073757935,
+    0.6497703716112442,
+    0.8528033701434974,
+    0.852803484849931,
+    0.9000000000000092,
+    0.9000000000000159
+  ],
+  "estimated_force_median_uN": 284.87203309592553,
+  "estimated_force_p10_uN": 76.34726341405994,
+  "estimated_weight_uN": 3.465956204586713,
+  "estimated_median_force_to_weight": 82.1914693321678,
+  "pressure_calibration_assumption_rms_pa": 3000.0,
+  "calibration_warning": "Absolute force scales with pressure squared and requires measurement on this hardware."
+}

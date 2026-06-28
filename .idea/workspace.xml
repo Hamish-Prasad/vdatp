@@ -18,8 +18,53 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="87c3cac7-3cdd-450a-908d-d5923d6aa46d" name="Changes" comment="">
-      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/cli/laptop_phase_sender.c" beforeDir="false" afterPath="$PROJECT_DIR$/cli/laptop_phase_sender.c" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/cli/New/README.md" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/cli/New/acoustic_solver.c" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/cli/New/acoustic_solver.h" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/cli/New/curvature_boost_3d.3d_metrics.json" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/cli/New/curvature_boost_3d.html" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/cli/New/curvature_boost_gorkov_xz.ppm" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/cli/New/curvature_boost_gorkov_xz.svg" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/cli/New/curvature_boost_metrics.csv" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/cli/New/curvature_boost_pyvista_metrics.csv" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/cli/New/curvature_boost_pyvista_volume.npz" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/cli/New/curvature_boost_pyvista_volume.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/cli/New/laptop_phase_sender.exe" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/cli/New/laptop_phase_sender_hirayama_twin_3p5mm_default-1.c" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/cli/New/laptop_phase_sender_new.c" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/cli/New/laptop_phase_sender_new.exe" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/cli/New/methods_original.md" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/cli/New/methods_replicate.md" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/cli/New/one_particle/curvature_boost_pyvista_metrics.csv" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/cli/New/one_particle/curvature_boost_pyvista_volume.npz" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/cli/New/one_particle/curvature_boost_pyvista_volume.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/cli/New/one_particle/pyvista_one_particle.log" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/cli/New/ppm_to_svg.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/cli/New/pyvista_default.log" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/cli/New/pyvista_diag.log" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/cli/New/pyvista_screenshot.log" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/cli/New/pyvista_screenshot_sparse.log" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/cli/New/pyvista_visualize_vdatp.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/cli/New/quick_validate.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/cli/New/replicate_wgs_3d.3d_metrics.json" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/cli/New/replicate_wgs_3d.html" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/cli/New/replicate_wgs_gorkov_xz.ppm" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/cli/New/replicate_wgs_gorkov_xz.svg" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/cli/New/replicate_wgs_metrics.csv" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/cli/New/replicate_wgs_pyvista_metrics.csv" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/cli/New/replicate_wgs_pyvista_volume.npz" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/cli/New/replicate_wgs_pyvista_volume.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/cli/New/results_3d.md" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/cli/New/shadow_nullspace_3d.3d_metrics.json" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/cli/New/shadow_nullspace_3d.html" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/cli/New/shadow_nullspace_gorkov_xz.ppm" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/cli/New/shadow_nullspace_gorkov_xz.svg" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/cli/New/shadow_nullspace_metrics.csv" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/cli/New/shadow_nullspace_pyvista_metrics.csv" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/cli/New/shadow_nullspace_pyvista_volume.npz" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/cli/New/shadow_nullspace_pyvista_volume.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/cli/New/validate_traps.c" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/cli/New/visualize_3d.py" beforeDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -30,7 +75,7 @@
     <option name="formatViaClangd" value="false" />
   </component>
   <component name="EmbeddingIndexingInfo">
-    <option name="cachedIndexableFilesCount" value="1168" />
+    <option name="cachedIndexableFilesCount" value="1232" />
     <option name="fileBasedEmbeddingIndicesEnabled" value="true" />
   </component>
   <component name="Git.Settings">
@@ -132,7 +177,7 @@
     "ignore.virus.scanning.warn.message": "true",
     "junie.onboarding.icon.badge.shown": "true",
     "kotlin-language-version-configured": "true",
-    "last_opened_file_path": "C:/Users/Bored/OneDrive/Documents/GitHub/vdatp/cli/New",
+    "last_opened_file_path": "D:/vtatp_proper/vdatp",
     "node.js.detected.package.eslint": "true",
     "node.js.detected.package.tslint": "true",
     "node.js.selected.package.eslint": "(autodetect)",
@@ -191,6 +236,7 @@
       <workItem from="1782354663828" duration="726000" />
       <workItem from="1782356299844" duration="1556000" />
       <workItem from="1782431801836" duration="5989000" />
+      <workItem from="1782690712343" duration="235000" />
     </task>
     <servers />
   </component>
