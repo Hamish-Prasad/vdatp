@@ -1,14 +1,9 @@
 /*
- * Closed-loop vector-field phase sender for one or two tracked particles.
- *
- * Each particle receives three phase-only twin-trap frames (X/Y/Z aperture
- * splits). Direction-adaptive dwell compensates for the stronger opposed-array
- * Y response. The state file is re-read once per ensemble cycle so a camera
- * process can atomically replace it with fresh bead coordinates.
- *
  * Windows build:
- *   gcc -O2 -std=c11 -Wall -Wextra laptop_phase_sender_vector.c -I.. \
- *       -lws2_32 -lm -o laptop_phase_sender_vector.exe
+ *   gcc -O2 -std=c11 -Wall -Wextra laptop_phase_sender_vector.c -I.. -o laptop_phase_sender_vector.exe -lm -lws2_32
+ *
+ *              .\laptop_phase_sender_vector.exe 169.254.101.245 one --port 5656
+ *          current ip - 169.254.101.245
  */
 
 #ifdef _WIN32
@@ -26,8 +21,12 @@
 #include <time.h>
 
 #ifdef _WIN32
-#undef _WIN32_WINNT
+#ifndef _WIN32_WINNT
 #define _WIN32_WINNT 0x0600
+#endif
+#ifndef WINVER
+#define WINVER 0x0600
+#endif
 #include <winsock2.h>
 #include <ws2tcpip.h>
 #include <windows.h>
@@ -88,7 +87,7 @@ static void stop_handler(int ignored)
 static uint64_t wall_time_us(void)
 {
 #ifdef _WIN32
-    return (uint64_t)GetTickCount64() * 1000u;
+    return (uint64_t)GetTickCount() * 1000u;
 #else
     struct timespec ts;
     clock_gettime(CLOCK_MONOTONIC, &ts);
