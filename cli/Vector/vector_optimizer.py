@@ -166,7 +166,7 @@ def target_set(case: str, path_samples: int = 96) -> np.ndarray:
     if case == "point":
         return np.array([[0.0, 0.0, 0.0]])
     if case == "two-points":
-        return np.array([[-16.0, 0.0, 0.0], [16.0, 0.0, 0.0]])
+        return np.array([[8.0, 0.0, 0.0], [-8.0, 0.0, 0.0]])
     if case == "circle":
         theta = np.linspace(0.0, 2.0 * np.pi, path_samples, endpoint=False)
         return np.column_stack((18.0 * np.cos(theta), np.zeros_like(theta), 18.0 * np.sin(theta)))

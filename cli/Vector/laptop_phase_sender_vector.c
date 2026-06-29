@@ -221,7 +221,7 @@ static void manual_dwell_weights(double weight[3])
 static Vec3 manual_home(int count, int particle)
 {
     if(count == 1) return (Vec3){0.0, 0.0, 0.0};
-    return (Vec3){particle == 0 ? -16.0 : 16.0, 0.0, 0.0};
+    return (Vec3){particle == 0 ? 8.0 : -8.0, 0.0, 0.0};
 }
 
 static void init_manual_state(TrackingState *state, int count)
