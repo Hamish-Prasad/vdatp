@@ -36,13 +36,17 @@ def main() -> None:
     args.output.parent.mkdir(parents=True, exist_ok=True)
     with args.output.open("w", newline="", encoding="ascii") as f:
         writer = csv.writer(f)
-        writer.writerow(("frame", "bead_x_mm", "bead_y_mm", "bead_z_mm", "assigned_target",
-                         "waypoint_x_mm", "waypoint_y_mm", "waypoint_z_mm", "channel", "phase_tick"))
-        for frame, position in enumerate(args.positions):
-            _force, ticks, waypoint, nearest = controller.command(position, targets)
-            for channel, tick in enumerate(ticks):
-                writer.writerow((frame, *position, nearest, *waypoint, channel, int(tick)))
-    print(f"wrote {len(args.positions)} frames x 200 channels to {args.output}")
+        writer.writerow(("particle", "axis_frame", "dwell_weight", "bead_x_mm", "bead_y_mm",
+                         "bead_z_mm", "assigned_target", "waypoint_x_mm", "waypoint_y_mm",
+                         "waypoint_z_mm", "channel", "phase_tick"))
+        for particle, position in enumerate(args.positions):
+            _force, tick_frames, dwell_weights, waypoint, nearest = controller.command(position, targets)
+            for axis, ticks in enumerate(tick_frames):
+                for channel, tick in enumerate(ticks):
+                    writer.writerow((particle, controller.AXIS_NAMES[axis],
+                        dwell_weights[axis] / np.sum(dwell_weights), *position, nearest, *waypoint,
+                        channel, int(tick)))
+    print(f"wrote {len(args.positions)} particles x 3 axis frames x 200 channels to {args.output}")
 
 
 if __name__ == "__main__":

@@ -1,9 +1,9 @@
 #!/usr/bin/env python3
 """Closed-loop compiler from nearest-set vectors to local phase holograms.
 
-Each displayed vector is the predicted force produced when a bead is observed at
-that location and a trap is placed one short look-ahead step along the desired
-route. Multiple beads use interleaved frames, one tracked bead per frame.
+Each displayed vector is the time-averaged force from an X/Y/Z twin-trap
+ensemble placed one short look-ahead step along the desired route. Multiple
+beads use interleaved ensembles, one tracked bead per group of three frames.
 """
 
 from __future__ import annotations
@@ -31,7 +31,11 @@ def nearest_policy(points: np.ndarray, targets: np.ndarray) -> tuple[np.ndarray,
 
 
 class DynamicVectorController:
-    def __init__(self, lookahead_mm: float = 2.0):
+    AXIS_NAMES = ("x", "y", "z")
+    LATERAL_DWELL_GAIN = 6.0
+    BASE_DWELL = 1.0
+
+    def __init__(self, lookahead_mm: float = 1.0):
         self.physics = Physics()
         self.model = GorkovModel(self.physics)
         self.lookahead_mm = lookahead_mm
@@ -44,19 +48,42 @@ class DynamicVectorController:
             * self.pressure_scale_pa**2 * 1000.0)
         self.weight_n = volume_m3 * self.physics.particle_density_kg_m3 * 9.80665
 
-    def command(self, position_mm: np.ndarray, targets: np.ndarray) -> tuple[np.ndarray, np.ndarray, np.ndarray, int]:
+    def command_frames(self, position_mm: np.ndarray, targets: np.ndarray):
         direction, distance, nearest = nearest_policy(position_mm.reshape(1, 3), targets)
         step = min(self.lookahead_mm, float(distance[0]))
         waypoint = position_mm + step * direction[0]
-        phases = np.angle(self.model.focus_drive(waypoint))
-        ticks, phases = quantize_phases(phases, self.physics.phase_levels)
-        force = self.model.compile(position_mm.reshape(1, 3)).force_and_jacobian(phases, jacobian=False)[0]
-        return force, ticks, waypoint, int(nearest[0])
+        row = transfer(waypoint.reshape(1, 3), self.physics,
+                       self.model.emitters, self.model.normals)[0]
+        focus = np.exp(-1j * np.angle(row))
+        tick_frames, phase_frames = [], []
+        for axis in range(3):
+            aperture = self.model.emitters[:, axis] - waypoint[axis]
+            drive = focus * np.where(aperture >= 0.0, 1.0, -1.0)
+            ticks, phases = quantize_phases(np.angle(drive), self.physics.phase_levels)
+            tick_frames.append(ticks)
+            phase_frames.append(phases)
+        compiled = self.model.compile(position_mm.reshape(1, 3))
+        frame_forces = np.asarray([
+            compiled.force_and_jacobian(phases, jacobian=False)[0]
+            for phases in phase_frames
+        ])
+        dwell_weights = np.array([
+            self.LATERAL_DWELL_GAIN * abs(direction[0, 0]) + self.BASE_DWELL,
+            abs(direction[0, 1]) + self.BASE_DWELL,
+            self.LATERAL_DWELL_GAIN * abs(direction[0, 2]) + self.BASE_DWELL,
+        ])
+        force = np.average(frame_forces, axis=0, weights=dwell_weights)
+        return (force, np.asarray(tick_frames), dwell_weights, waypoint,
+                int(nearest[0]), frame_forces)
+
+    def command(self, position_mm: np.ndarray, targets: np.ndarray):
+        force, ticks, dwell, waypoint, nearest, _frame_forces = self.command_frames(position_mm, targets)
+        return force, ticks, dwell, waypoint, nearest
 
     def field(self, points: np.ndarray, targets: np.ndarray) -> tuple[np.ndarray, np.ndarray]:
         forces, waypoints = [], []
         for point in points:
-            force, _ticks, waypoint, _nearest = self.command(point, targets)
+            force, _ticks, _dwell, waypoint, _nearest = self.command(point, targets)
             forces.append(force)
             waypoints.append(waypoint)
         return np.asarray(forces), np.asarray(waypoints)
@@ -79,7 +106,7 @@ def trajectories(controller: DynamicVectorController, case: str, steps: int = 18
             direction, distance, _ = nearest_policy(point.reshape(1, 3), targets)
             if distance[0] < 1.2:
                 break
-            force, _ticks, _waypoint, _nearest = controller.command(point, targets)
+            force, _ticks, _dwell, _waypoint, _nearest = controller.command(point, targets)
             norm = np.linalg.norm(force)
             if norm < 1.0e-12:
                 break
@@ -107,6 +134,7 @@ def evaluate(case: str, out_dir: Path) -> tuple[dict, np.ndarray, np.ndarray, li
         "case": case,
         "interpretation": "closed-loop vector-to-local-hologram policy; arrows are not simultaneous",
         "lookahead_mm": controller.lookahead_mm,
+        "axis_dwell_rule": "[6*abs(dx)+1, abs(dy)+1, 6*abs(dz)+1]",
         "mean_direction_cosine": float(np.mean(cosine[keep])),
         "minimum_direction_cosine": float(np.min(cosine[keep])),
         "inward_fraction": float(np.mean(cosine[keep] > 0.0)),

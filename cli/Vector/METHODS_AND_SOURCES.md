@@ -6,7 +6,7 @@ The objective is not merely a low Gor'kov value at a target. It is a *basin of a
 
 The working name is **Conservative Voronoi Gor'kov Field Matching (CV-GFM)**. This is a new synthesis assembled here; novelty in the publication sense has not yet been established by an exhaustive prior-art review or experiment.
 
-After falsifying the global-static hypothesis, the primary method became **Dynamic Vector-Field Hologram Compilation (DVF-HC)**. DVF-HC treats the desired arrows as a feedback policy. At each camera observation, it selects the nearest target/path point, places a locally strong twin trap 2 mm ahead along that vector, quantizes its 200 phases, and updates the command as the bead moves. Multiple beads receive interleaved local-trap frames. This preserves the requested global routing behavior without claiming that mutually incompatible arrows coexist in one static Helmholtz field.
+After falsifying the global-static hypothesis, the primary method became **Dynamic Vector-Field Hologram Compilation (DVF-HC)**. DVF-HC treats the desired arrows as a feedback policy. At each camera observation, it selects the nearest target/path point and places a tri-axial twin-trap ensemble 1.0 mm ahead. The three phase-only frames split the aperture along X, Y, and Z; direction-adaptive dwell weights `[6|d_x|+1, |d_y|+1, 6|d_z|+1]` compensate for the much stronger opposed-array Y response while retaining useful force magnitude. Multiple beads receive interleaved ensembles. This preserves the requested global routing behavior without claiming that mutually incompatible arrows coexist in one static Helmholtz field.
 
 ## Physics
 
@@ -105,3 +105,13 @@ Direct source links:
 - Under a 3000 Pa RMS focus calibration, estimated median force/weight ratios were 79.4, 85.8, and 82.2. These are conditional estimates, not measurements; force scales with pressure squared.
 - Added a compiler that converts multiple tracked bead positions into interleaved 512-level phase frames.
 - Pending: camera/latency integration, measured per-transducer phase/amplitude calibration, dynamic simulation with drag and gravity, scattering-aware finite-size validation, and hardware experiments.
+
+### 2026-06-29: lateral-restoring correction
+
+- Visual review exposed axial/Y dominance in the original one-frame policy. Its point-case mean direction cosine was 0.632, X/Z-dominant alignment was 0.619, and only 19.6% of voxels exceeded cosine 0.8.
+- A continuously rotated binary aperture split improved the mean to about 0.80 but introduced four fully reversed symmetry-corner voxels, so it was rejected.
+- The accepted tri-axial ensemble averages independent X/Y/Z twin traps. A fixed `4:1:4` dwell at 0.75 mm look-ahead achieved mean cosine 0.924 and minimum 0.823 but reduced the conditional median force to 17.3 uN.
+- Direction-adaptive dwell `[6|d_x|+1, |d_y|+1, 6|d_z|+1]` at 1.0 mm retained mean cosine 0.923 and minimum 0.809 while increasing the conditional median to 26.3 uN and the 10th percentile to 9.3 uN in the point sweep. Every point remained above cosine 0.8.
+- Revalidated the final quantized policy: one-point mean/minimum cosine 0.923/0.809 and two-point 0.921/0.803; both had inward fraction 1.000, every voxel above cosine 0.8, and 8/8 quasi-static captures. Conditional median force/weight margins were 7.59 and 9.11.
+- Added `laptop_phase_sender_vector.c`, a standard-C implementation with only one- and two-particle modes, safe coordinate/range checks, CRC-checked protocol frames, adaptive tri-axial dwell, unique two-goal assignment, state-file tracking input, periodic logs, and a network-free self-test.
+- Revised the sender interface so keyboard movement requires no state file and the Pi port is the explicit `--port` option. `--state FILE` now clearly selects camera-tracked closed-loop routing. Local mock-Pi tests accepted valid CRC/range-checked packets for one-particle manual mode, one-particle tracked mode, and all six frames of two-particle tracked mode.
