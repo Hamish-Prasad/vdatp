@@ -2,7 +2,7 @@
 """Phase-only inverse design of volumetric Gor'kov force-vector fields.
 
 The optimizer matches -grad(U) to a conservative nearest-target-set field.
-Only NumPy is required. Coordinates exposed by the CLI are in millimetres.
+UNITS ARE IN MM AAAA
 """
 
 from __future__ import annotations
