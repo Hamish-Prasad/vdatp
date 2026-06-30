@@ -1,0 +1,7670 @@
+(kicad_sch
+	(version 20260306)
+	(generator "eeschema")
+	(generator_version "10.0")
+	(uuid "40985797-4315-4a8c-86d7-45714e187cf9")
+	(paper "A4")
+	(lib_symbols)
+	(wire
+		(pts
+			(xy 91.44 110.49) (xy 86.36 110.49)
+		)
+		(stroke
+			(width 0)
+			(type default)
+		)
+		(uuid "01bfbe4b-7128-45d2-b63f-574c626d2b0c")
+	)
+	(wire
+		(pts
+			(xy 91.44 191.77) (xy 86.36 191.77)
+		)
+		(stroke
+			(width 0)
+			(type default)
+		)
+		(uuid "04a70918-8060-4d55-8774-db2a74f72994")
+	)
+	(wire
+		(pts
+			(xy 125.73 49.53) (xy 120.65 49.53)
+		)
+		(stroke
+			(width 0)
+			(type default)
+		)
+		(uuid "04e54e87-1652-488c-99f7-eabdcb9f30d6")
+	)
+	(wire
+		(pts
+			(xy 91.44 140.97) (xy 86.36 140.97)
+		)
+		(stroke
+			(width 0)
+			(type default)
+		)
+		(uuid "069dcbda-2e59-4e22-88a9-d06a7185e60b")
+	)
+	(wire
+		(pts
+			(xy 55.88 49.53) (xy 50.8 49.53)
+		)
+		(stroke
+			(width 0)
+			(type default)
+		)
+		(uuid "078f3e72-21a5-4262-b914-7a45e66a2f91")
+	)
+	(wire
+		(pts
+			(xy 91.44 181.61) (xy 86.36 181.61)
+		)
+		(stroke
+			(width 0)
+			(type default)
+		)
+		(uuid "08b4eea0-eeb5-47a3-9300-f79d601223ef")
+	)
+	(wire
+		(pts
+			(xy 55.88 161.29) (xy 50.8 161.29)
+		)
+		(stroke
+			(width 0)
+			(type default)
+		)
+		(uuid "08e069ac-413b-4cc9-9526-eafd2c017542")
+	)
+	(wire
+		(pts
+			(xy 21.59 120.65) (xy 16.51 120.65)
+		)
+		(stroke
+			(width 0)
+			(type default)
+		)
+		(uuid "0a4a59e6-8e9a-485e-90da-56a565b624b1")
+	)
+	(wire
+		(pts
+			(xy 157.48 69.85) (xy 152.4 69.85)
+		)
+		(stroke
+			(width 0)
+			(type default)
+		)
+		(uuid "0a9f32ba-3d0e-41b5-ae5f-0e7be844c7f8")
+	)
+	(wire
+		(pts
+			(xy 157.48 140.97) (xy 152.4 140.97)
+		)
+		(stroke
+			(width 0)
+			(type default)
+		)
+		(uuid "12356436-8968-4c9d-9bd2-85cbf4f2787b")
+	)
+	(wire
+		(pts
+			(xy 21.59 49.53) (xy 16.51 49.53)
+		)
+		(stroke
+			(width 0)
+			(type default)
+		)
+		(uuid "13c61982-a0fd-4082-8b45-bedbfa716cad")
+	)
+	(wire
+		(pts
+			(xy 91.44 90.17) (xy 86.36 90.17)
+		)
+		(stroke
+			(width 0)
+			(type default)
+		)
+		(uuid "13e5773f-e3a8-4f90-a069-b15729ccd6a2")
+	)
+	(wire
+		(pts
+			(xy 91.44 171.45) (xy 86.36 171.45)
+		)
+		(stroke
+			(width 0)
+			(type default)
+		)
+		(uuid "14f984d3-06a3-4125-9654-4b2cbe4183d9")
+	)
+	(wire
+		(pts
+			(xy 125.73 130.81) (xy 120.65 130.81)
+		)
+		(stroke
+			(width 0)
+			(type default)
+		)
+		(uuid "226a1c62-a43e-4e3c-b1bb-a57184adefa6")
+	)
+	(wire
+		(pts
+			(xy 21.59 181.61) (xy 16.51 181.61)
+		)
+		(stroke
+			(width 0)
+			(type default)
+		)
+		(uuid "2735e9c9-4e58-4462-903b-e34e55204c72")
+	)
+	(wire
+		(pts
+			(xy 21.59 69.85) (xy 16.51 69.85)
+		)
+		(stroke
+			(width 0)
+			(type default)
+		)
+		(uuid "27d196b5-da88-401f-adda-40a8a14dd959")
+	)
+	(wire
+		(pts
+			(xy 55.88 59.69) (xy 50.8 59.69)
+		)
+		(stroke
+			(width 0)
+			(type default)
+		)
+		(uuid "2927db14-5f71-4b59-849b-b983892e41eb")
+	)
+	(wire
+		(pts
+			(xy 91.44 120.65) (xy 86.36 120.65)
+		)
+		(stroke
+			(width 0)
+			(type default)
+		)
+		(uuid "29f43aa3-8183-411c-84de-922d1090d36c")
+	)
+	(wire
+		(pts
+			(xy 157.48 161.29) (xy 152.4 161.29)
+		)
+		(stroke
+			(width 0)
+			(type default)
+		)
+		(uuid "2e626493-43b6-47f6-a91b-8c72cd1b205f")
+	)
+	(bus
+		(pts
+			(xy 212.09 140.97) (xy 223.52 140.97)
+		)
+		(stroke
+			(width 0)
+			(type default)
+		)
+		(uuid "300c9790-8506-4f2b-a7f5-ffdd506c7f4d")
+	)
+	(wire
+		(pts
+			(xy 125.73 90.17) (xy 120.65 90.17)
+		)
+		(stroke
+			(width 0)
+			(type default)
+		)
+		(uuid "3197fdbb-2b06-4808-a49d-e2ac3d99eab9")
+	)
+	(wire
+		(pts
+			(xy 157.48 59.69) (xy 152.4 59.69)
+		)
+		(stroke
+			(width 0)
+			(type default)
+		)
+		(uuid "32e9b70c-a9ee-443c-97ab-67f6c97b2ee6")
+	)
+	(wire
+		(pts
+			(xy 125.73 120.65) (xy 120.65 120.65)
+		)
+		(stroke
+			(width 0)
+			(type default)
+		)
+		(uuid "3370c45f-9b70-4086-ad7c-2c777a762704")
+	)
+	(wire
+		(pts
+			(xy 190.5 69.85) (xy 185.42 69.85)
+		)
+		(stroke
+			(width 0)
+			(type default)
+		)
+		(uuid "33728298-0e25-4f49-80d9-b38e3c8bbabc")
+	)
+	(bus
+		(pts
+			(xy 212.09 135.89) (xy 223.52 135.89)
+		)
+		(stroke
+			(width 0)
+			(type default)
+		)
+		(uuid "3400597c-df31-4b0b-8d73-c5ccd387345b")
+	)
+	(wire
+		(pts
+			(xy 21.59 80.01) (xy 16.51 80.01)
+		)
+		(stroke
+			(width 0)
+			(type default)
+		)
+		(uuid "3446cab6-2311-4593-aac3-6a7abbf90ccf")
+	)
+	(wire
+		(pts
+			(xy 91.44 100.33) (xy 86.36 100.33)
+		)
+		(stroke
+			(width 0)
+			(type default)
+		)
+		(uuid "346ab8fb-cc0b-405c-a652-63faaad8b760")
+	)
+	(wire
+		(pts
+			(xy 91.44 151.13) (xy 86.36 151.13)
+		)
+		(stroke
+			(width 0)
+			(type default)
+		)
+		(uuid "3d989a95-a445-4fc6-be61-b7fcf6d3b86e")
+	)
+	(wire
+		(pts
+			(xy 55.88 80.01) (xy 50.8 80.01)
+		)
+		(stroke
+			(width 0)
+			(type default)
+		)
+		(uuid "4068dec0-1c9d-4cb3-bf30-09b3b5af24fe")
+	)
+	(wire
+		(pts
+			(xy 157.48 49.53) (xy 152.4 49.53)
+		)
+		(stroke
+			(width 0)
+			(type default)
+		)
+		(uuid "433bb8fd-ede6-47ce-ba52-c2763fdcc5ec")
+	)
+	(wire
+		(pts
+			(xy 55.88 110.49) (xy 50.8 110.49)
+		)
+		(stroke
+			(width 0)
+			(type default)
+		)
+		(uuid "46ca8e7f-aa34-41af-8900-e9ec8fb7c3f1")
+	)
+	(wire
+		(pts
+			(xy 157.48 100.33) (xy 152.4 100.33)
+		)
+		(stroke
+			(width 0)
+			(type default)
+		)
+		(uuid "46fe09dd-dae8-45dd-b188-8ee9d55eb79a")
+	)
+	(wire
+		(pts
+			(xy 125.73 181.61) (xy 120.65 181.61)
+		)
+		(stroke
+			(width 0)
+			(type default)
+		)
+		(uuid "4ea7258f-31d6-4bd5-a477-0d530011d564")
+	)
+	(wire
+		(pts
+			(xy 157.48 151.13) (xy 152.4 151.13)
+		)
+		(stroke
+			(width 0)
+			(type default)
+		)
+		(uuid "4f5c2018-fa39-412c-83ec-09130bc62aa1")
+	)
+	(wire
+		(pts
+			(xy 55.88 90.17) (xy 50.8 90.17)
+		)
+		(stroke
+			(width 0)
+			(type default)
+		)
+		(uuid "4fb0509e-4049-4eba-a97d-1f5f41cc300f")
+	)
+	(wire
+		(pts
+			(xy 157.48 80.01) (xy 152.4 80.01)
+		)
+		(stroke
+			(width 0)
+			(type default)
+		)
+		(uuid "54fd9b4a-96c5-4d9d-9bc7-32b4fbc9c54c")
+	)
+	(wire
+		(pts
+			(xy 91.44 49.53) (xy 86.36 49.53)
+		)
+		(stroke
+			(width 0)
+			(type default)
+		)
+		(uuid "59089ef0-aed3-4a33-a215-3991cdcbf161")
+	)
+	(wire
+		(pts
+			(xy 21.59 191.77) (xy 16.51 191.77)
+		)
+		(stroke
+			(width 0)
+			(type default)
+		)
+		(uuid "599ce6e1-978d-47c9-bb1f-6a94d2c91731")
+	)
+	(wire
+		(pts
+			(xy 55.88 29.21) (xy 50.8 29.21)
+		)
+		(stroke
+			(width 0)
+			(type default)
+		)
+		(uuid "5db5d6b5-5933-4b83-ad07-9caa6598d9a7")
+	)
+	(wire
+		(pts
+			(xy 125.73 161.29) (xy 120.65 161.29)
+		)
+		(stroke
+			(width 0)
+			(type default)
+		)
+		(uuid "5dd3165b-417a-46d6-8794-2cfddcc3bc24")
+	)
+	(wire
+		(pts
+			(xy 190.5 80.01) (xy 185.42 80.01)
+		)
+		(stroke
+			(width 0)
+			(type default)
+		)
+		(uuid "5de4c754-7f2a-4c1b-8a9b-cea61b119432")
+	)
+	(wire
+		(pts
+			(xy 21.59 140.97) (xy 16.51 140.97)
+		)
+		(stroke
+			(width 0)
+			(type default)
+		)
+		(uuid "6121cb75-c8ec-4c7d-a5a2-c10d029c971f")
+	)
+	(wire
+		(pts
+			(xy 125.73 19.05) (xy 120.65 19.05)
+		)
+		(stroke
+			(width 0)
+			(type default)
+		)
+		(uuid "6192dd74-d19b-49fb-9a98-b1a0f0c34f8c")
+	)
+	(wire
+		(pts
+			(xy 125.73 110.49) (xy 120.65 110.49)
+		)
+		(stroke
+			(width 0)
+			(type default)
+		)
+		(uuid "66e51493-f712-48ef-8a5b-60b2d50b63c8")
+	)
+	(wire
+		(pts
+			(xy 91.44 69.85) (xy 86.36 69.85)
+		)
+		(stroke
+			(width 0)
+			(type default)
+		)
+		(uuid "6711c684-4e0f-4fa6-b4c9-a48c3f238e6a")
+	)
+	(wire
+		(pts
+			(xy 55.88 19.05) (xy 50.8 19.05)
+		)
+		(stroke
+			(width 0)
+			(type default)
+		)
+		(uuid "6db21bee-c03f-490d-ba02-a2f6253882c0")
+	)
+	(wire
+		(pts
+			(xy 125.73 171.45) (xy 120.65 171.45)
+		)
+		(stroke
+			(width 0)
+			(type default)
+		)
+		(uuid "6dc1f2a8-ecdc-4fef-b6ed-e6d93b94e80e")
+	)
+	(wire
+		(pts
+			(xy 125.73 80.01) (xy 120.65 80.01)
+		)
+		(stroke
+			(width 0)
+			(type default)
+		)
+		(uuid "6ee0daca-4c7e-4522-af91-17fe86f5c7f7")
+	)
+	(wire
+		(pts
+			(xy 91.44 39.37) (xy 86.36 39.37)
+		)
+		(stroke
+			(width 0)
+			(type default)
+		)
+		(uuid "722879ba-0c6d-4a17-9264-323ab3417bf9")
+	)
+	(wire
+		(pts
+			(xy 125.73 151.13) (xy 120.65 151.13)
+		)
+		(stroke
+			(width 0)
+			(type default)
+		)
+		(uuid "72946c4c-927a-4dc6-8fcc-237ab7401632")
+	)
+	(wire
+		(pts
+			(xy 21.59 100.33) (xy 16.51 100.33)
+		)
+		(stroke
+			(width 0)
+			(type default)
+		)
+		(uuid "7336d58c-44ef-413c-bfef-5bd801d58591")
+	)
+	(wire
+		(pts
+			(xy 125.73 59.69) (xy 120.65 59.69)
+		)
+		(stroke
+			(width 0)
+			(type default)
+		)
+		(uuid "73584ee2-ff75-4436-9ff0-a01ac5ca88f1")
+	)
+	(wire
+		(pts
+			(xy 125.73 140.97) (xy 120.65 140.97)
+		)
+		(stroke
+			(width 0)
+			(type default)
+		)
+		(uuid "7572cd66-e443-4f87-99a3-d1d8a89c9a12")
+	)
+	(wire
+		(pts
+			(xy 55.88 120.65) (xy 50.8 120.65)
+		)
+		(stroke
+			(width 0)
+			(type default)
+		)
+		(uuid "759374fb-307b-426c-9ce7-42f2854d7a4c")
+	)
+	(wire
+		(pts
+			(xy 190.5 90.17) (xy 185.42 90.17)
+		)
+		(stroke
+			(width 0)
+			(type default)
+		)
+		(uuid "76ba81d4-8837-4f18-8d39-92814a304ccc")
+	)
+	(wire
+		(pts
+			(xy 125.73 69.85) (xy 120.65 69.85)
+		)
+		(stroke
+			(width 0)
+			(type default)
+		)
+		(uuid "76fd9bf7-8f16-43e6-baca-02d557914883")
+	)
+	(wire
+		(pts
+			(xy 21.59 90.17) (xy 16.51 90.17)
+		)
+		(stroke
+			(width 0)
+			(type default)
+		)
+		(uuid "79ceb688-0d08-4a45-8e8b-6730f9f287e4")
+	)
+	(wire
+		(pts
+			(xy 21.59 171.45) (xy 16.51 171.45)
+		)
+		(stroke
+			(width 0)
+			(type default)
+		)
+		(uuid "7a20e163-9f53-4fb4-a901-2e788a9e7c89")
+	)
+	(wire
+		(pts
+			(xy 55.88 191.77) (xy 50.8 191.77)
+		)
+		(stroke
+			(width 0)
+			(type default)
+		)
+		(uuid "7c60a1b9-ad93-47eb-baaa-b5da2438ce9c")
+	)
+	(wire
+		(pts
+			(xy 55.88 130.81) (xy 50.8 130.81)
+		)
+		(stroke
+			(width 0)
+			(type default)
+		)
+		(uuid "7cef071b-11ff-4aae-a5ee-0947d2027384")
+	)
+	(wire
+		(pts
+			(xy 157.48 191.77) (xy 152.4 191.77)
+		)
+		(stroke
+			(width 0)
+			(type default)
+		)
+		(uuid "84ed88bd-19a1-4978-a5f6-566419fb86ef")
+	)
+	(wire
+		(pts
+			(xy 91.44 80.01) (xy 86.36 80.01)
+		)
+		(stroke
+			(width 0)
+			(type default)
+		)
+		(uuid "87643b22-dbce-47aa-baff-0489ccab6844")
+	)
+	(wire
+		(pts
+			(xy 190.5 19.05) (xy 185.42 19.05)
+		)
+		(stroke
+			(width 0)
+			(type default)
+		)
+		(uuid "8777a952-db48-44f8-b1d9-3204b99ad46b")
+	)
+	(wire
+		(pts
+			(xy 157.48 110.49) (xy 152.4 110.49)
+		)
+		(stroke
+			(width 0)
+			(type default)
+		)
+		(uuid "87f5e8d0-427c-4862-89b8-a1d9eae8b5d1")
+	)
+	(wire
+		(pts
+			(xy 157.48 181.61) (xy 152.4 181.61)
+		)
+		(stroke
+			(width 0)
+			(type default)
+		)
+		(uuid "8ab01b06-5fe7-46a8-b10f-1849f0d899fb")
+	)
+	(wire
+		(pts
+			(xy 21.59 130.81) (xy 16.51 130.81)
+		)
+		(stroke
+			(width 0)
+			(type default)
+		)
+		(uuid "8c6c9f8b-eb12-48a5-b49b-885fb9a3d762")
+	)
+	(wire
+		(pts
+			(xy 157.48 29.21) (xy 152.4 29.21)
+		)
+		(stroke
+			(width 0)
+			(type default)
+		)
+		(uuid "8d52be99-6347-435b-85ef-c667722c6455")
+	)
+	(wire
+		(pts
+			(xy 190.5 49.53) (xy 185.42 49.53)
+		)
+		(stroke
+			(width 0)
+			(type default)
+		)
+		(uuid "91f98237-3a45-4f18-93c5-dea5608afe6b")
+	)
+	(wire
+		(pts
+			(xy 190.5 59.69) (xy 185.42 59.69)
+		)
+		(stroke
+			(width 0)
+			(type default)
+		)
+		(uuid "94b3fc31-122b-41c8-844a-4554106169ce")
+	)
+	(wire
+		(pts
+			(xy 21.59 110.49) (xy 16.51 110.49)
+		)
+		(stroke
+			(width 0)
+			(type default)
+		)
+		(uuid "9777e673-4a6e-4573-8344-7a941d6dffe6")
+	)
+	(wire
+		(pts
+			(xy 157.48 171.45) (xy 152.4 171.45)
+		)
+		(stroke
+			(width 0)
+			(type default)
+		)
+		(uuid "9a844407-275d-4d21-a436-ef0063a35e67")
+	)
+	(wire
+		(pts
+			(xy 21.59 59.69) (xy 16.51 59.69)
+		)
+		(stroke
+			(width 0)
+			(type default)
+		)
+		(uuid "a22a9b49-d608-4eda-8e7c-af5970ffa747")
+	)
+	(wire
+		(pts
+			(xy 21.59 161.29) (xy 16.51 161.29)
+		)
+		(stroke
+			(width 0)
+			(type default)
+		)
+		(uuid "a352041b-fc9a-4694-a545-f18d9e7269f4")
+	)
+	(wire
+		(pts
+			(xy 157.48 120.65) (xy 152.4 120.65)
+		)
+		(stroke
+			(width 0)
+			(type default)
+		)
+		(uuid "a73d35b9-c278-4564-9081-1d498f200977")
+	)
+	(wire
+		(pts
+			(xy 190.5 100.33) (xy 185.42 100.33)
+		)
+		(stroke
+			(width 0)
+			(type default)
+		)
+		(uuid "a74809a8-75be-4637-92f6-d1f58d6be085")
+	)
+	(wire
+		(pts
+			(xy 55.88 181.61) (xy 50.8 181.61)
+		)
+		(stroke
+			(width 0)
+			(type default)
+		)
+		(uuid "ab24e496-f6d3-4bff-b0db-d6550f471cfc")
+	)
+	(wire
+		(pts
+			(xy 55.88 140.97) (xy 50.8 140.97)
+		)
+		(stroke
+			(width 0)
+			(type default)
+		)
+		(uuid "adb2f5da-551d-4220-a36b-573beacad793")
+	)
+	(wire
+		(pts
+			(xy 21.59 29.21) (xy 16.51 29.21)
+		)
+		(stroke
+			(width 0)
+			(type default)
+		)
+		(uuid "aea5dc54-bc47-4eb3-a322-064fb7a84dc7")
+	)
+	(wire
+		(pts
+			(xy 91.44 130.81) (xy 86.36 130.81)
+		)
+		(stroke
+			(width 0)
+			(type default)
+		)
+		(uuid "b022b8e5-541c-4af7-bb59-1b377f614c5f")
+	)
+	(wire
+		(pts
+			(xy 190.5 110.49) (xy 185.42 110.49)
+		)
+		(stroke
+			(width 0)
+			(type default)
+		)
+		(uuid "b38d1f27-4bae-47bd-92b7-8a29b2aa1daa")
+	)
+	(wire
+		(pts
+			(xy 55.88 151.13) (xy 50.8 151.13)
+		)
+		(stroke
+			(width 0)
+			(type default)
+		)
+		(uuid "b4da14b1-ec18-4ff3-9c16-5e865979f9b4")
+	)
+	(wire
+		(pts
+			(xy 190.5 29.21) (xy 185.42 29.21)
+		)
+		(stroke
+			(width 0)
+			(type default)
+		)
+		(uuid "b6c1af53-38d4-4af6-b96d-6e66b598903b")
+	)
+	(wire
+		(pts
+			(xy 55.88 69.85) (xy 50.8 69.85)
+		)
+		(stroke
+			(width 0)
+			(type default)
+		)
+		(uuid "bcb47084-06d9-437c-b9ad-3596cbdf17ed")
+	)
+	(wire
+		(pts
+			(xy 157.48 39.37) (xy 152.4 39.37)
+		)
+		(stroke
+			(width 0)
+			(type default)
+		)
+		(uuid "be527d0f-7be4-4ba5-8771-f86703e3154e")
+	)
+	(wire
+		(pts
+			(xy 157.48 19.05) (xy 152.4 19.05)
+		)
+		(stroke
+			(width 0)
+			(type default)
+		)
+		(uuid "bf92f6cb-2ec2-4682-af22-58734d8520e8")
+	)
+	(wire
+		(pts
+			(xy 55.88 100.33) (xy 50.8 100.33)
+		)
+		(stroke
+			(width 0)
+			(type default)
+		)
+		(uuid "c3aaca56-7493-4ff0-9a9a-fe83a8e8e830")
+	)
+	(wire
+		(pts
+			(xy 190.5 39.37) (xy 185.42 39.37)
+		)
+		(stroke
+			(width 0)
+			(type default)
+		)
+		(uuid "c5b24f22-6442-4081-8cf3-c0f6deef761c")
+	)
+	(wire
+		(pts
+			(xy 125.73 29.21) (xy 120.65 29.21)
+		)
+		(stroke
+			(width 0)
+			(type default)
+		)
+		(uuid "c997f404-4a0c-4896-be74-11adf53173f9")
+	)
+	(wire
+		(pts
+			(xy 125.73 39.37) (xy 120.65 39.37)
+		)
+		(stroke
+			(width 0)
+			(type default)
+		)
+		(uuid "d0053254-f271-4261-8668-e30eba322864")
+	)
+	(wire
+		(pts
+			(xy 91.44 59.69) (xy 86.36 59.69)
+		)
+		(stroke
+			(width 0)
+			(type default)
+		)
+		(uuid "d23f47af-8822-43ec-8caa-4d09a489414e")
+	)
+	(wire
+		(pts
+			(xy 125.73 191.77) (xy 120.65 191.77)
+		)
+		(stroke
+			(width 0)
+			(type default)
+		)
+		(uuid "d2e11901-3d5b-4a8a-8a81-dbd9f7d7b767")
+	)
+	(wire
+		(pts
+			(xy 91.44 161.29) (xy 86.36 161.29)
+		)
+		(stroke
+			(width 0)
+			(type default)
+		)
+		(uuid "da40ddbe-137f-4b0d-b2c6-3aebdc60ba43")
+	)
+	(wire
+		(pts
+			(xy 55.88 39.37) (xy 50.8 39.37)
+		)
+		(stroke
+			(width 0)
+			(type default)
+		)
+		(uuid "e158c99a-f216-408b-9e42-f8b8ca2c7e00")
+	)
+	(wire
+		(pts
+			(xy 21.59 39.37) (xy 16.51 39.37)
+		)
+		(stroke
+			(width 0)
+			(type default)
+		)
+		(uuid "e34de4bc-c5e4-4dcf-a492-1edd944708d9")
+	)
+	(wire
+		(pts
+			(xy 91.44 19.05) (xy 86.36 19.05)
+		)
+		(stroke
+			(width 0)
+			(type default)
+		)
+		(uuid "e663afa6-be77-47b0-bb1d-f944a9057cea")
+	)
+	(wire
+		(pts
+			(xy 21.59 19.05) (xy 16.51 19.05)
+		)
+		(stroke
+			(width 0)
+			(type default)
+		)
+		(uuid "f040c457-21d1-4d40-aebb-840774d49395")
+	)
+	(wire
+		(pts
+			(xy 55.88 171.45) (xy 50.8 171.45)
+		)
+		(stroke
+			(width 0)
+			(type default)
+		)
+		(uuid "f07922f7-2b3d-4821-b330-34e3d222fac7")
+	)
+	(wire
+		(pts
+			(xy 125.73 100.33) (xy 120.65 100.33)
+		)
+		(stroke
+			(width 0)
+			(type default)
+		)
+		(uuid "f1d8fd42-7f7b-4ffa-adde-11a87215acc8")
+	)
+	(wire
+		(pts
+			(xy 21.59 151.13) (xy 16.51 151.13)
+		)
+		(stroke
+			(width 0)
+			(type default)
+		)
+		(uuid "f4172e04-e6d4-49ed-aa14-6fd8687df6cf")
+	)
+	(wire
+		(pts
+			(xy 157.48 130.81) (xy 152.4 130.81)
+		)
+		(stroke
+			(width 0)
+			(type default)
+		)
+		(uuid "f7b03301-c7f3-46ef-b152-f38dea7814c7")
+	)
+	(wire
+		(pts
+			(xy 157.48 90.17) (xy 152.4 90.17)
+		)
+		(stroke
+			(width 0)
+			(type default)
+		)
+		(uuid "fb0d7854-8054-4463-9edb-b6425f52980b")
+	)
+	(wire
+		(pts
+			(xy 91.44 29.21) (xy 86.36 29.21)
+		)
+		(stroke
+			(width 0)
+			(type default)
+		)
+		(uuid "fdf2bf91-633d-4e0d-be8f-eb7cbc9d2db5")
+	)
+	(label "t31"
+		(at 16.51 130.81 0)
+		(effects
+			(font
+				(size 1.27 1.27)
+			)
+			(justify left bottom)
+		)
+		(uuid "073fddcb-c063-440d-a51b-31bd6818a588")
+	)
+	(label "t1"
+		(at 86.36 69.85 0)
+		(effects
+			(font
+				(size 1.27 1.27)
+			)
+			(justify left bottom)
+		)
+		(uuid "0b901ed3-da67-41ab-a6b0-613ebe8066b7")
+	)
+	(label "s4"
+		(at 185.42 59.69 0)
+		(effects
+			(font
+				(size 1.27 1.27)
+			)
+			(justify left bottom)
+		)
+		(uuid "0c08f4ca-f6c9-4dcf-b1ee-5f8a5b3724dc")
+	)
+	(label "t22"
+		(at 50.8 59.69 0)
+		(effects
+			(font
+				(size 1.27 1.27)
+			)
+			(justify left bottom)
+		)
+		(uuid "0ec65bf9-623a-4b72-86b8-98eebf6700c1")
+	)
+	(label "s[49..0]"
+		(at 223.52 140.97 180)
+		(effects
+			(font
+				(size 1.27 1.27)
+			)
+			(justify right bottom)
+		)
+		(uuid "142911ed-d37b-47f3-a108-d4d8c8723115")
+	)
+	(label "t11"
+		(at 50.8 151.13 0)
+		(effects
+			(font
+				(size 1.27 1.27)
+			)
+			(justify left bottom)
+		)
+		(uuid "1609df24-5498-4477-94ea-c1d3e0be9036")
+	)
+	(label "t49"
+		(at 16.51 110.49 0)
+		(effects
+			(font
+				(size 1.27 1.27)
+			)
+			(justify left bottom)
+		)
+		(uuid "178bf31a-8ddd-4015-b6ca-5dbd1d15d56e")
+	)
+	(label "s38"
+		(at 120.65 161.29 0)
+		(effects
+			(font
+				(size 1.27 1.27)
+			)
+			(justify left bottom)
+		)
+		(uuid "1d66649b-ec8e-4033-b5ce-933b1a28703e")
+	)
+	(label "t48"
+		(at 16.51 100.33 0)
+		(effects
+			(font
+				(size 1.27 1.27)
+			)
+			(justify left bottom)
+		)
+		(uuid "1ffd34e7-fd27-4d1f-a533-7c76a4950d3f")
+	)
+	(label "s15"
+		(at 152.4 151.13 0)
+		(effects
+			(font
+				(size 1.27 1.27)
+			)
+			(justify left bottom)
+		)
+		(uuid "24ad61ae-0383-4c61-9f95-a9ac447ad6e3")
+	)
+	(label "t46"
+		(at 16.51 80.01 0)
+		(effects
+			(font
+				(size 1.27 1.27)
+			)
+			(justify left bottom)
+		)
+		(uuid "25b170c6-9801-42ce-b716-d6f374d14643")
+	)
+	(label "t17"
+		(at 86.36 29.21 0)
+		(effects
+			(font
+				(size 1.27 1.27)
+			)
+			(justify left bottom)
+		)
+		(uuid "2662389a-ea99-4f65-bb3d-2c7ac9b1bbf4")
+	)
+	(label "s48"
+		(at 120.65 59.69 0)
+		(effects
+			(font
+				(size 1.27 1.27)
+			)
+			(justify left bottom)
+		)
+		(uuid "27a82eb2-e880-4017-84bc-8552d584b451")
+	)
+	(label "t2"
+		(at 86.36 80.01 0)
+		(effects
+			(font
+				(size 1.27 1.27)
+			)
+			(justify left bottom)
+		)
+		(uuid "285955f8-cc1a-49b4-a53d-1cd292c3bdd0")
+	)
+	(label "t3"
+		(at 86.36 90.17 0)
+		(effects
+			(font
+				(size 1.27 1.27)
+			)
+			(justify left bottom)
+		)
+		(uuid "3184798f-8026-4a47-97f8-798f24d6f1ac")
+	)
+	(label "t41"
+		(at 16.51 29.21 0)
+		(effects
+			(font
+				(size 1.27 1.27)
+			)
+			(justify left bottom)
+		)
+		(uuid "32d09c8d-e50b-4b64-aa41-cc8b4a71e68a")
+	)
+	(label "s31"
+		(at 120.65 90.17 0)
+		(effects
+			(font
+				(size 1.27 1.27)
+			)
+			(justify left bottom)
+		)
+		(uuid "33791220-562a-40a9-88d9-1e9e8e21c46b")
+	)
+	(label "s32"
+		(at 120.65 100.33 0)
+		(effects
+			(font
+				(size 1.27 1.27)
+			)
+			(justify left bottom)
+		)
+		(uuid "362d690d-6340-4ba3-b214-fbf7517a2f99")
+	)
+	(label "t9"
+		(at 86.36 151.13 0)
+		(effects
+			(font
+				(size 1.27 1.27)
+			)
+			(justify left bottom)
+		)
+		(uuid "36383c5c-3a50-4333-9e20-6ad56543d63b")
+	)
+	(label "t37"
+		(at 16.51 191.77 0)
+		(effects
+			(font
+				(size 1.27 1.27)
+			)
+			(justify left bottom)
+		)
+		(uuid "3d4ae376-3a4b-42d3-bbe8-2ee3d40496d8")
+	)
+	(label "s20"
+		(at 120.65 181.61 0)
+		(effects
+			(font
+				(size 1.27 1.27)
+			)
+			(justify left bottom)
+		)
+		(uuid "3d92529b-b236-4319-9395-8319387dbfb3")
+	)
+	(label "s10"
+		(at 152.4 100.33 0)
+		(effects
+			(font
+				(size 1.27 1.27)
+			)
+			(justify left bottom)
+		)
+		(uuid "3da3e2cd-ec1e-4409-8969-64411634ba01")
+	)
+	(label "t7"
+		(at 86.36 130.81 0)
+		(effects
+			(font
+				(size 1.27 1.27)
+			)
+			(justify left bottom)
+		)
+		(uuid "4225cac3-2f2c-4a3e-9553-19d5fc010f96")
+	)
+	(label "t36"
+		(at 16.51 181.61 0)
+		(effects
+			(font
+				(size 1.27 1.27)
+			)
+			(justify left bottom)
+		)
+		(uuid "423b0d8a-5ccc-4af9-b15d-cd27da0b3ba2")
+	)
+	(label "s26"
+		(at 152.4 59.69 0)
+		(effects
+			(font
+				(size 1.27 1.27)
+			)
+			(justify left bottom)
+		)
+		(uuid "427dbb42-854c-44e9-8788-286b25b196b0")
+	)
+	(label "t33"
+		(at 16.51 151.13 0)
+		(effects
+			(font
+				(size 1.27 1.27)
+			)
+			(justify left bottom)
+		)
+		(uuid "46947601-08c8-4f51-a303-8747dc42fa53")
+	)
+	(label "s0"
+		(at 185.42 19.05 0)
+		(effects
+			(font
+				(size 1.27 1.27)
+			)
+			(justify left bottom)
+		)
+		(uuid "46c155c6-e492-489f-b42e-900d7d6d4aed")
+	)
+	(label "s13"
+		(at 152.4 130.81 0)
+		(effects
+			(font
+				(size 1.27 1.27)
+			)
+			(justify left bottom)
+		)
+		(uuid "47c31e13-332d-437a-b9be-a16255dfa209")
+	)
+	(label "s24"
+		(at 152.4 39.37 0)
+		(effects
+			(font
+				(size 1.27 1.27)
+			)
+			(justify left bottom)
+		)
+		(uuid "4a2dfd97-822c-495a-b8c6-b20c62bc5fe1")
+	)
+	(label "t8"
+		(at 86.36 140.97 0)
+		(effects
+			(font
+				(size 1.27 1.27)
+			)
+			(justify left bottom)
+		)
+		(uuid "4b31ec92-8bd0-4ad1-aff5-74b7b5461c77")
+	)
+	(label "t20"
+		(at 50.8 39.37 0)
+		(effects
+			(font
+				(size 1.27 1.27)
+			)
+			(justify left bottom)
+		)
+		(uuid "4f155718-631b-407b-aeae-fd36980c1cf4")
+	)
+	(label "s33"
+		(at 120.65 110.49 0)
+		(effects
+			(font
+				(size 1.27 1.27)
+			)
+			(justify left bottom)
+		)
+		(uuid "4f9a65c3-66ed-4449-b508-d0e792b1e0e9")
+	)
+	(label "s47"
+		(at 120.65 49.53 0)
+		(effects
+			(font
+				(size 1.27 1.27)
+			)
+			(justify left bottom)
+		)
+		(uuid "4fdb6531-d8c2-4a79-a77f-990cbd8321e0")
+	)
+	(label "t13"
+		(at 50.8 171.45 0)
+		(effects
+			(font
+				(size 1.27 1.27)
+			)
+			(justify left bottom)
+		)
+		(uuid "4fe1f64a-f4b6-42c9-9717-5a4b1766a6b5")
+	)
+	(label "s37"
+		(at 120.65 151.13 0)
+		(effects
+			(font
+				(size 1.27 1.27)
+			)
+			(justify left bottom)
+		)
+		(uuid "5045ba99-59c1-4329-b30f-9dcf1e51aae8")
+	)
+	(label "s9"
+		(at 185.42 110.49 0)
+		(effects
+			(font
+				(size 1.27 1.27)
+			)
+			(justify left bottom)
+		)
+		(uuid "5536d045-899c-4844-920c-98c10b1e340a")
+	)
+	(label "t21"
+		(at 50.8 49.53 0)
+		(effects
+			(font
+				(size 1.27 1.27)
+			)
+			(justify left bottom)
+		)
+		(uuid "562e5460-5eea-4b81-b270-317abed27976")
+	)
+	(label "t12"
+		(at 50.8 161.29 0)
+		(effects
+			(font
+				(size 1.27 1.27)
+			)
+			(justify left bottom)
+		)
+		(uuid "56e3e1af-3c3e-47b0-8b3d-597fd441a81d")
+	)
+	(label "t43"
+		(at 16.51 49.53 0)
+		(effects
+			(font
+				(size 1.27 1.27)
+			)
+			(justify left bottom)
+		)
+		(uuid "582e4e16-eea9-476d-8d53-b24481b7c046")
+	)
+	(label "t35"
+		(at 16.51 171.45 0)
+		(effects
+			(font
+				(size 1.27 1.27)
+			)
+			(justify left bottom)
+		)
+		(uuid "5c77cd08-9f38-4c95-a154-d3547bc0f05d")
+	)
+	(label "t42"
+		(at 16.51 39.37 0)
+		(effects
+			(font
+				(size 1.27 1.27)
+			)
+			(justify left bottom)
+		)
+		(uuid "63639154-5a04-405f-949f-dbd5d5e846c5")
+	)
+	(label "t26"
+		(at 50.8 100.33 0)
+		(effects
+			(font
+				(size 1.27 1.27)
+			)
+			(justify left bottom)
+		)
+		(uuid "670707cd-a6ba-48f1-bc6f-0a9dea394526")
+	)
+	(label "s42"
+		(at 86.36 181.61 0)
+		(effects
+			(font
+				(size 1.27 1.27)
+			)
+			(justify left bottom)
+		)
+		(uuid "67490ea9-d36f-47a2-b0cf-5eba3aba8172")
+	)
+	(label "t23"
+		(at 50.8 69.85 0)
+		(effects
+			(font
+				(size 1.27 1.27)
+			)
+			(justify left bottom)
+		)
+		(uuid "6894c057-72b1-417a-8e64-c5d3d6e2ad08")
+	)
+	(label "s27"
+		(at 152.4 69.85 0)
+		(effects
+			(font
+				(size 1.27 1.27)
+			)
+			(justify left bottom)
+		)
+		(uuid "6b5e0260-d647-43d6-8c60-7c529cbf2c93")
+	)
+	(label "s45"
+		(at 120.65 29.21 0)
+		(effects
+			(font
+				(size 1.27 1.27)
+			)
+			(justify left bottom)
+		)
+		(uuid "6d7795a7-a582-4e48-bd52-92b75edbd5ef")
+	)
+	(label "t47"
+		(at 16.51 90.17 0)
+		(effects
+			(font
+				(size 1.27 1.27)
+			)
+			(justify left bottom)
+		)
+		(uuid "6e78c146-69b2-42b3-9d24-af222db15100")
+	)
+	(label "s23"
+		(at 152.4 29.21 0)
+		(effects
+			(font
+				(size 1.27 1.27)
+			)
+			(justify left bottom)
+		)
+		(uuid "727dca41-e5db-4411-9cfd-260a63dd258b")
+	)
+	(label "t28"
+		(at 50.8 120.65 0)
+		(effects
+			(font
+				(size 1.27 1.27)
+			)
+			(justify left bottom)
+		)
+		(uuid "74de027b-dd6e-4059-bf3c-ac84523bcff9")
+	)
+	(label "s6"
+		(at 185.42 80.01 0)
+		(effects
+			(font
+				(size 1.27 1.27)
+			)
+			(justify left bottom)
+		)
+		(uuid "7501da47-45a5-4140-b3e4-27844e6f01c9")
+	)
+	(label "t18"
+		(at 86.36 39.37 0)
+		(effects
+			(font
+				(size 1.27 1.27)
+			)
+			(justify left bottom)
+		)
+		(uuid "791658cc-b178-489d-ae08-802add9c5399")
+	)
+	(label "s2"
+		(at 185.42 39.37 0)
+		(effects
+			(font
+				(size 1.27 1.27)
+			)
+			(justify left bottom)
+		)
+		(uuid "7c4810cb-1338-40e4-92f8-491bbbdbef4f")
+	)
+	(label "t10"
+		(at 50.8 140.97 0)
+		(effects
+			(font
+				(size 1.27 1.27)
+			)
+			(justify left bottom)
+		)
+		(uuid "7cc15801-d947-4f0c-9b93-24a95242026c")
+	)
+	(label "s28"
+		(at 152.4 80.01 0)
+		(effects
+			(font
+				(size 1.27 1.27)
+			)
+			(justify left bottom)
+		)
+		(uuid "7dfd878d-75f2-40c2-b1f1-588843668813")
+	)
+	(label "t27"
+		(at 50.8 110.49 0)
+		(effects
+			(font
+				(size 1.27 1.27)
+			)
+			(justify left bottom)
+		)
+		(uuid "7ea74995-2ba9-4b76-a9fc-4d7c9e862958")
+	)
+	(label "s8"
+		(at 185.42 100.33 0)
+		(effects
+			(font
+				(size 1.27 1.27)
+			)
+			(justify left bottom)
+		)
+		(uuid "7ec4858d-131d-4b99-8978-d4f7708f3dce")
+	)
+	(label "s49"
+		(at 120.65 69.85 0)
+		(effects
+			(font
+				(size 1.27 1.27)
+			)
+			(justify left bottom)
+		)
+		(uuid "85b27a1a-be1a-495c-88b1-65e42fbe4572")
+	)
+	(label "s34"
+		(at 120.65 120.65 0)
+		(effects
+			(font
+				(size 1.27 1.27)
+			)
+			(justify left bottom)
+		)
+		(uuid "889e7af2-619e-45de-be64-87fc571e0f4b")
+	)
+	(label "s44"
+		(at 120.65 19.05 0)
+		(effects
+			(font
+				(size 1.27 1.27)
+			)
+			(justify left bottom)
+		)
+		(uuid "8a967bba-7169-4467-bce2-f285fb48e11b")
+	)
+	(label "s22"
+		(at 152.4 19.05 0)
+		(effects
+			(font
+				(size 1.27 1.27)
+			)
+			(justify left bottom)
+		)
+		(uuid "8d651368-7f1c-4ec3-8e3c-7d092ff39845")
+	)
+	(label "s29"
+		(at 152.4 90.17 0)
+		(effects
+			(font
+				(size 1.27 1.27)
+			)
+			(justify left bottom)
+		)
+		(uuid "8d827310-9c9c-4737-a44b-9835c073e4ee")
+	)
+	(label "s17"
+		(at 152.4 171.45 0)
+		(effects
+			(font
+				(size 1.27 1.27)
+			)
+			(justify left bottom)
+		)
+		(uuid "967f5ceb-cc78-4477-b66d-a9abaae663fc")
+	)
+	(label "t29"
+		(at 50.8 130.81 0)
+		(effects
+			(font
+				(size 1.27 1.27)
+			)
+			(justify left bottom)
+		)
+		(uuid "9748f40a-dd15-4e06-bdec-504194e5d531")
+	)
+	(label "s46"
+		(at 120.65 39.37 0)
+		(effects
+			(font
+				(size 1.27 1.27)
+			)
+			(justify left bottom)
+		)
+		(uuid "99a91ae4-88c0-43e1-988c-30c6c1865237")
+	)
+	(label "s21"
+		(at 120.65 191.77 0)
+		(effects
+			(font
+				(size 1.27 1.27)
+			)
+			(justify left bottom)
+		)
+		(uuid "9b41b0ca-30fd-4cdf-8765-87af59cc98dd")
+	)
+	(label "s12"
+		(at 152.4 120.65 0)
+		(effects
+			(font
+				(size 1.27 1.27)
+			)
+			(justify left bottom)
+		)
+		(uuid "a08fecd2-1ac6-40a2-85c7-f7abda709ba4")
+	)
+	(label "s19"
+		(at 152.4 191.77 0)
+		(effects
+			(font
+				(size 1.27 1.27)
+			)
+			(justify left bottom)
+		)
+		(uuid "a0e1e2c4-15c2-4fb8-a857-14f801398c88")
+	)
+	(label "s16"
+		(at 152.4 161.29 0)
+		(effects
+			(font
+				(size 1.27 1.27)
+			)
+			(justify left bottom)
+		)
+		(uuid "a36fff17-5fb0-497e-92e8-eec1a64109c3")
+	)
+	(label "s7"
+		(at 185.42 90.17 0)
+		(effects
+			(font
+				(size 1.27 1.27)
+			)
+			(justify left bottom)
+		)
+		(uuid "a4f10dc9-b0ae-4234-9d21-030a0300f972")
+	)
+	(label "s30"
+		(at 120.65 80.01 0)
+		(effects
+			(font
+				(size 1.27 1.27)
+			)
+			(justify left bottom)
+		)
+		(uuid "a8c18b69-1bc2-49f9-808a-df9ea79c150a")
+	)
+	(label "t25"
+		(at 50.8 90.17 0)
+		(effects
+			(font
+				(size 1.27 1.27)
+			)
+			(justify left bottom)
+		)
+		(uuid "ac7742ff-7250-46ca-b37c-3213a77b7ab1")
+	)
+	(label "t15"
+		(at 50.8 191.77 0)
+		(effects
+			(font
+				(size 1.27 1.27)
+			)
+			(justify left bottom)
+		)
+		(uuid "ac79be79-a715-4a14-817c-a424b1ea21fd")
+	)
+	(label "s25"
+		(at 152.4 49.53 0)
+		(effects
+			(font
+				(size 1.27 1.27)
+			)
+			(justify left bottom)
+		)
+		(uuid "acca44fc-a3a4-4822-b6b0-ce6281a35104")
+	)
+	(label "t19"
+		(at 86.36 49.53 0)
+		(effects
+			(font
+				(size 1.27 1.27)
+			)
+			(justify left bottom)
+		)
+		(uuid "add47876-cc05-4c3e-9e98-2f2dcfb9e056")
+	)
+	(label "s35"
+		(at 120.65 130.81 0)
+		(effects
+			(font
+				(size 1.27 1.27)
+			)
+			(justify left bottom)
+		)
+		(uuid "b8506966-980f-49cf-bf72-2e600c370cf2")
+	)
+	(label "s3"
+		(at 185.42 49.53 0)
+		(effects
+			(font
+				(size 1.27 1.27)
+			)
+			(justify left bottom)
+		)
+		(uuid "b8fabd48-7663-4e72-81ad-04d36c2064f1")
+	)
+	(label "t4"
+		(at 86.36 100.33 0)
+		(effects
+			(font
+				(size 1.27 1.27)
+			)
+			(justify left bottom)
+		)
+		(uuid "bb896662-5116-4abb-9117-dbbecb9bfa7a")
+	)
+	(label "s36"
+		(at 120.65 140.97 0)
+		(effects
+			(font
+				(size 1.27 1.27)
+			)
+			(justify left bottom)
+		)
+		(uuid "bce9ee83-e2cf-4106-9762-d21addca488e")
+	)
+	(label "t5"
+		(at 86.36 110.49 0)
+		(effects
+			(font
+				(size 1.27 1.27)
+			)
+			(justify left bottom)
+		)
+		(uuid "bd383c04-ffc6-4f08-8884-0776f6921785")
+	)
+	(label "t0"
+		(at 86.36 59.69 0)
+		(effects
+			(font
+				(size 1.27 1.27)
+			)
+			(justify left bottom)
+		)
+		(uuid "c07131ff-5747-4614-8665-d82c5f92e9a0")
+	)
+	(label "s5"
+		(at 185.42 69.85 0)
+		(effects
+			(font
+				(size 1.27 1.27)
+			)
+			(justify left bottom)
+		)
+		(uuid "c78e1d0c-5108-4d55-9a0c-f977a9680b79")
+	)
+	(label "s41"
+		(at 86.36 171.45 0)
+		(effects
+			(font
+				(size 1.27 1.27)
+			)
+			(justify left bottom)
+		)
+		(uuid "c830f072-e1bb-4686-ad3a-fd14bfd2c3f6")
+	)
+	(label "t24"
+		(at 50.8 80.01 0)
+		(effects
+			(font
+				(size 1.27 1.27)
+			)
+			(justify left bottom)
+		)
+		(uuid "cc930df4-1316-42cb-9b9b-07d11f6bc1b4")
+	)
+	(label "t6"
+		(at 86.36 120.65 0)
+		(effects
+			(font
+				(size 1.27 1.27)
+			)
+			(justify left bottom)
+		)
+		(uuid "cee10e37-5208-4883-a5a4-f89ab9acc38f")
+	)
+	(label "s18"
+		(at 152.4 181.61 0)
+		(effects
+			(font
+				(size 1.27 1.27)
+			)
+			(justify left bottom)
+		)
+		(uuid "d33727e1-b17f-4f3e-a250-1988c6c2a36a")
+	)
+	(label "t16"
+		(at 86.36 19.05 0)
+		(effects
+			(font
+				(size 1.27 1.27)
+			)
+			(justify left bottom)
+		)
+		(uuid "d5a23dee-d1a4-4780-931e-35a4316db9cb")
+	)
+	(label "s39"
+		(at 120.65 171.45 0)
+		(effects
+			(font
+				(size 1.27 1.27)
+			)
+			(justify left bottom)
+		)
+		(uuid "d816bb55-d1eb-48e7-9ef5-ce5b021cfdd0")
+	)
+	(label "t44"
+		(at 16.51 59.69 0)
+		(effects
+			(font
+				(size 1.27 1.27)
+			)
+			(justify left bottom)
+		)
+		(uuid "d870de2d-9f98-4b4b-af6b-1c1f737adedc")
+	)
+	(label "t40"
+		(at 16.51 19.05 0)
+		(effects
+			(font
+				(size 1.27 1.27)
+			)
+			(justify left bottom)
+		)
+		(uuid "db5837a1-dac0-43a8-923b-720c6e7d66f3")
+	)
+	(label "t32"
+		(at 16.51 140.97 0)
+		(effects
+			(font
+				(size 1.27 1.27)
+			)
+			(justify left bottom)
+		)
+		(uuid "ddc400ea-706f-42bf-a887-980961266b2a")
+	)
+	(label "t30"
+		(at 16.51 120.65 0)
+		(effects
+			(font
+				(size 1.27 1.27)
+			)
+			(justify left bottom)
+		)
+		(uuid "e0081ce4-182b-4537-8c18-b5e6cb463010")
+	)
+	(label "t39"
+		(at 50.8 29.21 0)
+		(effects
+			(font
+				(size 1.27 1.27)
+			)
+			(justify left bottom)
+		)
+		(uuid "e047eadc-cf1e-40f0-b0f6-a401f4ca68cf")
+	)
+	(label "s11"
+		(at 152.4 110.49 0)
+		(effects
+			(font
+				(size 1.27 1.27)
+			)
+			(justify left bottom)
+		)
+		(uuid "e60e58b2-96dd-4ad1-8021-e1e717526bae")
+	)
+	(label "t38"
+		(at 50.8 19.05 0)
+		(effects
+			(font
+				(size 1.27 1.27)
+			)
+			(justify left bottom)
+		)
+		(uuid "e6947185-93f8-4a47-ac54-f5b84595ce05")
+	)
+	(label "s1"
+		(at 185.42 29.21 0)
+		(effects
+			(font
+				(size 1.27 1.27)
+			)
+			(justify left bottom)
+		)
+		(uuid "e6b49e66-d9a7-43ec-aa55-c72daab6585c")
+	)
+	(label "s43"
+		(at 86.36 191.77 0)
+		(effects
+			(font
+				(size 1.27 1.27)
+			)
+			(justify left bottom)
+		)
+		(uuid "e733c61f-3a15-4faa-b1a1-d7abd0dcaed1")
+	)
+	(label "t[49..0]"
+		(at 223.52 135.89 180)
+		(effects
+			(font
+				(size 1.27 1.27)
+			)
+			(justify right bottom)
+		)
+		(uuid "e9c36181-c14d-4f8b-9158-156111e38e6d")
+	)
+	(label "s40"
+		(at 86.36 161.29 0)
+		(effects
+			(font
+				(size 1.27 1.27)
+			)
+			(justify left bottom)
+		)
+		(uuid "ee16bdd1-0afa-4dae-9fc7-a199362c3139")
+	)
+	(label "s14"
+		(at 152.4 140.97 0)
+		(effects
+			(font
+				(size 1.27 1.27)
+			)
+			(justify left bottom)
+		)
+		(uuid "f5a40f03-3b32-4f78-be3f-63b3795ecf88")
+	)
+	(label "t34"
+		(at 16.51 161.29 0)
+		(effects
+			(font
+				(size 1.27 1.27)
+			)
+			(justify left bottom)
+		)
+		(uuid "f7d73963-7ee6-4a44-948c-24ea98ef4337")
+	)
+	(label "t45"
+		(at 16.51 69.85 0)
+		(effects
+			(font
+				(size 1.27 1.27)
+			)
+			(justify left bottom)
+		)
+		(uuid "f90d8dc6-68a7-4438-886b-599c0f557559")
+	)
+	(label "t14"
+		(at 50.8 181.61 0)
+		(effects
+			(font
+				(size 1.27 1.27)
+			)
+			(justify left bottom)
+		)
+		(uuid "ff1fc5ea-18e9-4f02-943d-9193c6c65869")
+	)
+	(hierarchical_label "s[49..0]"
+		(shape input)
+		(at 212.09 140.97 180)
+		(effects
+			(font
+				(size 1.27 1.27)
+			)
+			(justify right)
+		)
+		(uuid "8c97b216-a701-4c3f-8501-e0e0139b158d")
+	)
+	(hierarchical_label "t[49..0]"
+		(shape input)
+		(at 212.09 135.89 180)
+		(effects
+			(font
+				(size 1.27 1.27)
+			)
+			(justify right)
+		)
+		(uuid "9b41e85b-713e-43df-8291-481aa91290e0")
+	)
+	(sheet
+		(at 21.59 16.51)
+		(size 13.97 5.08)
+		(exclude_from_sim no)
+		(in_bom yes)
+		(on_board yes)
+		(dnp no)
+		(fields_autoplaced yes)
+		(stroke
+			(width 0)
+			(type solid)
+		)
+		(fill
+			(color 0 0 0 0)
+		)
+		(uuid "00000000-0000-0000-0000-00005f4e0219")
+		(property "Sheetname" "Transducer"
+			(at 21.59 15.7984 0)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify left bottom)
+			)
+		)
+		(property "Sheetfile" "Transducer.kicad_sch"
+			(at 21.59 22.1746 0)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify left top)
+			)
+		)
+		(pin "in" input
+			(at 21.59 19.05 180)
+			(uuid "18ac45ed-c8da-4f5e-aa4e-70f8af220312")
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify left)
+			)
+		)
+		(instances
+			(project "floater"
+				(path "/215b576a-c21a-436d-8bf0-864312c57ceb/00000000-0000-0000-0000-00005f4dfbb0"
+					(page "5")
+				)
+			)
+		)
+	)
+	(sheet
+		(at 21.59 26.67)
+		(size 13.97 5.08)
+		(exclude_from_sim no)
+		(in_bom yes)
+		(on_board yes)
+		(dnp no)
+		(fields_autoplaced yes)
+		(stroke
+			(width 0)
+			(type solid)
+		)
+		(fill
+			(color 0 0 0 0)
+		)
+		(uuid "00000000-0000-0000-0000-00005f4e75f5")
+		(property "Sheetname" "sheet5F4E75F2"
+			(at 21.59 25.9584 0)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify left bottom)
+			)
+		)
+		(property "Sheetfile" "Transducer.kicad_sch"
+			(at 21.59 32.3346 0)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify left top)
+			)
+		)
+		(pin "in" input
+			(at 21.59 29.21 180)
+			(uuid "b7cc8edd-481f-4b9d-9279-68baa98a279c")
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify left)
+			)
+		)
+		(instances
+			(project "floater"
+				(path "/215b576a-c21a-436d-8bf0-864312c57ceb/00000000-0000-0000-0000-00005f4dfbb0"
+					(page "6")
+				)
+			)
+		)
+	)
+	(sheet
+		(at 21.59 36.83)
+		(size 13.97 5.08)
+		(exclude_from_sim no)
+		(in_bom yes)
+		(on_board yes)
+		(dnp no)
+		(fields_autoplaced yes)
+		(stroke
+			(width 0)
+			(type solid)
+		)
+		(fill
+			(color 0 0 0 0)
+		)
+		(uuid "00000000-0000-0000-0000-00005f4e7777")
+		(property "Sheetname" "sheet5F4E7773"
+			(at 21.59 36.1184 0)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify left bottom)
+			)
+		)
+		(property "Sheetfile" "Transducer.kicad_sch"
+			(at 21.59 42.4946 0)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify left top)
+			)
+		)
+		(pin "in" input
+			(at 21.59 39.37 180)
+			(uuid "ec394770-5ef2-45d0-a831-1c3a7e890368")
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify left)
+			)
+		)
+		(instances
+			(project "floater"
+				(path "/215b576a-c21a-436d-8bf0-864312c57ceb/00000000-0000-0000-0000-00005f4dfbb0"
+					(page "7")
+				)
+			)
+		)
+	)
+	(sheet
+		(at 21.59 46.99)
+		(size 13.97 5.08)
+		(exclude_from_sim no)
+		(in_bom yes)
+		(on_board yes)
+		(dnp no)
+		(fields_autoplaced yes)
+		(stroke
+			(width 0)
+			(type solid)
+		)
+		(fill
+			(color 0 0 0 0)
+		)
+		(uuid "00000000-0000-0000-0000-00005f4e777c")
+		(property "Sheetname" "sheet5F4E7774"
+			(at 21.59 46.2784 0)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify left bottom)
+			)
+		)
+		(property "Sheetfile" "Transducer.kicad_sch"
+			(at 21.59 52.6546 0)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify left top)
+			)
+		)
+		(pin "in" input
+			(at 21.59 49.53 180)
+			(uuid "9b8e5c42-7d37-4089-84ed-45ad58acbbe4")
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify left)
+			)
+		)
+		(instances
+			(project "floater"
+				(path "/215b576a-c21a-436d-8bf0-864312c57ceb/00000000-0000-0000-0000-00005f4dfbb0"
+					(page "8")
+				)
+			)
+		)
+	)
+	(sheet
+		(at 21.59 57.15)
+		(size 13.97 5.08)
+		(exclude_from_sim no)
+		(in_bom yes)
+		(on_board yes)
+		(dnp no)
+		(fields_autoplaced yes)
+		(stroke
+			(width 0)
+			(type solid)
+		)
+		(fill
+			(color 0 0 0 0)
+		)
+		(uuid "00000000-0000-0000-0000-00005f4e7cb7")
+		(property "Sheetname" "sheet5F4E7CB1"
+			(at 21.59 56.4384 0)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify left bottom)
+			)
+		)
+		(property "Sheetfile" "Transducer.kicad_sch"
+			(at 21.59 62.8146 0)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify left top)
+			)
+		)
+		(pin "in" input
+			(at 21.59 59.69 180)
+			(uuid "38fe0120-a829-47a4-b0ef-e57334525481")
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify left)
+			)
+		)
+		(instances
+			(project "floater"
+				(path "/215b576a-c21a-436d-8bf0-864312c57ceb/00000000-0000-0000-0000-00005f4dfbb0"
+					(page "9")
+				)
+			)
+		)
+	)
+	(sheet
+		(at 21.59 67.31)
+		(size 13.97 5.08)
+		(exclude_from_sim no)
+		(in_bom yes)
+		(on_board yes)
+		(dnp no)
+		(fields_autoplaced yes)
+		(stroke
+			(width 0)
+			(type solid)
+		)
+		(fill
+			(color 0 0 0 0)
+		)
+		(uuid "00000000-0000-0000-0000-00005f4e7cbc")
+		(property "Sheetname" "sheet5F4E7CB2"
+			(at 21.59 66.5984 0)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify left bottom)
+			)
+		)
+		(property "Sheetfile" "Transducer.kicad_sch"
+			(at 21.59 72.9746 0)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify left top)
+			)
+		)
+		(pin "in" input
+			(at 21.59 69.85 180)
+			(uuid "c9c79543-c1ea-4bb4-a31e-22ee0ea5fe98")
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify left)
+			)
+		)
+		(instances
+			(project "floater"
+				(path "/215b576a-c21a-436d-8bf0-864312c57ceb/00000000-0000-0000-0000-00005f4dfbb0"
+					(page "10")
+				)
+			)
+		)
+	)
+	(sheet
+		(at 21.59 77.47)
+		(size 13.97 5.08)
+		(exclude_from_sim no)
+		(in_bom yes)
+		(on_board yes)
+		(dnp no)
+		(fields_autoplaced yes)
+		(stroke
+			(width 0)
+			(type solid)
+		)
+		(fill
+			(color 0 0 0 0)
+		)
+		(uuid "00000000-0000-0000-0000-00005f4e7cc1")
+		(property "Sheetname" "sheet5F4E7CB3"
+			(at 21.59 76.7584 0)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify left bottom)
+			)
+		)
+		(property "Sheetfile" "Transducer.kicad_sch"
+			(at 21.59 83.1346 0)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify left top)
+			)
+		)
+		(pin "in" input
+			(at 21.59 80.01 180)
+			(uuid "2ec66e65-4916-41ab-9684-0b9428f5c2f3")
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify left)
+			)
+		)
+		(instances
+			(project "floater"
+				(path "/215b576a-c21a-436d-8bf0-864312c57ceb/00000000-0000-0000-0000-00005f4dfbb0"
+					(page "11")
+				)
+			)
+		)
+	)
+	(sheet
+		(at 21.59 87.63)
+		(size 13.97 5.08)
+		(exclude_from_sim no)
+		(in_bom yes)
+		(on_board yes)
+		(dnp no)
+		(fields_autoplaced yes)
+		(stroke
+			(width 0)
+			(type solid)
+		)
+		(fill
+			(color 0 0 0 0)
+		)
+		(uuid "00000000-0000-0000-0000-00005f4e7cc6")
+		(property "Sheetname" "sheet5F4E7CB4"
+			(at 21.59 86.9184 0)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify left bottom)
+			)
+		)
+		(property "Sheetfile" "Transducer.kicad_sch"
+			(at 21.59 93.2946 0)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify left top)
+			)
+		)
+		(pin "in" input
+			(at 21.59 90.17 180)
+			(uuid "f09f83b9-f657-4db1-acc6-2bf2ce5bdcb6")
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify left)
+			)
+		)
+		(instances
+			(project "floater"
+				(path "/215b576a-c21a-436d-8bf0-864312c57ceb/00000000-0000-0000-0000-00005f4dfbb0"
+					(page "12")
+				)
+			)
+		)
+	)
+	(sheet
+		(at 21.59 97.79)
+		(size 13.97 5.08)
+		(exclude_from_sim no)
+		(in_bom yes)
+		(on_board yes)
+		(dnp no)
+		(fields_autoplaced yes)
+		(stroke
+			(width 0)
+			(type solid)
+		)
+		(fill
+			(color 0 0 0 0)
+		)
+		(uuid "00000000-0000-0000-0000-00005f4e9147")
+		(property "Sheetname" "sheet5F4E913D"
+			(at 21.59 97.0784 0)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify left bottom)
+			)
+		)
+		(property "Sheetfile" "Transducer.kicad_sch"
+			(at 21.59 103.4546 0)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify left top)
+			)
+		)
+		(pin "in" input
+			(at 21.59 100.33 180)
+			(uuid "4cb0e09b-4607-4fdc-9475-13dced43700e")
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify left)
+			)
+		)
+		(instances
+			(project "floater"
+				(path "/215b576a-c21a-436d-8bf0-864312c57ceb/00000000-0000-0000-0000-00005f4dfbb0"
+					(page "13")
+				)
+			)
+		)
+	)
+	(sheet
+		(at 21.59 107.95)
+		(size 13.97 5.08)
+		(exclude_from_sim no)
+		(in_bom yes)
+		(on_board yes)
+		(dnp no)
+		(fields_autoplaced yes)
+		(stroke
+			(width 0)
+			(type solid)
+		)
+		(fill
+			(color 0 0 0 0)
+		)
+		(uuid "00000000-0000-0000-0000-00005f4e914c")
+		(property "Sheetname" "sheet5F4E913E"
+			(at 21.59 107.2384 0)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify left bottom)
+			)
+		)
+		(property "Sheetfile" "Transducer.kicad_sch"
+			(at 21.59 113.6146 0)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify left top)
+			)
+		)
+		(pin "in" input
+			(at 21.59 110.49 180)
+			(uuid "da26b844-82ae-49c5-8ba2-ffebe36cec52")
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify left)
+			)
+		)
+		(instances
+			(project "floater"
+				(path "/215b576a-c21a-436d-8bf0-864312c57ceb/00000000-0000-0000-0000-00005f4dfbb0"
+					(page "14")
+				)
+			)
+		)
+	)
+	(sheet
+		(at 21.59 118.11)
+		(size 13.97 5.08)
+		(exclude_from_sim no)
+		(in_bom yes)
+		(on_board yes)
+		(dnp no)
+		(fields_autoplaced yes)
+		(stroke
+			(width 0)
+			(type solid)
+		)
+		(fill
+			(color 0 0 0 0)
+		)
+		(uuid "00000000-0000-0000-0000-00005f4e9151")
+		(property "Sheetname" "sheet5F4E913F"
+			(at 21.59 117.3984 0)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify left bottom)
+			)
+		)
+		(property "Sheetfile" "Transducer.kicad_sch"
+			(at 21.59 123.7746 0)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify left top)
+			)
+		)
+		(pin "in" input
+			(at 21.59 120.65 180)
+			(uuid "b0d7ecc9-4581-4a31-8624-a65c967e1646")
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify left)
+			)
+		)
+		(instances
+			(project "floater"
+				(path "/215b576a-c21a-436d-8bf0-864312c57ceb/00000000-0000-0000-0000-00005f4dfbb0"
+					(page "15")
+				)
+			)
+		)
+	)
+	(sheet
+		(at 21.59 128.27)
+		(size 13.97 5.08)
+		(exclude_from_sim no)
+		(in_bom yes)
+		(on_board yes)
+		(dnp no)
+		(fields_autoplaced yes)
+		(stroke
+			(width 0)
+			(type solid)
+		)
+		(fill
+			(color 0 0 0 0)
+		)
+		(uuid "00000000-0000-0000-0000-00005f4e9156")
+		(property "Sheetname" "sheet5F4E9140"
+			(at 21.59 127.5584 0)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify left bottom)
+			)
+		)
+		(property "Sheetfile" "Transducer.kicad_sch"
+			(at 21.59 133.9346 0)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify left top)
+			)
+		)
+		(pin "in" input
+			(at 21.59 130.81 180)
+			(uuid "9c3d0ac6-187b-4f48-80f1-d2776af3cf5b")
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify left)
+			)
+		)
+		(instances
+			(project "floater"
+				(path "/215b576a-c21a-436d-8bf0-864312c57ceb/00000000-0000-0000-0000-00005f4dfbb0"
+					(page "16")
+				)
+			)
+		)
+	)
+	(sheet
+		(at 21.59 138.43)
+		(size 13.97 5.08)
+		(exclude_from_sim no)
+		(in_bom yes)
+		(on_board yes)
+		(dnp no)
+		(fields_autoplaced yes)
+		(stroke
+			(width 0)
+			(type solid)
+		)
+		(fill
+			(color 0 0 0 0)
+		)
+		(uuid "00000000-0000-0000-0000-00005f4e915b")
+		(property "Sheetname" "sheet5F4E9141"
+			(at 21.59 137.7184 0)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify left bottom)
+			)
+		)
+		(property "Sheetfile" "Transducer.kicad_sch"
+			(at 21.59 144.0946 0)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify left top)
+			)
+		)
+		(pin "in" input
+			(at 21.59 140.97 180)
+			(uuid "bb8001de-417e-4f76-8fd1-23e656e464c9")
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify left)
+			)
+		)
+		(instances
+			(project "floater"
+				(path "/215b576a-c21a-436d-8bf0-864312c57ceb/00000000-0000-0000-0000-00005f4dfbb0"
+					(page "17")
+				)
+			)
+		)
+	)
+	(sheet
+		(at 21.59 148.59)
+		(size 13.97 5.08)
+		(exclude_from_sim no)
+		(in_bom yes)
+		(on_board yes)
+		(dnp no)
+		(fields_autoplaced yes)
+		(stroke
+			(width 0)
+			(type solid)
+		)
+		(fill
+			(color 0 0 0 0)
+		)
+		(uuid "00000000-0000-0000-0000-00005f4e9160")
+		(property "Sheetname" "sheet5F4E9142"
+			(at 21.59 147.8784 0)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify left bottom)
+			)
+		)
+		(property "Sheetfile" "Transducer.kicad_sch"
+			(at 21.59 154.2546 0)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify left top)
+			)
+		)
+		(pin "in" input
+			(at 21.59 151.13 180)
+			(uuid "303b09f0-16ee-48e0-9783-9b54454dbf96")
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify left)
+			)
+		)
+		(instances
+			(project "floater"
+				(path "/215b576a-c21a-436d-8bf0-864312c57ceb/00000000-0000-0000-0000-00005f4dfbb0"
+					(page "18")
+				)
+			)
+		)
+	)
+	(sheet
+		(at 21.59 158.75)
+		(size 13.97 5.08)
+		(exclude_from_sim no)
+		(in_bom yes)
+		(on_board yes)
+		(dnp no)
+		(fields_autoplaced yes)
+		(stroke
+			(width 0)
+			(type solid)
+		)
+		(fill
+			(color 0 0 0 0)
+		)
+		(uuid "00000000-0000-0000-0000-00005f4e9165")
+		(property "Sheetname" "sheet5F4E9143"
+			(at 21.59 158.0384 0)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify left bottom)
+			)
+		)
+		(property "Sheetfile" "Transducer.kicad_sch"
+			(at 21.59 164.4146 0)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify left top)
+			)
+		)
+		(pin "in" input
+			(at 21.59 161.29 180)
+			(uuid "11cff695-b446-487f-9323-93c0d6b7e107")
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify left)
+			)
+		)
+		(instances
+			(project "floater"
+				(path "/215b576a-c21a-436d-8bf0-864312c57ceb/00000000-0000-0000-0000-00005f4dfbb0"
+					(page "19")
+				)
+			)
+		)
+	)
+	(sheet
+		(at 21.59 168.91)
+		(size 13.97 5.08)
+		(exclude_from_sim no)
+		(in_bom yes)
+		(on_board yes)
+		(dnp no)
+		(fields_autoplaced yes)
+		(stroke
+			(width 0)
+			(type solid)
+		)
+		(fill
+			(color 0 0 0 0)
+		)
+		(uuid "00000000-0000-0000-0000-00005f4e916a")
+		(property "Sheetname" "sheet5F4E9144"
+			(at 21.59 168.1984 0)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify left bottom)
+			)
+		)
+		(property "Sheetfile" "Transducer.kicad_sch"
+			(at 21.59 174.5746 0)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify left top)
+			)
+		)
+		(pin "in" input
+			(at 21.59 171.45 180)
+			(uuid "e24eb819-f466-4f88-a3f3-04d4d72a38eb")
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify left)
+			)
+		)
+		(instances
+			(project "floater"
+				(path "/215b576a-c21a-436d-8bf0-864312c57ceb/00000000-0000-0000-0000-00005f4dfbb0"
+					(page "20")
+				)
+			)
+		)
+	)
+	(sheet
+		(at 21.59 179.07)
+		(size 13.97 5.08)
+		(exclude_from_sim no)
+		(in_bom yes)
+		(on_board yes)
+		(dnp no)
+		(fields_autoplaced yes)
+		(stroke
+			(width 0)
+			(type solid)
+		)
+		(fill
+			(color 0 0 0 0)
+		)
+		(uuid "00000000-0000-0000-0000-00005f4e9ac1")
+		(property "Sheetname" "sheet5F4E9ABD"
+			(at 21.59 178.3584 0)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify left bottom)
+			)
+		)
+		(property "Sheetfile" "Transducer.kicad_sch"
+			(at 21.59 184.7346 0)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify left top)
+			)
+		)
+		(pin "in" input
+			(at 21.59 181.61 180)
+			(uuid "00cf1511-d58c-4f4a-97b6-2620ceab92e1")
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify left)
+			)
+		)
+		(instances
+			(project "floater"
+				(path "/215b576a-c21a-436d-8bf0-864312c57ceb/00000000-0000-0000-0000-00005f4dfbb0"
+					(page "21")
+				)
+			)
+		)
+	)
+	(sheet
+		(at 21.59 189.23)
+		(size 13.97 5.08)
+		(exclude_from_sim no)
+		(in_bom yes)
+		(on_board yes)
+		(dnp no)
+		(fields_autoplaced yes)
+		(stroke
+			(width 0)
+			(type solid)
+		)
+		(fill
+			(color 0 0 0 0)
+		)
+		(uuid "00000000-0000-0000-0000-00005f4e9ac6")
+		(property "Sheetname" "sheet5F4E9ABE"
+			(at 21.59 188.5184 0)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify left bottom)
+			)
+		)
+		(property "Sheetfile" "Transducer.kicad_sch"
+			(at 21.59 194.8946 0)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify left top)
+			)
+		)
+		(pin "in" input
+			(at 21.59 191.77 180)
+			(uuid "4f60af17-0fef-4e92-b984-976b0c2fb236")
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify left)
+			)
+		)
+		(instances
+			(project "floater"
+				(path "/215b576a-c21a-436d-8bf0-864312c57ceb/00000000-0000-0000-0000-00005f4dfbb0"
+					(page "22")
+				)
+			)
+		)
+	)
+	(sheet
+		(at 55.88 16.51)
+		(size 13.97 5.08)
+		(exclude_from_sim no)
+		(in_bom yes)
+		(on_board yes)
+		(dnp no)
+		(fields_autoplaced yes)
+		(stroke
+			(width 0)
+			(type solid)
+		)
+		(fill
+			(color 0 0 0 0)
+		)
+		(uuid "00000000-0000-0000-0000-00005f4ec3c0")
+		(property "Sheetname" "sheet5F4EC3AC"
+			(at 55.88 15.7984 0)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify left bottom)
+			)
+		)
+		(property "Sheetfile" "Transducer.kicad_sch"
+			(at 55.88 22.1746 0)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify left top)
+			)
+		)
+		(pin "in" input
+			(at 55.88 19.05 180)
+			(uuid "b8c0365d-e3d3-4e00-a39c-657b5b066109")
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify left)
+			)
+		)
+		(instances
+			(project "floater"
+				(path "/215b576a-c21a-436d-8bf0-864312c57ceb/00000000-0000-0000-0000-00005f4dfbb0"
+					(page "23")
+				)
+			)
+		)
+	)
+	(sheet
+		(at 55.88 26.67)
+		(size 13.97 5.08)
+		(exclude_from_sim no)
+		(in_bom yes)
+		(on_board yes)
+		(dnp no)
+		(fields_autoplaced yes)
+		(stroke
+			(width 0)
+			(type solid)
+		)
+		(fill
+			(color 0 0 0 0)
+		)
+		(uuid "00000000-0000-0000-0000-00005f4ec3c5")
+		(property "Sheetname" "sheet5F4EC3AD"
+			(at 55.88 25.9584 0)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify left bottom)
+			)
+		)
+		(property "Sheetfile" "Transducer.kicad_sch"
+			(at 55.88 32.3346 0)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify left top)
+			)
+		)
+		(pin "in" input
+			(at 55.88 29.21 180)
+			(uuid "2f7aa749-8efc-4327-b949-b251be3699a8")
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify left)
+			)
+		)
+		(instances
+			(project "floater"
+				(path "/215b576a-c21a-436d-8bf0-864312c57ceb/00000000-0000-0000-0000-00005f4dfbb0"
+					(page "24")
+				)
+			)
+		)
+	)
+	(sheet
+		(at 55.88 36.83)
+		(size 13.97 5.08)
+		(exclude_from_sim no)
+		(in_bom yes)
+		(on_board yes)
+		(dnp no)
+		(fields_autoplaced yes)
+		(stroke
+			(width 0)
+			(type solid)
+		)
+		(fill
+			(color 0 0 0 0)
+		)
+		(uuid "00000000-0000-0000-0000-00005f4ec3ca")
+		(property "Sheetname" "sheet5F4EC3AE"
+			(at 55.88 36.1184 0)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify left bottom)
+			)
+		)
+		(property "Sheetfile" "Transducer.kicad_sch"
+			(at 55.88 42.4946 0)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify left top)
+			)
+		)
+		(pin "in" input
+			(at 55.88 39.37 180)
+			(uuid "ba3d73db-1dc9-48b7-90ac-e942f833ba2c")
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify left)
+			)
+		)
+		(instances
+			(project "floater"
+				(path "/215b576a-c21a-436d-8bf0-864312c57ceb/00000000-0000-0000-0000-00005f4dfbb0"
+					(page "25")
+				)
+			)
+		)
+	)
+	(sheet
+		(at 55.88 46.99)
+		(size 13.97 5.08)
+		(exclude_from_sim no)
+		(in_bom yes)
+		(on_board yes)
+		(dnp no)
+		(fields_autoplaced yes)
+		(stroke
+			(width 0)
+			(type solid)
+		)
+		(fill
+			(color 0 0 0 0)
+		)
+		(uuid "00000000-0000-0000-0000-00005f4ec3cf")
+		(property "Sheetname" "sheet5F4EC3AF"
+			(at 55.88 46.2784 0)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify left bottom)
+			)
+		)
+		(property "Sheetfile" "Transducer.kicad_sch"
+			(at 55.88 52.6546 0)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify left top)
+			)
+		)
+		(pin "in" input
+			(at 55.88 49.53 180)
+			(uuid "3c699c19-a32d-41f8-9c94-539f4c3881ab")
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify left)
+			)
+		)
+		(instances
+			(project "floater"
+				(path "/215b576a-c21a-436d-8bf0-864312c57ceb/00000000-0000-0000-0000-00005f4dfbb0"
+					(page "26")
+				)
+			)
+		)
+	)
+	(sheet
+		(at 55.88 57.15)
+		(size 13.97 5.08)
+		(exclude_from_sim no)
+		(in_bom yes)
+		(on_board yes)
+		(dnp no)
+		(fields_autoplaced yes)
+		(stroke
+			(width 0)
+			(type solid)
+		)
+		(fill
+			(color 0 0 0 0)
+		)
+		(uuid "00000000-0000-0000-0000-00005f4ec3d4")
+		(property "Sheetname" "sheet5F4EC3B0"
+			(at 55.88 56.4384 0)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify left bottom)
+			)
+		)
+		(property "Sheetfile" "Transducer.kicad_sch"
+			(at 55.88 62.8146 0)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify left top)
+			)
+		)
+		(pin "in" input
+			(at 55.88 59.69 180)
+			(uuid "adac1082-7227-4c7c-8fa0-7aa5562b50a2")
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify left)
+			)
+		)
+		(instances
+			(project "floater"
+				(path "/215b576a-c21a-436d-8bf0-864312c57ceb/00000000-0000-0000-0000-00005f4dfbb0"
+					(page "27")
+				)
+			)
+		)
+	)
+	(sheet
+		(at 55.88 67.31)
+		(size 13.97 5.08)
+		(exclude_from_sim no)
+		(in_bom yes)
+		(on_board yes)
+		(dnp no)
+		(fields_autoplaced yes)
+		(stroke
+			(width 0)
+			(type solid)
+		)
+		(fill
+			(color 0 0 0 0)
+		)
+		(uuid "00000000-0000-0000-0000-00005f4ec3d9")
+		(property "Sheetname" "sheet5F4EC3B1"
+			(at 55.88 66.5984 0)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify left bottom)
+			)
+		)
+		(property "Sheetfile" "Transducer.kicad_sch"
+			(at 55.88 72.9746 0)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify left top)
+			)
+		)
+		(pin "in" input
+			(at 55.88 69.85 180)
+			(uuid "f482db98-c9d3-4b8f-a141-b2d5775d7bb2")
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify left)
+			)
+		)
+		(instances
+			(project "floater"
+				(path "/215b576a-c21a-436d-8bf0-864312c57ceb/00000000-0000-0000-0000-00005f4dfbb0"
+					(page "28")
+				)
+			)
+		)
+	)
+	(sheet
+		(at 55.88 77.47)
+		(size 13.97 5.08)
+		(exclude_from_sim no)
+		(in_bom yes)
+		(on_board yes)
+		(dnp no)
+		(fields_autoplaced yes)
+		(stroke
+			(width 0)
+			(type solid)
+		)
+		(fill
+			(color 0 0 0 0)
+		)
+		(uuid "00000000-0000-0000-0000-00005f4ec3de")
+		(property "Sheetname" "sheet5F4EC3B2"
+			(at 55.88 76.7584 0)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify left bottom)
+			)
+		)
+		(property "Sheetfile" "Transducer.kicad_sch"
+			(at 55.88 83.1346 0)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify left top)
+			)
+		)
+		(pin "in" input
+			(at 55.88 80.01 180)
+			(uuid "7cd27b1e-b400-436c-a1a9-d9acfca3ac61")
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify left)
+			)
+		)
+		(instances
+			(project "floater"
+				(path "/215b576a-c21a-436d-8bf0-864312c57ceb/00000000-0000-0000-0000-00005f4dfbb0"
+					(page "29")
+				)
+			)
+		)
+	)
+	(sheet
+		(at 55.88 87.63)
+		(size 13.97 5.08)
+		(exclude_from_sim no)
+		(in_bom yes)
+		(on_board yes)
+		(dnp no)
+		(fields_autoplaced yes)
+		(stroke
+			(width 0)
+			(type solid)
+		)
+		(fill
+			(color 0 0 0 0)
+		)
+		(uuid "00000000-0000-0000-0000-00005f4ec3e3")
+		(property "Sheetname" "sheet5F4EC3B3"
+			(at 55.88 86.9184 0)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify left bottom)
+			)
+		)
+		(property "Sheetfile" "Transducer.kicad_sch"
+			(at 55.88 93.2946 0)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify left top)
+			)
+		)
+		(pin "in" input
+			(at 55.88 90.17 180)
+			(uuid "7e0dd170-56c2-4f0d-aff2-b4d68fd213a2")
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify left)
+			)
+		)
+		(instances
+			(project "floater"
+				(path "/215b576a-c21a-436d-8bf0-864312c57ceb/00000000-0000-0000-0000-00005f4dfbb0"
+					(page "30")
+				)
+			)
+		)
+	)
+	(sheet
+		(at 55.88 97.79)
+		(size 13.97 5.08)
+		(exclude_from_sim no)
+		(in_bom yes)
+		(on_board yes)
+		(dnp no)
+		(fields_autoplaced yes)
+		(stroke
+			(width 0)
+			(type solid)
+		)
+		(fill
+			(color 0 0 0 0)
+		)
+		(uuid "00000000-0000-0000-0000-00005f4ec3e8")
+		(property "Sheetname" "sheet5F4EC3B4"
+			(at 55.88 97.0784 0)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify left bottom)
+			)
+		)
+		(property "Sheetfile" "Transducer.kicad_sch"
+			(at 55.88 103.4546 0)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify left top)
+			)
+		)
+		(pin "in" input
+			(at 55.88 100.33 180)
+			(uuid "39986578-77ad-498a-bd88-8d8064055ab3")
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify left)
+			)
+		)
+		(instances
+			(project "floater"
+				(path "/215b576a-c21a-436d-8bf0-864312c57ceb/00000000-0000-0000-0000-00005f4dfbb0"
+					(page "31")
+				)
+			)
+		)
+	)
+	(sheet
+		(at 55.88 107.95)
+		(size 13.97 5.08)
+		(exclude_from_sim no)
+		(in_bom yes)
+		(on_board yes)
+		(dnp no)
+		(fields_autoplaced yes)
+		(stroke
+			(width 0)
+			(type solid)
+		)
+		(fill
+			(color 0 0 0 0)
+		)
+		(uuid "00000000-0000-0000-0000-00005f4ec3ed")
+		(property "Sheetname" "sheet5F4EC3B5"
+			(at 55.88 107.2384 0)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify left bottom)
+			)
+		)
+		(property "Sheetfile" "Transducer.kicad_sch"
+			(at 55.88 113.6146 0)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify left top)
+			)
+		)
+		(pin "in" input
+			(at 55.88 110.49 180)
+			(uuid "f1b13e24-8e0d-4ded-aba8-ffbe66cf9dfa")
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify left)
+			)
+		)
+		(instances
+			(project "floater"
+				(path "/215b576a-c21a-436d-8bf0-864312c57ceb/00000000-0000-0000-0000-00005f4dfbb0"
+					(page "32")
+				)
+			)
+		)
+	)
+	(sheet
+		(at 55.88 118.11)
+		(size 13.97 5.08)
+		(exclude_from_sim no)
+		(in_bom yes)
+		(on_board yes)
+		(dnp no)
+		(fields_autoplaced yes)
+		(stroke
+			(width 0)
+			(type solid)
+		)
+		(fill
+			(color 0 0 0 0)
+		)
+		(uuid "00000000-0000-0000-0000-00005f4ec3f2")
+		(property "Sheetname" "sheet5F4EC3B6"
+			(at 55.88 117.3984 0)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify left bottom)
+			)
+		)
+		(property "Sheetfile" "Transducer.kicad_sch"
+			(at 55.88 123.7746 0)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify left top)
+			)
+		)
+		(pin "in" input
+			(at 55.88 120.65 180)
+			(uuid "26944f80-5e69-4d38-a1ab-482f40a20d11")
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify left)
+			)
+		)
+		(instances
+			(project "floater"
+				(path "/215b576a-c21a-436d-8bf0-864312c57ceb/00000000-0000-0000-0000-00005f4dfbb0"
+					(page "33")
+				)
+			)
+		)
+	)
+	(sheet
+		(at 55.88 128.27)
+		(size 13.97 5.08)
+		(exclude_from_sim no)
+		(in_bom yes)
+		(on_board yes)
+		(dnp no)
+		(fields_autoplaced yes)
+		(stroke
+			(width 0)
+			(type solid)
+		)
+		(fill
+			(color 0 0 0 0)
+		)
+		(uuid "00000000-0000-0000-0000-00005f4ec3f7")
+		(property "Sheetname" "sheet5F4EC3B7"
+			(at 55.88 127.5584 0)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify left bottom)
+			)
+		)
+		(property "Sheetfile" "Transducer.kicad_sch"
+			(at 55.88 133.9346 0)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify left top)
+			)
+		)
+		(pin "in" input
+			(at 55.88 130.81 180)
+			(uuid "4fc6b142-9fdc-43c2-acbe-d160b1d11133")
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify left)
+			)
+		)
+		(instances
+			(project "floater"
+				(path "/215b576a-c21a-436d-8bf0-864312c57ceb/00000000-0000-0000-0000-00005f4dfbb0"
+					(page "34")
+				)
+			)
+		)
+	)
+	(sheet
+		(at 55.88 138.43)
+		(size 13.97 5.08)
+		(exclude_from_sim no)
+		(in_bom yes)
+		(on_board yes)
+		(dnp no)
+		(fields_autoplaced yes)
+		(stroke
+			(width 0)
+			(type solid)
+		)
+		(fill
+			(color 0 0 0 0)
+		)
+		(uuid "00000000-0000-0000-0000-00005f4ec3fc")
+		(property "Sheetname" "sheet5F4EC3B8"
+			(at 55.88 137.7184 0)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify left bottom)
+			)
+		)
+		(property "Sheetfile" "Transducer.kicad_sch"
+			(at 55.88 144.0946 0)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify left top)
+			)
+		)
+		(pin "in" input
+			(at 55.88 140.97 180)
+			(uuid "279a1106-5c13-4420-a4d8-4f8a51616c81")
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify left)
+			)
+		)
+		(instances
+			(project "floater"
+				(path "/215b576a-c21a-436d-8bf0-864312c57ceb/00000000-0000-0000-0000-00005f4dfbb0"
+					(page "35")
+				)
+			)
+		)
+	)
+	(sheet
+		(at 55.88 148.59)
+		(size 13.97 5.08)
+		(exclude_from_sim no)
+		(in_bom yes)
+		(on_board yes)
+		(dnp no)
+		(fields_autoplaced yes)
+		(stroke
+			(width 0)
+			(type solid)
+		)
+		(fill
+			(color 0 0 0 0)
+		)
+		(uuid "00000000-0000-0000-0000-00005f4ec401")
+		(property "Sheetname" "sheet5F4EC3B9"
+			(at 55.88 147.8784 0)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify left bottom)
+			)
+		)
+		(property "Sheetfile" "Transducer.kicad_sch"
+			(at 55.88 154.2546 0)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify left top)
+			)
+		)
+		(pin "in" input
+			(at 55.88 151.13 180)
+			(uuid "ea076c8c-37d1-46c7-b775-c127a147860d")
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify left)
+			)
+		)
+		(instances
+			(project "floater"
+				(path "/215b576a-c21a-436d-8bf0-864312c57ceb/00000000-0000-0000-0000-00005f4dfbb0"
+					(page "36")
+				)
+			)
+		)
+	)
+	(sheet
+		(at 55.88 158.75)
+		(size 13.97 5.08)
+		(exclude_from_sim no)
+		(in_bom yes)
+		(on_board yes)
+		(dnp no)
+		(fields_autoplaced yes)
+		(stroke
+			(width 0)
+			(type solid)
+		)
+		(fill
+			(color 0 0 0 0)
+		)
+		(uuid "00000000-0000-0000-0000-00005f4ec406")
+		(property "Sheetname" "sheet5F4EC3BA"
+			(at 55.88 158.0384 0)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify left bottom)
+			)
+		)
+		(property "Sheetfile" "Transducer.kicad_sch"
+			(at 55.88 164.4146 0)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify left top)
+			)
+		)
+		(pin "in" input
+			(at 55.88 161.29 180)
+			(uuid "04fbe727-97a5-4d21-8cf2-81d38424013f")
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify left)
+			)
+		)
+		(instances
+			(project "floater"
+				(path "/215b576a-c21a-436d-8bf0-864312c57ceb/00000000-0000-0000-0000-00005f4dfbb0"
+					(page "37")
+				)
+			)
+		)
+	)
+	(sheet
+		(at 55.88 168.91)
+		(size 13.97 5.08)
+		(exclude_from_sim no)
+		(in_bom yes)
+		(on_board yes)
+		(dnp no)
+		(fields_autoplaced yes)
+		(stroke
+			(width 0)
+			(type solid)
+		)
+		(fill
+			(color 0 0 0 0)
+		)
+		(uuid "00000000-0000-0000-0000-00005f4ec40b")
+		(property "Sheetname" "sheet5F4EC3BB"
+			(at 55.88 168.1984 0)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify left bottom)
+			)
+		)
+		(property "Sheetfile" "Transducer.kicad_sch"
+			(at 55.88 174.5746 0)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify left top)
+			)
+		)
+		(pin "in" input
+			(at 55.88 171.45 180)
+			(uuid "d63929ea-c2fd-4098-a099-f009b1cba9ad")
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify left)
+			)
+		)
+		(instances
+			(project "floater"
+				(path "/215b576a-c21a-436d-8bf0-864312c57ceb/00000000-0000-0000-0000-00005f4dfbb0"
+					(page "38")
+				)
+			)
+		)
+	)
+	(sheet
+		(at 55.88 179.07)
+		(size 13.97 5.08)
+		(exclude_from_sim no)
+		(in_bom yes)
+		(on_board yes)
+		(dnp no)
+		(fields_autoplaced yes)
+		(stroke
+			(width 0)
+			(type solid)
+		)
+		(fill
+			(color 0 0 0 0)
+		)
+		(uuid "00000000-0000-0000-0000-00005f4ec410")
+		(property "Sheetname" "sheet5F4EC3BC"
+			(at 55.88 178.3584 0)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify left bottom)
+			)
+		)
+		(property "Sheetfile" "Transducer.kicad_sch"
+			(at 55.88 184.7346 0)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify left top)
+			)
+		)
+		(pin "in" input
+			(at 55.88 181.61 180)
+			(uuid "bd09a29d-328f-46ab-ab08-6a490a2e5193")
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify left)
+			)
+		)
+		(instances
+			(project "floater"
+				(path "/215b576a-c21a-436d-8bf0-864312c57ceb/00000000-0000-0000-0000-00005f4dfbb0"
+					(page "39")
+				)
+			)
+		)
+	)
+	(sheet
+		(at 55.88 189.23)
+		(size 13.97 5.08)
+		(exclude_from_sim no)
+		(in_bom yes)
+		(on_board yes)
+		(dnp no)
+		(fields_autoplaced yes)
+		(stroke
+			(width 0)
+			(type solid)
+		)
+		(fill
+			(color 0 0 0 0)
+		)
+		(uuid "00000000-0000-0000-0000-00005f4ec415")
+		(property "Sheetname" "sheet5F4EC3BD"
+			(at 55.88 188.5184 0)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify left bottom)
+			)
+		)
+		(property "Sheetfile" "Transducer.kicad_sch"
+			(at 55.88 194.8946 0)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify left top)
+			)
+		)
+		(pin "in" input
+			(at 55.88 191.77 180)
+			(uuid "e03f58ab-b63f-4b3f-9692-b0a05146fdb3")
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify left)
+			)
+		)
+		(instances
+			(project "floater"
+				(path "/215b576a-c21a-436d-8bf0-864312c57ceb/00000000-0000-0000-0000-00005f4dfbb0"
+					(page "40")
+				)
+			)
+		)
+	)
+	(sheet
+		(at 91.44 16.51)
+		(size 13.97 5.08)
+		(exclude_from_sim no)
+		(in_bom yes)
+		(on_board yes)
+		(dnp no)
+		(fields_autoplaced yes)
+		(stroke
+			(width 0)
+			(type solid)
+		)
+		(fill
+			(color 0 0 0 0)
+		)
+		(uuid "00000000-0000-0000-0000-00005f4f0620")
+		(property "Sheetname" "sheet5F4F05FA"
+			(at 91.44 15.7984 0)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify left bottom)
+			)
+		)
+		(property "Sheetfile" "Transducer.kicad_sch"
+			(at 91.44 22.1746 0)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify left top)
+			)
+		)
+		(pin "in" input
+			(at 91.44 19.05 180)
+			(uuid "d1520c98-a220-40f1-8f5f-831d7d1d7da9")
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify left)
+			)
+		)
+		(instances
+			(project "floater"
+				(path "/215b576a-c21a-436d-8bf0-864312c57ceb/00000000-0000-0000-0000-00005f4dfbb0"
+					(page "41")
+				)
+			)
+		)
+	)
+	(sheet
+		(at 91.44 26.67)
+		(size 13.97 5.08)
+		(exclude_from_sim no)
+		(in_bom yes)
+		(on_board yes)
+		(dnp no)
+		(fields_autoplaced yes)
+		(stroke
+			(width 0)
+			(type solid)
+		)
+		(fill
+			(color 0 0 0 0)
+		)
+		(uuid "00000000-0000-0000-0000-00005f4f0625")
+		(property "Sheetname" "sheet5F4F05FB"
+			(at 91.44 25.9584 0)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify left bottom)
+			)
+		)
+		(property "Sheetfile" "Transducer.kicad_sch"
+			(at 91.44 32.3346 0)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify left top)
+			)
+		)
+		(pin "in" input
+			(at 91.44 29.21 180)
+			(uuid "9009318b-6507-461d-9412-a3f93b2dbd02")
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify left)
+			)
+		)
+		(instances
+			(project "floater"
+				(path "/215b576a-c21a-436d-8bf0-864312c57ceb/00000000-0000-0000-0000-00005f4dfbb0"
+					(page "42")
+				)
+			)
+		)
+	)
+	(sheet
+		(at 91.44 36.83)
+		(size 13.97 5.08)
+		(exclude_from_sim no)
+		(in_bom yes)
+		(on_board yes)
+		(dnp no)
+		(fields_autoplaced yes)
+		(stroke
+			(width 0)
+			(type solid)
+		)
+		(fill
+			(color 0 0 0 0)
+		)
+		(uuid "00000000-0000-0000-0000-00005f4f062a")
+		(property "Sheetname" "sheet5F4F05FC"
+			(at 91.44 36.1184 0)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify left bottom)
+			)
+		)
+		(property "Sheetfile" "Transducer.kicad_sch"
+			(at 91.44 42.4946 0)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify left top)
+			)
+		)
+		(pin "in" input
+			(at 91.44 39.37 180)
+			(uuid "9c1c8078-700e-4a12-853a-7822184a2f59")
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify left)
+			)
+		)
+		(instances
+			(project "floater"
+				(path "/215b576a-c21a-436d-8bf0-864312c57ceb/00000000-0000-0000-0000-00005f4dfbb0"
+					(page "43")
+				)
+			)
+		)
+	)
+	(sheet
+		(at 91.44 46.99)
+		(size 13.97 5.08)
+		(exclude_from_sim no)
+		(in_bom yes)
+		(on_board yes)
+		(dnp no)
+		(fields_autoplaced yes)
+		(stroke
+			(width 0)
+			(type solid)
+		)
+		(fill
+			(color 0 0 0 0)
+		)
+		(uuid "00000000-0000-0000-0000-00005f4f062f")
+		(property "Sheetname" "sheet5F4F05FD"
+			(at 91.44 46.2784 0)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify left bottom)
+			)
+		)
+		(property "Sheetfile" "Transducer.kicad_sch"
+			(at 91.44 52.6546 0)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify left top)
+			)
+		)
+		(pin "in" input
+			(at 91.44 49.53 180)
+			(uuid "4ad23c07-20b5-4d28-a741-4d9e93279504")
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify left)
+			)
+		)
+		(instances
+			(project "floater"
+				(path "/215b576a-c21a-436d-8bf0-864312c57ceb/00000000-0000-0000-0000-00005f4dfbb0"
+					(page "44")
+				)
+			)
+		)
+	)
+	(sheet
+		(at 91.44 57.15)
+		(size 13.97 5.08)
+		(exclude_from_sim no)
+		(in_bom yes)
+		(on_board yes)
+		(dnp no)
+		(fields_autoplaced yes)
+		(stroke
+			(width 0)
+			(type solid)
+		)
+		(fill
+			(color 0 0 0 0)
+		)
+		(uuid "00000000-0000-0000-0000-00005f4f0634")
+		(property "Sheetname" "sheet5F4F05FE"
+			(at 91.44 56.4384 0)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify left bottom)
+			)
+		)
+		(property "Sheetfile" "Transducer.kicad_sch"
+			(at 91.44 62.8146 0)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify left top)
+			)
+		)
+		(pin "in" input
+			(at 91.44 59.69 180)
+			(uuid "32e0e0a7-b1a3-4e9b-93eb-5ea495bd21dd")
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify left)
+			)
+		)
+		(instances
+			(project "floater"
+				(path "/215b576a-c21a-436d-8bf0-864312c57ceb/00000000-0000-0000-0000-00005f4dfbb0"
+					(page "45")
+				)
+			)
+		)
+	)
+	(sheet
+		(at 91.44 67.31)
+		(size 13.97 5.08)
+		(exclude_from_sim no)
+		(in_bom yes)
+		(on_board yes)
+		(dnp no)
+		(fields_autoplaced yes)
+		(stroke
+			(width 0)
+			(type solid)
+		)
+		(fill
+			(color 0 0 0 0)
+		)
+		(uuid "00000000-0000-0000-0000-00005f4f0639")
+		(property "Sheetname" "sheet5F4F05FF"
+			(at 91.44 66.5984 0)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify left bottom)
+			)
+		)
+		(property "Sheetfile" "Transducer.kicad_sch"
+			(at 91.44 72.9746 0)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify left top)
+			)
+		)
+		(pin "in" input
+			(at 91.44 69.85 180)
+			(uuid "40ccc8cc-eca1-4dca-a4fb-05d021244feb")
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify left)
+			)
+		)
+		(instances
+			(project "floater"
+				(path "/215b576a-c21a-436d-8bf0-864312c57ceb/00000000-0000-0000-0000-00005f4dfbb0"
+					(page "46")
+				)
+			)
+		)
+	)
+	(sheet
+		(at 91.44 77.47)
+		(size 13.97 5.08)
+		(exclude_from_sim no)
+		(in_bom yes)
+		(on_board yes)
+		(dnp no)
+		(fields_autoplaced yes)
+		(stroke
+			(width 0)
+			(type solid)
+		)
+		(fill
+			(color 0 0 0 0)
+		)
+		(uuid "00000000-0000-0000-0000-00005f4f063e")
+		(property "Sheetname" "sheet5F4F0600"
+			(at 91.44 76.7584 0)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify left bottom)
+			)
+		)
+		(property "Sheetfile" "Transducer.kicad_sch"
+			(at 91.44 83.1346 0)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify left top)
+			)
+		)
+		(pin "in" input
+			(at 91.44 80.01 180)
+			(uuid "5f87bce3-9395-42f6-a565-3f6bad146b82")
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify left)
+			)
+		)
+		(instances
+			(project "floater"
+				(path "/215b576a-c21a-436d-8bf0-864312c57ceb/00000000-0000-0000-0000-00005f4dfbb0"
+					(page "47")
+				)
+			)
+		)
+	)
+	(sheet
+		(at 91.44 87.63)
+		(size 13.97 5.08)
+		(exclude_from_sim no)
+		(in_bom yes)
+		(on_board yes)
+		(dnp no)
+		(fields_autoplaced yes)
+		(stroke
+			(width 0)
+			(type solid)
+		)
+		(fill
+			(color 0 0 0 0)
+		)
+		(uuid "00000000-0000-0000-0000-00005f4f0643")
+		(property "Sheetname" "sheet5F4F0601"
+			(at 91.44 86.9184 0)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify left bottom)
+			)
+		)
+		(property "Sheetfile" "Transducer.kicad_sch"
+			(at 91.44 93.2946 0)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify left top)
+			)
+		)
+		(pin "in" input
+			(at 91.44 90.17 180)
+			(uuid "d1c70510-8196-4738-98a3-7c78b4ea0fe2")
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify left)
+			)
+		)
+		(instances
+			(project "floater"
+				(path "/215b576a-c21a-436d-8bf0-864312c57ceb/00000000-0000-0000-0000-00005f4dfbb0"
+					(page "48")
+				)
+			)
+		)
+	)
+	(sheet
+		(at 91.44 97.79)
+		(size 13.97 5.08)
+		(exclude_from_sim no)
+		(in_bom yes)
+		(on_board yes)
+		(dnp no)
+		(fields_autoplaced yes)
+		(stroke
+			(width 0)
+			(type solid)
+		)
+		(fill
+			(color 0 0 0 0)
+		)
+		(uuid "00000000-0000-0000-0000-00005f4f0648")
+		(property "Sheetname" "sheet5F4F0602"
+			(at 91.44 97.0784 0)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify left bottom)
+			)
+		)
+		(property "Sheetfile" "Transducer.kicad_sch"
+			(at 91.44 103.4546 0)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify left top)
+			)
+		)
+		(pin "in" input
+			(at 91.44 100.33 180)
+			(uuid "6b9b9651-6019-4a5c-9f27-00ab224c205e")
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify left)
+			)
+		)
+		(instances
+			(project "floater"
+				(path "/215b576a-c21a-436d-8bf0-864312c57ceb/00000000-0000-0000-0000-00005f4dfbb0"
+					(page "49")
+				)
+			)
+		)
+	)
+	(sheet
+		(at 91.44 107.95)
+		(size 13.97 5.08)
+		(exclude_from_sim no)
+		(in_bom yes)
+		(on_board yes)
+		(dnp no)
+		(fields_autoplaced yes)
+		(stroke
+			(width 0)
+			(type solid)
+		)
+		(fill
+			(color 0 0 0 0)
+		)
+		(uuid "00000000-0000-0000-0000-00005f4f064d")
+		(property "Sheetname" "sheet5F4F0603"
+			(at 91.44 107.2384 0)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify left bottom)
+			)
+		)
+		(property "Sheetfile" "Transducer.kicad_sch"
+			(at 91.44 113.6146 0)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify left top)
+			)
+		)
+		(pin "in" input
+			(at 91.44 110.49 180)
+			(uuid "f6ec3d28-71c9-4d75-885c-18b654db6a59")
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify left)
+			)
+		)
+		(instances
+			(project "floater"
+				(path "/215b576a-c21a-436d-8bf0-864312c57ceb/00000000-0000-0000-0000-00005f4dfbb0"
+					(page "50")
+				)
+			)
+		)
+	)
+	(sheet
+		(at 91.44 118.11)
+		(size 13.97 5.08)
+		(exclude_from_sim no)
+		(in_bom yes)
+		(on_board yes)
+		(dnp no)
+		(fields_autoplaced yes)
+		(stroke
+			(width 0)
+			(type solid)
+		)
+		(fill
+			(color 0 0 0 0)
+		)
+		(uuid "00000000-0000-0000-0000-00005f4f0652")
+		(property "Sheetname" "sheet5F4F0604"
+			(at 91.44 117.3984 0)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify left bottom)
+			)
+		)
+		(property "Sheetfile" "Transducer.kicad_sch"
+			(at 91.44 123.7746 0)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify left top)
+			)
+		)
+		(pin "in" input
+			(at 91.44 120.65 180)
+			(uuid "41aeb1fc-9b2d-48f6-8588-b9b90203ef2c")
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify left)
+			)
+		)
+		(instances
+			(project "floater"
+				(path "/215b576a-c21a-436d-8bf0-864312c57ceb/00000000-0000-0000-0000-00005f4dfbb0"
+					(page "51")
+				)
+			)
+		)
+	)
+	(sheet
+		(at 91.44 128.27)
+		(size 13.97 5.08)
+		(exclude_from_sim no)
+		(in_bom yes)
+		(on_board yes)
+		(dnp no)
+		(fields_autoplaced yes)
+		(stroke
+			(width 0)
+			(type solid)
+		)
+		(fill
+			(color 0 0 0 0)
+		)
+		(uuid "00000000-0000-0000-0000-00005f4f0657")
+		(property "Sheetname" "sheet5F4F0605"
+			(at 91.44 127.5584 0)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify left bottom)
+			)
+		)
+		(property "Sheetfile" "Transducer.kicad_sch"
+			(at 91.44 133.9346 0)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify left top)
+			)
+		)
+		(pin "in" input
+			(at 91.44 130.81 180)
+			(uuid "d612b0b4-5ca4-4e7a-9730-3f1e52723ed9")
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify left)
+			)
+		)
+		(instances
+			(project "floater"
+				(path "/215b576a-c21a-436d-8bf0-864312c57ceb/00000000-0000-0000-0000-00005f4dfbb0"
+					(page "52")
+				)
+			)
+		)
+	)
+	(sheet
+		(at 91.44 138.43)
+		(size 13.97 5.08)
+		(exclude_from_sim no)
+		(in_bom yes)
+		(on_board yes)
+		(dnp no)
+		(fields_autoplaced yes)
+		(stroke
+			(width 0)
+			(type solid)
+		)
+		(fill
+			(color 0 0 0 0)
+		)
+		(uuid "00000000-0000-0000-0000-00005f4f065c")
+		(property "Sheetname" "sheet5F4F0606"
+			(at 91.44 137.7184 0)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify left bottom)
+			)
+		)
+		(property "Sheetfile" "Transducer.kicad_sch"
+			(at 91.44 144.0946 0)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify left top)
+			)
+		)
+		(pin "in" input
+			(at 91.44 140.97 180)
+			(uuid "86402c95-41f8-428d-b251-60b3e9bcc803")
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify left)
+			)
+		)
+		(instances
+			(project "floater"
+				(path "/215b576a-c21a-436d-8bf0-864312c57ceb/00000000-0000-0000-0000-00005f4dfbb0"
+					(page "53")
+				)
+			)
+		)
+	)
+	(sheet
+		(at 91.44 148.59)
+		(size 13.97 5.08)
+		(exclude_from_sim no)
+		(in_bom yes)
+		(on_board yes)
+		(dnp no)
+		(fields_autoplaced yes)
+		(stroke
+			(width 0)
+			(type solid)
+		)
+		(fill
+			(color 0 0 0 0)
+		)
+		(uuid "00000000-0000-0000-0000-00005f4f0661")
+		(property "Sheetname" "sheet5F4F0607"
+			(at 91.44 147.8784 0)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify left bottom)
+			)
+		)
+		(property "Sheetfile" "Transducer.kicad_sch"
+			(at 91.44 154.2546 0)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify left top)
+			)
+		)
+		(pin "in" input
+			(at 91.44 151.13 180)
+			(uuid "402b8681-c9dc-445f-86e1-106bf4d3b3c1")
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify left)
+			)
+		)
+		(instances
+			(project "floater"
+				(path "/215b576a-c21a-436d-8bf0-864312c57ceb/00000000-0000-0000-0000-00005f4dfbb0"
+					(page "54")
+				)
+			)
+		)
+	)
+	(sheet
+		(at 91.44 158.75)
+		(size 13.97 5.08)
+		(exclude_from_sim no)
+		(in_bom yes)
+		(on_board yes)
+		(dnp no)
+		(fields_autoplaced yes)
+		(stroke
+			(width 0)
+			(type solid)
+		)
+		(fill
+			(color 0 0 0 0)
+		)
+		(uuid "00000000-0000-0000-0000-00005f4f0666")
+		(property "Sheetname" "sheet5F4F0608"
+			(at 91.44 158.0384 0)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify left bottom)
+			)
+		)
+		(property "Sheetfile" "Transducer.kicad_sch"
+			(at 91.44 164.4146 0)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify left top)
+			)
+		)
+		(pin "in" input
+			(at 91.44 161.29 180)
+			(uuid "2614d6b9-4978-41e5-91e3-48c6d2131e91")
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify left)
+			)
+		)
+		(instances
+			(project "floater"
+				(path "/215b576a-c21a-436d-8bf0-864312c57ceb/00000000-0000-0000-0000-00005f4dfbb0"
+					(page "55")
+				)
+			)
+		)
+	)
+	(sheet
+		(at 91.44 168.91)
+		(size 13.97 5.08)
+		(exclude_from_sim no)
+		(in_bom yes)
+		(on_board yes)
+		(dnp no)
+		(fields_autoplaced yes)
+		(stroke
+			(width 0)
+			(type solid)
+		)
+		(fill
+			(color 0 0 0 0)
+		)
+		(uuid "00000000-0000-0000-0000-00005f4f066b")
+		(property "Sheetname" "sheet5F4F0609"
+			(at 91.44 168.1984 0)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify left bottom)
+			)
+		)
+		(property "Sheetfile" "Transducer.kicad_sch"
+			(at 91.44 174.5746 0)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify left top)
+			)
+		)
+		(pin "in" input
+			(at 91.44 171.45 180)
+			(uuid "409f16cf-7e91-41f7-b739-6dfeb0afb7bc")
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify left)
+			)
+		)
+		(instances
+			(project "floater"
+				(path "/215b576a-c21a-436d-8bf0-864312c57ceb/00000000-0000-0000-0000-00005f4dfbb0"
+					(page "56")
+				)
+			)
+		)
+	)
+	(sheet
+		(at 91.44 179.07)
+		(size 13.97 5.08)
+		(exclude_from_sim no)
+		(in_bom yes)
+		(on_board yes)
+		(dnp no)
+		(fields_autoplaced yes)
+		(stroke
+			(width 0)
+			(type solid)
+		)
+		(fill
+			(color 0 0 0 0)
+		)
+		(uuid "00000000-0000-0000-0000-00005f4f0670")
+		(property "Sheetname" "sheet5F4F060A"
+			(at 91.44 178.3584 0)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify left bottom)
+			)
+		)
+		(property "Sheetfile" "Transducer.kicad_sch"
+			(at 91.44 184.7346 0)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify left top)
+			)
+		)
+		(pin "in" input
+			(at 91.44 181.61 180)
+			(uuid "c2403339-de23-41a0-b69e-8e2a2fb511d2")
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify left)
+			)
+		)
+		(instances
+			(project "floater"
+				(path "/215b576a-c21a-436d-8bf0-864312c57ceb/00000000-0000-0000-0000-00005f4dfbb0"
+					(page "57")
+				)
+			)
+		)
+	)
+	(sheet
+		(at 91.44 189.23)
+		(size 13.97 5.08)
+		(exclude_from_sim no)
+		(in_bom yes)
+		(on_board yes)
+		(dnp no)
+		(fields_autoplaced yes)
+		(stroke
+			(width 0)
+			(type solid)
+		)
+		(fill
+			(color 0 0 0 0)
+		)
+		(uuid "00000000-0000-0000-0000-00005f4f0675")
+		(property "Sheetname" "sheet5F4F060B"
+			(at 91.44 188.5184 0)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify left bottom)
+			)
+		)
+		(property "Sheetfile" "Transducer.kicad_sch"
+			(at 91.44 194.8946 0)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify left top)
+			)
+		)
+		(pin "in" input
+			(at 91.44 191.77 180)
+			(uuid "a7b0d271-2abe-47d6-9cb2-e3b264225544")
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify left)
+			)
+		)
+		(instances
+			(project "floater"
+				(path "/215b576a-c21a-436d-8bf0-864312c57ceb/00000000-0000-0000-0000-00005f4dfbb0"
+					(page "58")
+				)
+			)
+		)
+	)
+	(sheet
+		(at 125.73 16.51)
+		(size 13.97 5.08)
+		(exclude_from_sim no)
+		(in_bom yes)
+		(on_board yes)
+		(dnp no)
+		(fields_autoplaced yes)
+		(stroke
+			(width 0)
+			(type solid)
+		)
+		(fill
+			(color 0 0 0 0)
+		)
+		(uuid "00000000-0000-0000-0000-00005f4f067a")
+		(property "Sheetname" "sheet5F4F060C"
+			(at 125.73 15.7984 0)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify left bottom)
+			)
+		)
+		(property "Sheetfile" "Transducer.kicad_sch"
+			(at 125.73 22.1746 0)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify left top)
+			)
+		)
+		(pin "in" input
+			(at 125.73 19.05 180)
+			(uuid "5a2b16fb-001f-4633-b710-00c22e55313d")
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify left)
+			)
+		)
+		(instances
+			(project "floater"
+				(path "/215b576a-c21a-436d-8bf0-864312c57ceb/00000000-0000-0000-0000-00005f4dfbb0"
+					(page "59")
+				)
+			)
+		)
+	)
+	(sheet
+		(at 125.73 26.67)
+		(size 13.97 5.08)
+		(exclude_from_sim no)
+		(in_bom yes)
+		(on_board yes)
+		(dnp no)
+		(fields_autoplaced yes)
+		(stroke
+			(width 0)
+			(type solid)
+		)
+		(fill
+			(color 0 0 0 0)
+		)
+		(uuid "00000000-0000-0000-0000-00005f4f067f")
+		(property "Sheetname" "sheet5F4F060D"
+			(at 125.73 25.9584 0)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify left bottom)
+			)
+		)
+		(property "Sheetfile" "Transducer.kicad_sch"
+			(at 125.73 32.3346 0)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify left top)
+			)
+		)
+		(pin "in" input
+			(at 125.73 29.21 180)
+			(uuid "00ee1b39-005e-4b16-858c-158d25feaae1")
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify left)
+			)
+		)
+		(instances
+			(project "floater"
+				(path "/215b576a-c21a-436d-8bf0-864312c57ceb/00000000-0000-0000-0000-00005f4dfbb0"
+					(page "60")
+				)
+			)
+		)
+	)
+	(sheet
+		(at 125.73 36.83)
+		(size 13.97 5.08)
+		(exclude_from_sim no)
+		(in_bom yes)
+		(on_board yes)
+		(dnp no)
+		(fields_autoplaced yes)
+		(stroke
+			(width 0)
+			(type solid)
+		)
+		(fill
+			(color 0 0 0 0)
+		)
+		(uuid "00000000-0000-0000-0000-00005f4f0684")
+		(property "Sheetname" "sheet5F4F060E"
+			(at 125.73 36.1184 0)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify left bottom)
+			)
+		)
+		(property "Sheetfile" "Transducer.kicad_sch"
+			(at 125.73 42.4946 0)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify left top)
+			)
+		)
+		(pin "in" input
+			(at 125.73 39.37 180)
+			(uuid "70ebdc3c-45cb-4e39-9fa7-5f59e3726325")
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify left)
+			)
+		)
+		(instances
+			(project "floater"
+				(path "/215b576a-c21a-436d-8bf0-864312c57ceb/00000000-0000-0000-0000-00005f4dfbb0"
+					(page "61")
+				)
+			)
+		)
+	)
+	(sheet
+		(at 125.73 46.99)
+		(size 13.97 5.08)
+		(exclude_from_sim no)
+		(in_bom yes)
+		(on_board yes)
+		(dnp no)
+		(fields_autoplaced yes)
+		(stroke
+			(width 0)
+			(type solid)
+		)
+		(fill
+			(color 0 0 0 0)
+		)
+		(uuid "00000000-0000-0000-0000-00005f4f0689")
+		(property "Sheetname" "sheet5F4F060F"
+			(at 125.73 46.2784 0)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify left bottom)
+			)
+		)
+		(property "Sheetfile" "Transducer.kicad_sch"
+			(at 125.73 52.6546 0)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify left top)
+			)
+		)
+		(pin "in" input
+			(at 125.73 49.53 180)
+			(uuid "55f12ddd-80fd-4873-b401-9a524fe97cf0")
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify left)
+			)
+		)
+		(instances
+			(project "floater"
+				(path "/215b576a-c21a-436d-8bf0-864312c57ceb/00000000-0000-0000-0000-00005f4dfbb0"
+					(page "62")
+				)
+			)
+		)
+	)
+	(sheet
+		(at 125.73 57.15)
+		(size 13.97 5.08)
+		(exclude_from_sim no)
+		(in_bom yes)
+		(on_board yes)
+		(dnp no)
+		(fields_autoplaced yes)
+		(stroke
+			(width 0)
+			(type solid)
+		)
+		(fill
+			(color 0 0 0 0)
+		)
+		(uuid "00000000-0000-0000-0000-00005f4f068e")
+		(property "Sheetname" "sheet5F4F0610"
+			(at 125.73 56.4384 0)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify left bottom)
+			)
+		)
+		(property "Sheetfile" "Transducer.kicad_sch"
+			(at 125.73 62.8146 0)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify left top)
+			)
+		)
+		(pin "in" input
+			(at 125.73 59.69 180)
+			(uuid "e41e938e-7b21-4067-a73c-a2dc24925da5")
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify left)
+			)
+		)
+		(instances
+			(project "floater"
+				(path "/215b576a-c21a-436d-8bf0-864312c57ceb/00000000-0000-0000-0000-00005f4dfbb0"
+					(page "63")
+				)
+			)
+		)
+	)
+	(sheet
+		(at 125.73 67.31)
+		(size 13.97 5.08)
+		(exclude_from_sim no)
+		(in_bom yes)
+		(on_board yes)
+		(dnp no)
+		(fields_autoplaced yes)
+		(stroke
+			(width 0)
+			(type solid)
+		)
+		(fill
+			(color 0 0 0 0)
+		)
+		(uuid "00000000-0000-0000-0000-00005f4f0693")
+		(property "Sheetname" "sheet5F4F0611"
+			(at 125.73 66.5984 0)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify left bottom)
+			)
+		)
+		(property "Sheetfile" "Transducer.kicad_sch"
+			(at 125.73 72.9746 0)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify left top)
+			)
+		)
+		(pin "in" input
+			(at 125.73 69.85 180)
+			(uuid "ff12cfe7-838a-41ed-b871-eaafc82521f0")
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify left)
+			)
+		)
+		(instances
+			(project "floater"
+				(path "/215b576a-c21a-436d-8bf0-864312c57ceb/00000000-0000-0000-0000-00005f4dfbb0"
+					(page "64")
+				)
+			)
+		)
+	)
+	(sheet
+		(at 125.73 77.47)
+		(size 13.97 5.08)
+		(exclude_from_sim no)
+		(in_bom yes)
+		(on_board yes)
+		(dnp no)
+		(fields_autoplaced yes)
+		(stroke
+			(width 0)
+			(type solid)
+		)
+		(fill
+			(color 0 0 0 0)
+		)
+		(uuid "00000000-0000-0000-0000-00005f4f0698")
+		(property "Sheetname" "sheet5F4F0612"
+			(at 125.73 76.7584 0)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify left bottom)
+			)
+		)
+		(property "Sheetfile" "Transducer.kicad_sch"
+			(at 125.73 83.1346 0)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify left top)
+			)
+		)
+		(pin "in" input
+			(at 125.73 80.01 180)
+			(uuid "cfcdf55f-b92f-40ef-8c52-99afe971e118")
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify left)
+			)
+		)
+		(instances
+			(project "floater"
+				(path "/215b576a-c21a-436d-8bf0-864312c57ceb/00000000-0000-0000-0000-00005f4dfbb0"
+					(page "65")
+				)
+			)
+		)
+	)
+	(sheet
+		(at 125.73 87.63)
+		(size 13.97 5.08)
+		(exclude_from_sim no)
+		(in_bom yes)
+		(on_board yes)
+		(dnp no)
+		(fields_autoplaced yes)
+		(stroke
+			(width 0)
+			(type solid)
+		)
+		(fill
+			(color 0 0 0 0)
+		)
+		(uuid "00000000-0000-0000-0000-00005f4f069d")
+		(property "Sheetname" "sheet5F4F0613"
+			(at 125.73 86.9184 0)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify left bottom)
+			)
+		)
+		(property "Sheetfile" "Transducer.kicad_sch"
+			(at 125.73 93.2946 0)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify left top)
+			)
+		)
+		(pin "in" input
+			(at 125.73 90.17 180)
+			(uuid "fba2329b-6c19-4aca-97eb-b770ed8534ad")
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify left)
+			)
+		)
+		(instances
+			(project "floater"
+				(path "/215b576a-c21a-436d-8bf0-864312c57ceb/00000000-0000-0000-0000-00005f4dfbb0"
+					(page "66")
+				)
+			)
+		)
+	)
+	(sheet
+		(at 125.73 97.79)
+		(size 13.97 5.08)
+		(exclude_from_sim no)
+		(in_bom yes)
+		(on_board yes)
+		(dnp no)
+		(fields_autoplaced yes)
+		(stroke
+			(width 0)
+			(type solid)
+		)
+		(fill
+			(color 0 0 0 0)
+		)
+		(uuid "00000000-0000-0000-0000-00005f4f06a2")
+		(property "Sheetname" "sheet5F4F0614"
+			(at 125.73 97.0784 0)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify left bottom)
+			)
+		)
+		(property "Sheetfile" "Transducer.kicad_sch"
+			(at 125.73 103.4546 0)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify left top)
+			)
+		)
+		(pin "in" input
+			(at 125.73 100.33 180)
+			(uuid "7c160313-d5cf-4859-9ae6-c172b5d8e12f")
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify left)
+			)
+		)
+		(instances
+			(project "floater"
+				(path "/215b576a-c21a-436d-8bf0-864312c57ceb/00000000-0000-0000-0000-00005f4dfbb0"
+					(page "67")
+				)
+			)
+		)
+	)
+	(sheet
+		(at 125.73 107.95)
+		(size 13.97 5.08)
+		(exclude_from_sim no)
+		(in_bom yes)
+		(on_board yes)
+		(dnp no)
+		(fields_autoplaced yes)
+		(stroke
+			(width 0)
+			(type solid)
+		)
+		(fill
+			(color 0 0 0 0)
+		)
+		(uuid "00000000-0000-0000-0000-00005f4f06a7")
+		(property "Sheetname" "sheet5F4F0615"
+			(at 125.73 107.2384 0)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify left bottom)
+			)
+		)
+		(property "Sheetfile" "Transducer.kicad_sch"
+			(at 125.73 113.6146 0)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify left top)
+			)
+		)
+		(pin "in" input
+			(at 125.73 110.49 180)
+			(uuid "538c0923-fd31-43e5-874e-9cc68558f459")
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify left)
+			)
+		)
+		(instances
+			(project "floater"
+				(path "/215b576a-c21a-436d-8bf0-864312c57ceb/00000000-0000-0000-0000-00005f4dfbb0"
+					(page "68")
+				)
+			)
+		)
+	)
+	(sheet
+		(at 125.73 118.11)
+		(size 13.97 5.08)
+		(exclude_from_sim no)
+		(in_bom yes)
+		(on_board yes)
+		(dnp no)
+		(fields_autoplaced yes)
+		(stroke
+			(width 0)
+			(type solid)
+		)
+		(fill
+			(color 0 0 0 0)
+		)
+		(uuid "00000000-0000-0000-0000-00005f4f06ac")
+		(property "Sheetname" "sheet5F4F0616"
+			(at 125.73 117.3984 0)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify left bottom)
+			)
+		)
+		(property "Sheetfile" "Transducer.kicad_sch"
+			(at 125.73 123.7746 0)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify left top)
+			)
+		)
+		(pin "in" input
+			(at 125.73 120.65 180)
+			(uuid "49e7c1bc-3af6-4816-9e96-cd8e9689f448")
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify left)
+			)
+		)
+		(instances
+			(project "floater"
+				(path "/215b576a-c21a-436d-8bf0-864312c57ceb/00000000-0000-0000-0000-00005f4dfbb0"
+					(page "69")
+				)
+			)
+		)
+	)
+	(sheet
+		(at 125.73 128.27)
+		(size 13.97 5.08)
+		(exclude_from_sim no)
+		(in_bom yes)
+		(on_board yes)
+		(dnp no)
+		(fields_autoplaced yes)
+		(stroke
+			(width 0)
+			(type solid)
+		)
+		(fill
+			(color 0 0 0 0)
+		)
+		(uuid "00000000-0000-0000-0000-00005f4f06b1")
+		(property "Sheetname" "sheet5F4F0617"
+			(at 125.73 127.5584 0)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify left bottom)
+			)
+		)
+		(property "Sheetfile" "Transducer.kicad_sch"
+			(at 125.73 133.9346 0)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify left top)
+			)
+		)
+		(pin "in" input
+			(at 125.73 130.81 180)
+			(uuid "0904d08b-602c-450a-b95a-90e791cf11e0")
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify left)
+			)
+		)
+		(instances
+			(project "floater"
+				(path "/215b576a-c21a-436d-8bf0-864312c57ceb/00000000-0000-0000-0000-00005f4dfbb0"
+					(page "70")
+				)
+			)
+		)
+	)
+	(sheet
+		(at 125.73 138.43)
+		(size 13.97 5.08)
+		(exclude_from_sim no)
+		(in_bom yes)
+		(on_board yes)
+		(dnp no)
+		(fields_autoplaced yes)
+		(stroke
+			(width 0)
+			(type solid)
+		)
+		(fill
+			(color 0 0 0 0)
+		)
+		(uuid "00000000-0000-0000-0000-00005f4f06b6")
+		(property "Sheetname" "sheet5F4F0618"
+			(at 125.73 137.7184 0)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify left bottom)
+			)
+		)
+		(property "Sheetfile" "Transducer.kicad_sch"
+			(at 125.73 144.0946 0)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify left top)
+			)
+		)
+		(pin "in" input
+			(at 125.73 140.97 180)
+			(uuid "e93272ce-bd33-471d-8659-5e14c745cb55")
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify left)
+			)
+		)
+		(instances
+			(project "floater"
+				(path "/215b576a-c21a-436d-8bf0-864312c57ceb/00000000-0000-0000-0000-00005f4dfbb0"
+					(page "71")
+				)
+			)
+		)
+	)
+	(sheet
+		(at 125.73 148.59)
+		(size 13.97 5.08)
+		(exclude_from_sim no)
+		(in_bom yes)
+		(on_board yes)
+		(dnp no)
+		(fields_autoplaced yes)
+		(stroke
+			(width 0)
+			(type solid)
+		)
+		(fill
+			(color 0 0 0 0)
+		)
+		(uuid "00000000-0000-0000-0000-00005f4f06bb")
+		(property "Sheetname" "sheet5F4F0619"
+			(at 125.73 147.8784 0)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify left bottom)
+			)
+		)
+		(property "Sheetfile" "Transducer.kicad_sch"
+			(at 125.73 154.2546 0)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify left top)
+			)
+		)
+		(pin "in" input
+			(at 125.73 151.13 180)
+			(uuid "0fa26592-5ba6-48d0-8e3f-6ca8ccffc348")
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify left)
+			)
+		)
+		(instances
+			(project "floater"
+				(path "/215b576a-c21a-436d-8bf0-864312c57ceb/00000000-0000-0000-0000-00005f4dfbb0"
+					(page "72")
+				)
+			)
+		)
+	)
+	(sheet
+		(at 125.73 158.75)
+		(size 13.97 5.08)
+		(exclude_from_sim no)
+		(in_bom yes)
+		(on_board yes)
+		(dnp no)
+		(fields_autoplaced yes)
+		(stroke
+			(width 0)
+			(type solid)
+		)
+		(fill
+			(color 0 0 0 0)
+		)
+		(uuid "00000000-0000-0000-0000-00005f4f06c0")
+		(property "Sheetname" "sheet5F4F061A"
+			(at 125.73 158.0384 0)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify left bottom)
+			)
+		)
+		(property "Sheetfile" "Transducer.kicad_sch"
+			(at 125.73 164.4146 0)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify left top)
+			)
+		)
+		(pin "in" input
+			(at 125.73 161.29 180)
+			(uuid "33cb767d-0304-4509-bd12-31759c0d76fd")
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify left)
+			)
+		)
+		(instances
+			(project "floater"
+				(path "/215b576a-c21a-436d-8bf0-864312c57ceb/00000000-0000-0000-0000-00005f4dfbb0"
+					(page "73")
+				)
+			)
+		)
+	)
+	(sheet
+		(at 125.73 168.91)
+		(size 13.97 5.08)
+		(exclude_from_sim no)
+		(in_bom yes)
+		(on_board yes)
+		(dnp no)
+		(fields_autoplaced yes)
+		(stroke
+			(width 0)
+			(type solid)
+		)
+		(fill
+			(color 0 0 0 0)
+		)
+		(uuid "00000000-0000-0000-0000-00005f4f06c5")
+		(property "Sheetname" "sheet5F4F061B"
+			(at 125.73 168.1984 0)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify left bottom)
+			)
+		)
+		(property "Sheetfile" "Transducer.kicad_sch"
+			(at 125.73 174.5746 0)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify left top)
+			)
+		)
+		(pin "in" input
+			(at 125.73 171.45 180)
+			(uuid "2eea0c71-0d75-41b7-b032-47dbf902d28b")
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify left)
+			)
+		)
+		(instances
+			(project "floater"
+				(path "/215b576a-c21a-436d-8bf0-864312c57ceb/00000000-0000-0000-0000-00005f4dfbb0"
+					(page "74")
+				)
+			)
+		)
+	)
+	(sheet
+		(at 125.73 179.07)
+		(size 13.97 5.08)
+		(exclude_from_sim no)
+		(in_bom yes)
+		(on_board yes)
+		(dnp no)
+		(fields_autoplaced yes)
+		(stroke
+			(width 0)
+			(type solid)
+		)
+		(fill
+			(color 0 0 0 0)
+		)
+		(uuid "00000000-0000-0000-0000-00005f4f06ca")
+		(property "Sheetname" "sheet5F4F061C"
+			(at 125.73 178.3584 0)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify left bottom)
+			)
+		)
+		(property "Sheetfile" "Transducer.kicad_sch"
+			(at 125.73 184.7346 0)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify left top)
+			)
+		)
+		(pin "in" input
+			(at 125.73 181.61 180)
+			(uuid "6be34f91-8ec4-43d6-b91c-0e70e294cb0b")
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify left)
+			)
+		)
+		(instances
+			(project "floater"
+				(path "/215b576a-c21a-436d-8bf0-864312c57ceb/00000000-0000-0000-0000-00005f4dfbb0"
+					(page "75")
+				)
+			)
+		)
+	)
+	(sheet
+		(at 125.73 189.23)
+		(size 13.97 5.08)
+		(exclude_from_sim no)
+		(in_bom yes)
+		(on_board yes)
+		(dnp no)
+		(fields_autoplaced yes)
+		(stroke
+			(width 0)
+			(type solid)
+		)
+		(fill
+			(color 0 0 0 0)
+		)
+		(uuid "00000000-0000-0000-0000-00005f4f06cf")
+		(property "Sheetname" "sheet5F4F061D"
+			(at 125.73 188.5184 0)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify left bottom)
+			)
+		)
+		(property "Sheetfile" "Transducer.kicad_sch"
+			(at 125.73 194.8946 0)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify left top)
+			)
+		)
+		(pin "in" input
+			(at 125.73 191.77 180)
+			(uuid "aed14308-2e3a-48ec-94ba-d64d359c22aa")
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify left)
+			)
+		)
+		(instances
+			(project "floater"
+				(path "/215b576a-c21a-436d-8bf0-864312c57ceb/00000000-0000-0000-0000-00005f4dfbb0"
+					(page "76")
+				)
+			)
+		)
+	)
+	(sheet
+		(at 157.48 16.51)
+		(size 13.97 5.08)
+		(exclude_from_sim no)
+		(in_bom yes)
+		(on_board yes)
+		(dnp no)
+		(fields_autoplaced yes)
+		(stroke
+			(width 0)
+			(type solid)
+		)
+		(fill
+			(color 0 0 0 0)
+		)
+		(uuid "00000000-0000-0000-0000-00005f4f41d2")
+		(property "Sheetname" "sheet5F4F41BE"
+			(at 157.48 15.7984 0)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify left bottom)
+			)
+		)
+		(property "Sheetfile" "Transducer.kicad_sch"
+			(at 157.48 22.1746 0)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify left top)
+			)
+		)
+		(pin "in" input
+			(at 157.48 19.05 180)
+			(uuid "fff1023d-f4bf-4ba8-a2b2-3891f871e543")
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify left)
+			)
+		)
+		(instances
+			(project "floater"
+				(path "/215b576a-c21a-436d-8bf0-864312c57ceb/00000000-0000-0000-0000-00005f4dfbb0"
+					(page "77")
+				)
+			)
+		)
+	)
+	(sheet
+		(at 157.48 26.67)
+		(size 13.97 5.08)
+		(exclude_from_sim no)
+		(in_bom yes)
+		(on_board yes)
+		(dnp no)
+		(fields_autoplaced yes)
+		(stroke
+			(width 0)
+			(type solid)
+		)
+		(fill
+			(color 0 0 0 0)
+		)
+		(uuid "00000000-0000-0000-0000-00005f4f41d7")
+		(property "Sheetname" "sheet5F4F41BF"
+			(at 157.48 25.9584 0)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify left bottom)
+			)
+		)
+		(property "Sheetfile" "Transducer.kicad_sch"
+			(at 157.48 32.3346 0)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify left top)
+			)
+		)
+		(pin "in" input
+			(at 157.48 29.21 180)
+			(uuid "6c5a159d-4f6b-41a0-9362-6522c581a181")
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify left)
+			)
+		)
+		(instances
+			(project "floater"
+				(path "/215b576a-c21a-436d-8bf0-864312c57ceb/00000000-0000-0000-0000-00005f4dfbb0"
+					(page "78")
+				)
+			)
+		)
+	)
+	(sheet
+		(at 157.48 36.83)
+		(size 13.97 5.08)
+		(exclude_from_sim no)
+		(in_bom yes)
+		(on_board yes)
+		(dnp no)
+		(fields_autoplaced yes)
+		(stroke
+			(width 0)
+			(type solid)
+		)
+		(fill
+			(color 0 0 0 0)
+		)
+		(uuid "00000000-0000-0000-0000-00005f4f41dc")
+		(property "Sheetname" "sheet5F4F41C0"
+			(at 157.48 36.1184 0)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify left bottom)
+			)
+		)
+		(property "Sheetfile" "Transducer.kicad_sch"
+			(at 157.48 42.4946 0)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify left top)
+			)
+		)
+		(pin "in" input
+			(at 157.48 39.37 180)
+			(uuid "a25423a3-ede8-482d-b755-16bd460d3baf")
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify left)
+			)
+		)
+		(instances
+			(project "floater"
+				(path "/215b576a-c21a-436d-8bf0-864312c57ceb/00000000-0000-0000-0000-00005f4dfbb0"
+					(page "79")
+				)
+			)
+		)
+	)
+	(sheet
+		(at 157.48 46.99)
+		(size 13.97 5.08)
+		(exclude_from_sim no)
+		(in_bom yes)
+		(on_board yes)
+		(dnp no)
+		(fields_autoplaced yes)
+		(stroke
+			(width 0)
+			(type solid)
+		)
+		(fill
+			(color 0 0 0 0)
+		)
+		(uuid "00000000-0000-0000-0000-00005f4f41e1")
+		(property "Sheetname" "sheet5F4F41C1"
+			(at 157.48 46.2784 0)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify left bottom)
+			)
+		)
+		(property "Sheetfile" "Transducer.kicad_sch"
+			(at 157.48 52.6546 0)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify left top)
+			)
+		)
+		(pin "in" input
+			(at 157.48 49.53 180)
+			(uuid "ee7f4716-6737-45bf-869b-7d442da60895")
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify left)
+			)
+		)
+		(instances
+			(project "floater"
+				(path "/215b576a-c21a-436d-8bf0-864312c57ceb/00000000-0000-0000-0000-00005f4dfbb0"
+					(page "80")
+				)
+			)
+		)
+	)
+	(sheet
+		(at 157.48 57.15)
+		(size 13.97 5.08)
+		(exclude_from_sim no)
+		(in_bom yes)
+		(on_board yes)
+		(dnp no)
+		(fields_autoplaced yes)
+		(stroke
+			(width 0)
+			(type solid)
+		)
+		(fill
+			(color 0 0 0 0)
+		)
+		(uuid "00000000-0000-0000-0000-00005f4f41e6")
+		(property "Sheetname" "sheet5F4F41C2"
+			(at 157.48 56.4384 0)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify left bottom)
+			)
+		)
+		(property "Sheetfile" "Transducer.kicad_sch"
+			(at 157.48 62.8146 0)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify left top)
+			)
+		)
+		(pin "in" input
+			(at 157.48 59.69 180)
+			(uuid "0a7865aa-bc79-4943-be8d-9388a061df96")
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify left)
+			)
+		)
+		(instances
+			(project "floater"
+				(path "/215b576a-c21a-436d-8bf0-864312c57ceb/00000000-0000-0000-0000-00005f4dfbb0"
+					(page "81")
+				)
+			)
+		)
+	)
+	(sheet
+		(at 157.48 67.31)
+		(size 13.97 5.08)
+		(exclude_from_sim no)
+		(in_bom yes)
+		(on_board yes)
+		(dnp no)
+		(fields_autoplaced yes)
+		(stroke
+			(width 0)
+			(type solid)
+		)
+		(fill
+			(color 0 0 0 0)
+		)
+		(uuid "00000000-0000-0000-0000-00005f4f41eb")
+		(property "Sheetname" "sheet5F4F41C3"
+			(at 157.48 66.5984 0)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify left bottom)
+			)
+		)
+		(property "Sheetfile" "Transducer.kicad_sch"
+			(at 157.48 72.9746 0)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify left top)
+			)
+		)
+		(pin "in" input
+			(at 157.48 69.85 180)
+			(uuid "2952745b-ca2c-43cb-914f-84c6fd67a1e1")
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify left)
+			)
+		)
+		(instances
+			(project "floater"
+				(path "/215b576a-c21a-436d-8bf0-864312c57ceb/00000000-0000-0000-0000-00005f4dfbb0"
+					(page "82")
+				)
+			)
+		)
+	)
+	(sheet
+		(at 157.48 77.47)
+		(size 13.97 5.08)
+		(exclude_from_sim no)
+		(in_bom yes)
+		(on_board yes)
+		(dnp no)
+		(fields_autoplaced yes)
+		(stroke
+			(width 0)
+			(type solid)
+		)
+		(fill
+			(color 0 0 0 0)
+		)
+		(uuid "00000000-0000-0000-0000-00005f4f41f0")
+		(property "Sheetname" "sheet5F4F41C4"
+			(at 157.48 76.7584 0)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify left bottom)
+			)
+		)
+		(property "Sheetfile" "Transducer.kicad_sch"
+			(at 157.48 83.1346 0)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify left top)
+			)
+		)
+		(pin "in" input
+			(at 157.48 80.01 180)
+			(uuid "4afa09cb-d83e-460a-bf3f-02145e2b3b67")
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify left)
+			)
+		)
+		(instances
+			(project "floater"
+				(path "/215b576a-c21a-436d-8bf0-864312c57ceb/00000000-0000-0000-0000-00005f4dfbb0"
+					(page "83")
+				)
+			)
+		)
+	)
+	(sheet
+		(at 157.48 87.63)
+		(size 13.97 5.08)
+		(exclude_from_sim no)
+		(in_bom yes)
+		(on_board yes)
+		(dnp no)
+		(fields_autoplaced yes)
+		(stroke
+			(width 0)
+			(type solid)
+		)
+		(fill
+			(color 0 0 0 0)
+		)
+		(uuid "00000000-0000-0000-0000-00005f4f41f5")
+		(property "Sheetname" "sheet5F4F41C5"
+			(at 157.48 86.9184 0)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify left bottom)
+			)
+		)
+		(property "Sheetfile" "Transducer.kicad_sch"
+			(at 157.48 93.2946 0)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify left top)
+			)
+		)
+		(pin "in" input
+			(at 157.48 90.17 180)
+			(uuid "cfaa0aee-bd92-4aa9-b74d-a019c63eacad")
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify left)
+			)
+		)
+		(instances
+			(project "floater"
+				(path "/215b576a-c21a-436d-8bf0-864312c57ceb/00000000-0000-0000-0000-00005f4dfbb0"
+					(page "84")
+				)
+			)
+		)
+	)
+	(sheet
+		(at 157.48 97.79)
+		(size 13.97 5.08)
+		(exclude_from_sim no)
+		(in_bom yes)
+		(on_board yes)
+		(dnp no)
+		(fields_autoplaced yes)
+		(stroke
+			(width 0)
+			(type solid)
+		)
+		(fill
+			(color 0 0 0 0)
+		)
+		(uuid "00000000-0000-0000-0000-00005f4f41fa")
+		(property "Sheetname" "sheet5F4F41C6"
+			(at 157.48 97.0784 0)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify left bottom)
+			)
+		)
+		(property "Sheetfile" "Transducer.kicad_sch"
+			(at 157.48 103.4546 0)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify left top)
+			)
+		)
+		(pin "in" input
+			(at 157.48 100.33 180)
+			(uuid "61cb7101-9de7-4029-9e58-7cb496e5084f")
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify left)
+			)
+		)
+		(instances
+			(project "floater"
+				(path "/215b576a-c21a-436d-8bf0-864312c57ceb/00000000-0000-0000-0000-00005f4dfbb0"
+					(page "85")
+				)
+			)
+		)
+	)
+	(sheet
+		(at 157.48 107.95)
+		(size 13.97 5.08)
+		(exclude_from_sim no)
+		(in_bom yes)
+		(on_board yes)
+		(dnp no)
+		(fields_autoplaced yes)
+		(stroke
+			(width 0)
+			(type solid)
+		)
+		(fill
+			(color 0 0 0 0)
+		)
+		(uuid "00000000-0000-0000-0000-00005f4f41ff")
+		(property "Sheetname" "sheet5F4F41C7"
+			(at 157.48 107.2384 0)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify left bottom)
+			)
+		)
+		(property "Sheetfile" "Transducer.kicad_sch"
+			(at 157.48 113.6146 0)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify left top)
+			)
+		)
+		(pin "in" input
+			(at 157.48 110.49 180)
+			(uuid "7ea64cda-d5ba-4f51-a49c-521a5a232764")
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify left)
+			)
+		)
+		(instances
+			(project "floater"
+				(path "/215b576a-c21a-436d-8bf0-864312c57ceb/00000000-0000-0000-0000-00005f4dfbb0"
+					(page "86")
+				)
+			)
+		)
+	)
+	(sheet
+		(at 157.48 118.11)
+		(size 13.97 5.08)
+		(exclude_from_sim no)
+		(in_bom yes)
+		(on_board yes)
+		(dnp no)
+		(fields_autoplaced yes)
+		(stroke
+			(width 0)
+			(type solid)
+		)
+		(fill
+			(color 0 0 0 0)
+		)
+		(uuid "00000000-0000-0000-0000-00005f4f4204")
+		(property "Sheetname" "sheet5F4F41C8"
+			(at 157.48 117.3984 0)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify left bottom)
+			)
+		)
+		(property "Sheetfile" "Transducer.kicad_sch"
+			(at 157.48 123.7746 0)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify left top)
+			)
+		)
+		(pin "in" input
+			(at 157.48 120.65 180)
+			(uuid "4465f301-9286-49d1-9c70-006db6f4032d")
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify left)
+			)
+		)
+		(instances
+			(project "floater"
+				(path "/215b576a-c21a-436d-8bf0-864312c57ceb/00000000-0000-0000-0000-00005f4dfbb0"
+					(page "87")
+				)
+			)
+		)
+	)
+	(sheet
+		(at 157.48 128.27)
+		(size 13.97 5.08)
+		(exclude_from_sim no)
+		(in_bom yes)
+		(on_board yes)
+		(dnp no)
+		(fields_autoplaced yes)
+		(stroke
+			(width 0)
+			(type solid)
+		)
+		(fill
+			(color 0 0 0 0)
+		)
+		(uuid "00000000-0000-0000-0000-00005f4f4209")
+		(property "Sheetname" "sheet5F4F41C9"
+			(at 157.48 127.5584 0)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify left bottom)
+			)
+		)
+		(property "Sheetfile" "Transducer.kicad_sch"
+			(at 157.48 133.9346 0)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify left top)
+			)
+		)
+		(pin "in" input
+			(at 157.48 130.81 180)
+			(uuid "b762b360-b2ef-406e-9630-1908f8299beb")
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify left)
+			)
+		)
+		(instances
+			(project "floater"
+				(path "/215b576a-c21a-436d-8bf0-864312c57ceb/00000000-0000-0000-0000-00005f4dfbb0"
+					(page "88")
+				)
+			)
+		)
+	)
+	(sheet
+		(at 157.48 138.43)
+		(size 13.97 5.08)
+		(exclude_from_sim no)
+		(in_bom yes)
+		(on_board yes)
+		(dnp no)
+		(fields_autoplaced yes)
+		(stroke
+			(width 0)
+			(type solid)
+		)
+		(fill
+			(color 0 0 0 0)
+		)
+		(uuid "00000000-0000-0000-0000-00005f4f420e")
+		(property "Sheetname" "sheet5F4F41CA"
+			(at 157.48 137.7184 0)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify left bottom)
+			)
+		)
+		(property "Sheetfile" "Transducer.kicad_sch"
+			(at 157.48 144.0946 0)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify left top)
+			)
+		)
+		(pin "in" input
+			(at 157.48 140.97 180)
+			(uuid "fdde38e6-e215-4be3-988c-759390f63608")
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify left)
+			)
+		)
+		(instances
+			(project "floater"
+				(path "/215b576a-c21a-436d-8bf0-864312c57ceb/00000000-0000-0000-0000-00005f4dfbb0"
+					(page "89")
+				)
+			)
+		)
+	)
+	(sheet
+		(at 157.48 148.59)
+		(size 13.97 5.08)
+		(exclude_from_sim no)
+		(in_bom yes)
+		(on_board yes)
+		(dnp no)
+		(fields_autoplaced yes)
+		(stroke
+			(width 0)
+			(type solid)
+		)
+		(fill
+			(color 0 0 0 0)
+		)
+		(uuid "00000000-0000-0000-0000-00005f4f4213")
+		(property "Sheetname" "sheet5F4F41CB"
+			(at 157.48 147.8784 0)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify left bottom)
+			)
+		)
+		(property "Sheetfile" "Transducer.kicad_sch"
+			(at 157.48 154.2546 0)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify left top)
+			)
+		)
+		(pin "in" input
+			(at 157.48 151.13 180)
+			(uuid "842ea30c-d577-4cc5-95df-db9bba7ac47c")
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify left)
+			)
+		)
+		(instances
+			(project "floater"
+				(path "/215b576a-c21a-436d-8bf0-864312c57ceb/00000000-0000-0000-0000-00005f4dfbb0"
+					(page "90")
+				)
+			)
+		)
+	)
+	(sheet
+		(at 157.48 158.75)
+		(size 13.97 5.08)
+		(exclude_from_sim no)
+		(in_bom yes)
+		(on_board yes)
+		(dnp no)
+		(fields_autoplaced yes)
+		(stroke
+			(width 0)
+			(type solid)
+		)
+		(fill
+			(color 0 0 0 0)
+		)
+		(uuid "00000000-0000-0000-0000-00005f4f4218")
+		(property "Sheetname" "sheet5F4F41CC"
+			(at 157.48 158.0384 0)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify left bottom)
+			)
+		)
+		(property "Sheetfile" "Transducer.kicad_sch"
+			(at 157.48 164.4146 0)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify left top)
+			)
+		)
+		(pin "in" input
+			(at 157.48 161.29 180)
+			(uuid "840fde77-f295-4f7d-8c35-390e545e38cd")
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify left)
+			)
+		)
+		(instances
+			(project "floater"
+				(path "/215b576a-c21a-436d-8bf0-864312c57ceb/00000000-0000-0000-0000-00005f4dfbb0"
+					(page "91")
+				)
+			)
+		)
+	)
+	(sheet
+		(at 157.48 168.91)
+		(size 13.97 5.08)
+		(exclude_from_sim no)
+		(in_bom yes)
+		(on_board yes)
+		(dnp no)
+		(fields_autoplaced yes)
+		(stroke
+			(width 0)
+			(type solid)
+		)
+		(fill
+			(color 0 0 0 0)
+		)
+		(uuid "00000000-0000-0000-0000-00005f4f421d")
+		(property "Sheetname" "sheet5F4F41CD"
+			(at 157.48 168.1984 0)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify left bottom)
+			)
+		)
+		(property "Sheetfile" "Transducer.kicad_sch"
+			(at 157.48 174.5746 0)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify left top)
+			)
+		)
+		(pin "in" input
+			(at 157.48 171.45 180)
+			(uuid "f866e65f-9fd5-4641-b651-ef074bf0d15f")
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify left)
+			)
+		)
+		(instances
+			(project "floater"
+				(path "/215b576a-c21a-436d-8bf0-864312c57ceb/00000000-0000-0000-0000-00005f4dfbb0"
+					(page "92")
+				)
+			)
+		)
+	)
+	(sheet
+		(at 157.48 179.07)
+		(size 13.97 5.08)
+		(exclude_from_sim no)
+		(in_bom yes)
+		(on_board yes)
+		(dnp no)
+		(fields_autoplaced yes)
+		(stroke
+			(width 0)
+			(type solid)
+		)
+		(fill
+			(color 0 0 0 0)
+		)
+		(uuid "00000000-0000-0000-0000-00005f4f4222")
+		(property "Sheetname" "sheet5F4F41CE"
+			(at 157.48 178.3584 0)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify left bottom)
+			)
+		)
+		(property "Sheetfile" "Transducer.kicad_sch"
+			(at 157.48 184.7346 0)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify left top)
+			)
+		)
+		(pin "in" input
+			(at 157.48 181.61 180)
+			(uuid "516585db-fe7f-40fc-98fb-292458e6522a")
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify left)
+			)
+		)
+		(instances
+			(project "floater"
+				(path "/215b576a-c21a-436d-8bf0-864312c57ceb/00000000-0000-0000-0000-00005f4dfbb0"
+					(page "93")
+				)
+			)
+		)
+	)
+	(sheet
+		(at 157.48 189.23)
+		(size 13.97 5.08)
+		(exclude_from_sim no)
+		(in_bom yes)
+		(on_board yes)
+		(dnp no)
+		(fields_autoplaced yes)
+		(stroke
+			(width 0)
+			(type solid)
+		)
+		(fill
+			(color 0 0 0 0)
+		)
+		(uuid "00000000-0000-0000-0000-00005f4f4227")
+		(property "Sheetname" "sheet5F4F41CF"
+			(at 157.48 188.5184 0)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify left bottom)
+			)
+		)
+		(property "Sheetfile" "Transducer.kicad_sch"
+			(at 157.48 194.8946 0)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify left top)
+			)
+		)
+		(pin "in" input
+			(at 157.48 191.77 180)
+			(uuid "59711011-71f1-4352-9c03-00bbe300aa82")
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify left)
+			)
+		)
+		(instances
+			(project "floater"
+				(path "/215b576a-c21a-436d-8bf0-864312c57ceb/00000000-0000-0000-0000-00005f4dfbb0"
+					(page "94")
+				)
+			)
+		)
+	)
+	(sheet
+		(at 190.5 16.51)
+		(size 13.97 5.08)
+		(exclude_from_sim no)
+		(in_bom yes)
+		(on_board yes)
+		(dnp no)
+		(fields_autoplaced yes)
+		(stroke
+			(width 0)
+			(type solid)
+		)
+		(fill
+			(color 0 0 0 0)
+		)
+		(uuid "00000000-0000-0000-0000-00005f4f8447")
+		(property "Sheetname" "sheet5F4F843B"
+			(at 190.5 15.7984 0)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify left bottom)
+			)
+		)
+		(property "Sheetfile" "Transducer.kicad_sch"
+			(at 190.5 22.1746 0)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify left top)
+			)
+		)
+		(pin "in" input
+			(at 190.5 19.05 180)
+			(uuid "7999d21f-8443-4804-9e56-5534745be912")
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify left)
+			)
+		)
+		(instances
+			(project "floater"
+				(path "/215b576a-c21a-436d-8bf0-864312c57ceb/00000000-0000-0000-0000-00005f4dfbb0"
+					(page "95")
+				)
+			)
+		)
+	)
+	(sheet
+		(at 190.5 26.67)
+		(size 13.97 5.08)
+		(exclude_from_sim no)
+		(in_bom yes)
+		(on_board yes)
+		(dnp no)
+		(fields_autoplaced yes)
+		(stroke
+			(width 0)
+			(type solid)
+		)
+		(fill
+			(color 0 0 0 0)
+		)
+		(uuid "00000000-0000-0000-0000-00005f4f844c")
+		(property "Sheetname" "sheet5F4F843C"
+			(at 190.5 25.9584 0)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify left bottom)
+			)
+		)
+		(property "Sheetfile" "Transducer.kicad_sch"
+			(at 190.5 32.3346 0)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify left top)
+			)
+		)
+		(pin "in" input
+			(at 190.5 29.21 180)
+			(uuid "131675bc-ef07-4046-9840-4063eff64db5")
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify left)
+			)
+		)
+		(instances
+			(project "floater"
+				(path "/215b576a-c21a-436d-8bf0-864312c57ceb/00000000-0000-0000-0000-00005f4dfbb0"
+					(page "96")
+				)
+			)
+		)
+	)
+	(sheet
+		(at 190.5 36.83)
+		(size 13.97 5.08)
+		(exclude_from_sim no)
+		(in_bom yes)
+		(on_board yes)
+		(dnp no)
+		(fields_autoplaced yes)
+		(stroke
+			(width 0)
+			(type solid)
+		)
+		(fill
+			(color 0 0 0 0)
+		)
+		(uuid "00000000-0000-0000-0000-00005f4f8451")
+		(property "Sheetname" "sheet5F4F843D"
+			(at 190.5 36.1184 0)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify left bottom)
+			)
+		)
+		(property "Sheetfile" "Transducer.kicad_sch"
+			(at 190.5 42.4946 0)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify left top)
+			)
+		)
+		(pin "in" input
+			(at 190.5 39.37 180)
+			(uuid "ede7850d-98df-4dcc-b0ba-a1a41c478ab8")
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify left)
+			)
+		)
+		(instances
+			(project "floater"
+				(path "/215b576a-c21a-436d-8bf0-864312c57ceb/00000000-0000-0000-0000-00005f4dfbb0"
+					(page "97")
+				)
+			)
+		)
+	)
+	(sheet
+		(at 190.5 46.99)
+		(size 13.97 5.08)
+		(exclude_from_sim no)
+		(in_bom yes)
+		(on_board yes)
+		(dnp no)
+		(fields_autoplaced yes)
+		(stroke
+			(width 0)
+			(type solid)
+		)
+		(fill
+			(color 0 0 0 0)
+		)
+		(uuid "00000000-0000-0000-0000-00005f4f8456")
+		(property "Sheetname" "sheet5F4F843E"
+			(at 190.5 46.2784 0)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify left bottom)
+			)
+		)
+		(property "Sheetfile" "Transducer.kicad_sch"
+			(at 190.5 52.6546 0)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify left top)
+			)
+		)
+		(pin "in" input
+			(at 190.5 49.53 180)
+			(uuid "8b27302c-02ae-43e2-be9d-f709cfa60ae4")
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify left)
+			)
+		)
+		(instances
+			(project "floater"
+				(path "/215b576a-c21a-436d-8bf0-864312c57ceb/00000000-0000-0000-0000-00005f4dfbb0"
+					(page "98")
+				)
+			)
+		)
+	)
+	(sheet
+		(at 190.5 57.15)
+		(size 13.97 5.08)
+		(exclude_from_sim no)
+		(in_bom yes)
+		(on_board yes)
+		(dnp no)
+		(fields_autoplaced yes)
+		(stroke
+			(width 0)
+			(type solid)
+		)
+		(fill
+			(color 0 0 0 0)
+		)
+		(uuid "00000000-0000-0000-0000-00005f4f845b")
+		(property "Sheetname" "sheet5F4F843F"
+			(at 190.5 56.4384 0)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify left bottom)
+			)
+		)
+		(property "Sheetfile" "Transducer.kicad_sch"
+			(at 190.5 62.8146 0)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify left top)
+			)
+		)
+		(pin "in" input
+			(at 190.5 59.69 180)
+			(uuid "f84a201c-7de4-4087-ba44-813b3159a084")
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify left)
+			)
+		)
+		(instances
+			(project "floater"
+				(path "/215b576a-c21a-436d-8bf0-864312c57ceb/00000000-0000-0000-0000-00005f4dfbb0"
+					(page "99")
+				)
+			)
+		)
+	)
+	(sheet
+		(at 190.5 67.31)
+		(size 13.97 5.08)
+		(exclude_from_sim no)
+		(in_bom yes)
+		(on_board yes)
+		(dnp no)
+		(fields_autoplaced yes)
+		(stroke
+			(width 0)
+			(type solid)
+		)
+		(fill
+			(color 0 0 0 0)
+		)
+		(uuid "00000000-0000-0000-0000-00005f4f8460")
+		(property "Sheetname" "sheet5F4F8440"
+			(at 190.5 66.5984 0)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify left bottom)
+			)
+		)
+		(property "Sheetfile" "Transducer.kicad_sch"
+			(at 190.5 72.9746 0)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify left top)
+			)
+		)
+		(pin "in" input
+			(at 190.5 69.85 180)
+			(uuid "c5ef96aa-2cb9-4297-88cc-e79a5f5b7757")
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify left)
+			)
+		)
+		(instances
+			(project "floater"
+				(path "/215b576a-c21a-436d-8bf0-864312c57ceb/00000000-0000-0000-0000-00005f4dfbb0"
+					(page "100")
+				)
+			)
+		)
+	)
+	(sheet
+		(at 190.5 77.47)
+		(size 13.97 5.08)
+		(exclude_from_sim no)
+		(in_bom yes)
+		(on_board yes)
+		(dnp no)
+		(fields_autoplaced yes)
+		(stroke
+			(width 0)
+			(type solid)
+		)
+		(fill
+			(color 0 0 0 0)
+		)
+		(uuid "00000000-0000-0000-0000-00005f4f8465")
+		(property "Sheetname" "sheet5F4F8441"
+			(at 190.5 76.7584 0)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify left bottom)
+			)
+		)
+		(property "Sheetfile" "Transducer.kicad_sch"
+			(at 190.5 83.1346 0)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify left top)
+			)
+		)
+		(pin "in" input
+			(at 190.5 80.01 180)
+			(uuid "7f0dfcd3-aab2-4750-8426-b95c63245aa7")
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify left)
+			)
+		)
+		(instances
+			(project "floater"
+				(path "/215b576a-c21a-436d-8bf0-864312c57ceb/00000000-0000-0000-0000-00005f4dfbb0"
+					(page "101")
+				)
+			)
+		)
+	)
+	(sheet
+		(at 190.5 87.63)
+		(size 13.97 5.08)
+		(exclude_from_sim no)
+		(in_bom yes)
+		(on_board yes)
+		(dnp no)
+		(fields_autoplaced yes)
+		(stroke
+			(width 0)
+			(type solid)
+		)
+		(fill
+			(color 0 0 0 0)
+		)
+		(uuid "00000000-0000-0000-0000-00005f4f846a")
+		(property "Sheetname" "sheet5F4F8442"
+			(at 190.5 86.9184 0)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify left bottom)
+			)
+		)
+		(property "Sheetfile" "Transducer.kicad_sch"
+			(at 190.5 93.2946 0)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify left top)
+			)
+		)
+		(pin "in" input
+			(at 190.5 90.17 180)
+			(uuid "e03894ef-ff8a-4704-a822-d173a94c8b13")
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify left)
+			)
+		)
+		(instances
+			(project "floater"
+				(path "/215b576a-c21a-436d-8bf0-864312c57ceb/00000000-0000-0000-0000-00005f4dfbb0"
+					(page "102")
+				)
+			)
+		)
+	)
+	(sheet
+		(at 190.5 97.79)
+		(size 13.97 5.08)
+		(exclude_from_sim no)
+		(in_bom yes)
+		(on_board yes)
+		(dnp no)
+		(fields_autoplaced yes)
+		(stroke
+			(width 0)
+			(type solid)
+		)
+		(fill
+			(color 0 0 0 0)
+		)
+		(uuid "00000000-0000-0000-0000-00005f4f846f")
+		(property "Sheetname" "sheet5F4F8443"
+			(at 190.5 97.0784 0)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify left bottom)
+			)
+		)
+		(property "Sheetfile" "Transducer.kicad_sch"
+			(at 190.5 103.4546 0)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify left top)
+			)
+		)
+		(pin "in" input
+			(at 190.5 100.33 180)
+			(uuid "1a3cd9f1-c13c-4f3b-ae92-3c78e6572e8f")
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify left)
+			)
+		)
+		(instances
+			(project "floater"
+				(path "/215b576a-c21a-436d-8bf0-864312c57ceb/00000000-0000-0000-0000-00005f4dfbb0"
+					(page "103")
+				)
+			)
+		)
+	)
+	(sheet
+		(at 190.5 107.95)
+		(size 13.97 5.08)
+		(exclude_from_sim no)
+		(in_bom yes)
+		(on_board yes)
+		(dnp no)
+		(fields_autoplaced yes)
+		(stroke
+			(width 0)
+			(type solid)
+		)
+		(fill
+			(color 0 0 0 0)
+		)
+		(uuid "00000000-0000-0000-0000-00005f4f8474")
+		(property "Sheetname" "sheet5F4F8444"
+			(at 190.5 107.2384 0)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify left bottom)
+			)
+		)
+		(property "Sheetfile" "Transducer.kicad_sch"
+			(at 190.5 113.6146 0)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify left top)
+			)
+		)
+		(pin "in" input
+			(at 190.5 110.49 180)
+			(uuid "66b70a68-7bef-43ec-85b9-9d08810d245c")
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify left)
+			)
+		)
+		(instances
+			(project "floater"
+				(path "/215b576a-c21a-436d-8bf0-864312c57ceb/00000000-0000-0000-0000-00005f4dfbb0"
+					(page "104")
+				)
+			)
+		)
+	)
+)

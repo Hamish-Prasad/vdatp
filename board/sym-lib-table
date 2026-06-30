@@ -1,5 +1,7 @@
 (sym_lib_table
-  (lib (name flicker)(type Legacy)(uri D:/projects/flicker2/board/flicker/flicker.lib)(options "")(descr ""))
-  (lib (name holo)(type Legacy)(uri ${KIPRJMOD}/holo.lib)(options "")(descr ""))
-  (lib (name floater-rescue)(type Legacy)(uri ${KIPRJMOD}/floater-rescue.lib)(options "")(descr ""))
+	(version 7)
+	(lib (name "flicker") (type "Legacy") (uri "D:/projects/flicker2/board/flicker/flicker.lib") (options "") (descr ""))
+	(lib (name "holo") (type "Legacy") (uri "${KIPRJMOD}/holo.lib") (options "") (descr ""))
+	(lib (name "floater-rescue") (type "Legacy") (uri "${KIPRJMOD}/floater-rescue.lib") (options "") (descr ""))
+	(lib (name "floater-cache") (type "Legacy") (uri "C:/Users/Bored/OneDrive/Documents/GitHub/vdatp/board/floater-cache.lib") (options "") (descr "Legacy project cache library"))
 )
