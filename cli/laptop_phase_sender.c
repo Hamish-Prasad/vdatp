@@ -199,6 +199,24 @@ static int loadPhaseFile(const char *path, HoloPhaseFrame *frame, uint16_t frame
 	return 0;
 }
 
+/* Compile a dual trap while the FPGA continues holding particle 1 in its old frame. */
+static int compileLiveTwoParticleFrame(double x, double y, double z,
+	double boardDistanceMm, const char *outputPath)
+{
+	char command[1024];
+	const char *python = getenv("PYTHON");
+	if(!python || !*python) python = "python";
+	if(!isfinite(x) || !isfinite(y) || !isfinite(z) || !isfinite(boardDistanceMm))
+		return -1;
+	int count = snprintf(command, sizeof(command),
+		"\"%s\" two_particle_optimizer.py \"--targets=%.6f,%.6f,%.6f;0,0,0\" "
+		"--board-mm=%.6f --iterations=1200 --seed=47 --output=\"%s\"",
+		python, x, y, z, boardDistanceMm, outputPath);
+	if(count < 0 || (size_t)count >= sizeof(command)) return -1;
+	printf("compiling robust dual trap; particle 1 remains held at its current focus...\n");
+	return system(command) == 0 ? 0 : -1;
+}
+
 static socket_t connectToPi(const char *host, uint16_t port)
 {
 	socket_t sock = socket(AF_INET, SOCK_STREAM, 0); /* Create a TCP/IPv4 socket. */
@@ -265,12 +283,14 @@ int main(int argc, char **argv)
 		printf("usage: %s <pi-ip-or-host> [port] [board-distance-mm]\n", argv[0]);
 		printf("       %s <pi-ip-or-host> --two <phase-file> [port]\n", argv[0]);
 		printf("       %s <pi-ip-or-host> --staged <phase-file> <first-x> <first-y> <first-z> [port]\n", argv[0]);
+		printf("       %s <pi-ip-or-host> --staged-auto [port] [board-distance-mm]\n", argv[0]);
 		return 1;
 	}
 
 	const char *host = argv[1];
 	int requestedTwoParticleMode = argc >= 3 && strcmp(argv[2], "--two") == 0;
 	int stagedMode = argc >= 3 && strcmp(argv[2], "--staged") == 0;
+	int stagedAutoMode = argc >= 3 && strcmp(argv[2], "--staged-auto") == 0;
 	if(requestedTwoParticleMode && argc < 4) {
 		printf("--two requires a 200-value phase file\n");
 		return 1;
@@ -280,14 +300,18 @@ int main(int argc, char **argv)
 		return 1;
 	}
 	int twoParticleMode = requestedTwoParticleMode;
-	const char *phaseFile = (twoParticleMode || stagedMode) ? argv[3] : NULL;
+	const char *phaseFile = stagedAutoMode ? "live_two_particle_phases.txt" :
+	                        ((twoParticleMode || stagedMode) ? argv[3] : NULL);
 	double stagedX = stagedMode ? atof(argv[4]) : 0.0;
 	double stagedY = stagedMode ? atof(argv[5]) : 0.0;
 	double stagedZ = stagedMode ? atof(argv[6]) : 0.0;
-	uint16_t port = stagedMode ? (argc >= 8 ? (uint16_t)atoi(argv[7]) : HOLO_PHASE_TCP_PORT)
+	uint16_t port = stagedAutoMode ? (argc >= 4 ? (uint16_t)atoi(argv[3]) : HOLO_PHASE_TCP_PORT)
+	                : stagedMode ? (argc >= 8 ? (uint16_t)atoi(argv[7]) : HOLO_PHASE_TCP_PORT)
 	                : twoParticleMode ? (argc >= 5 ? (uint16_t)atoi(argv[4]) : HOLO_PHASE_TCP_PORT)
 	                                : (argc >= 3 ? (uint16_t)atoi(argv[2]) : HOLO_PHASE_TCP_PORT);
-	double boardDistanceMm = (twoParticleMode || stagedMode) ? 135.0 : (argc >= 4 ? atof(argv[3]) : 135.0);
+	double boardDistanceMm = stagedAutoMode ? (argc >= 5 ? atof(argv[4]) : 135.0)
+	                         : (twoParticleMode || stagedMode) ? 135.0
+	                         : (argc >= 4 ? atof(argv[3]) : 135.0);
 	if(port == 0) {
 		printf("invalid TCP port\n");
 		return 1;
@@ -334,7 +358,9 @@ int main(int argc, char **argv)
 		return 0;
 	}
 
-	if(stagedMode)
+	if(stagedAutoMode)
+		printf("automatic staged loading: move particle 1 anywhere at least 12 mm from the origin, then press 2\n");
+	else if(stagedMode)
 		printf("staged loading: move particle 1 to %.1f, %.1f, %.1f mm, then press 2 to add particle 2 at the origin\n",
 		       stagedX, stagedY, stagedZ);
 	printHelp();
@@ -356,10 +382,18 @@ int main(int argc, char **argv)
 			case 'd': y += MOVE_INC_MM; break;
 			case 'p': printf("position %.1f, %.1f, %.1f mm\n", x, y, z); break;
 			case '2':
-				if(!stagedMode) { printHelp(); break; }
-				if(fabs(x-stagedX) > 0.05 || fabs(y-stagedY) > 0.05 || fabs(z-stagedZ) > 0.05) {
+				if(!stagedMode && !stagedAutoMode) { printHelp(); break; }
+				if(stagedAutoMode && sqrt(x*x+y*y+z*z) < 12.0) {
+					printf("move particle 1 at least 12 mm from the origin before adding particle 2\n");
+					break;
+				}
+				if(stagedMode && (fabs(x-stagedX) > 0.05 || fabs(y-stagedY) > 0.05 || fabs(z-stagedZ) > 0.05)) {
 					printf("move particle 1 to %.1f, %.1f, %.1f mm before adding particle 2\n",
 					       stagedX, stagedY, stagedZ);
+					break;
+				}
+				if(stagedAutoMode && compileLiveTwoParticleFrame(x,y,z,boardDistanceMm,phaseFile) != 0) {
+					printf("dual-trap optimization failed; particle 1 remains on its single focus\n");
 					break;
 				}
 				if(loadPhaseFile(phaseFile, &frame, frameID++) != 0) {
@@ -372,7 +406,7 @@ int main(int argc, char **argv)
 					break;
 				}
 				printf("two-particle field active: particle 1 at %.1f, %.1f, %.1f; add particle 2 at 0,0,0; q quits\n",
-				       stagedX, stagedY, stagedZ);
+				       x, y, z);
 				while((ch = getchar()) != EOF && ch != 'q') { }
 				break;
 			case 'o': handleCircleCommand(sock, &frame, &frameID, z, boardDistanceMm); break;

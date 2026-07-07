@@ -13,11 +13,11 @@ any rotated direction. A force-bias penalty keeps the equilibrium close to the
 requested coordinates. The final result is quantized to the FPGA's 512 phase
 levels before verification.
 
-The recommended staged frame targets `(-16, 0, 0)` and `(0, 0, 0)` mm with
-135 mm board separation. This allows the first particle to start at the origin,
-move safely to -16 mm on X, and then leaves the origin available for loading the
-second particle. Regenerate it whenever the target positions or physical board
-separation change:
+The recommended automatic staged mode starts with one particle at the origin.
+Move it to any commanded position at least 12 mm from the origin and press `2`.
+The existing single-focus frame remains active while the laptop compiles a new
+robust hologram for the particle's current position plus `(0,0,0)`. The FPGA is
+updated only if optimization succeeds and the resulting 200 phases validate.
 
 ```powershell
 python cli\two_particle_optimizer.py `
@@ -38,15 +38,25 @@ Build the normal sender, then activate the compiled two-trap frame:
 gcc -std=gnu99 -O3 -Wall -Wextra cli\laptop_phase_sender.c `
   -o cli\laptop_phase_sender.exe -lm -lws2_32
 
-cli\laptop_phase_sender.exe 169.254.3.160 `
-  --staged cli\staged_two_particle_phases.txt -16 0 0 5656
+cd cli
+$env:PYTHON = "C:\path\to\python.exe"
+.\laptop_phase_sender.exe 169.254.3.160 --staged-auto 5656 135
 ```
 
 The sender initially activates the ordinary single-particle focus at `(0,0,0)`.
-Use `x` sixteen times (press Enter after each command) to move particle 1 to
-`(-16,0,0)`. Press `2` to switch atomically to the dual hologram, then introduce
-particle 2 at the origin. The sender rejects `2` until particle 1's commanded
-position exactly matches the frame's staged position. Press `q` to stop.
+Use the normal movement keys (press Enter after each command) to move particle 1.
+Once it is at least 12 mm from the origin, press `2`. Optimization takes a few
+seconds; particle 1 remains held by the unchanged single focus during this time.
+After the sender reports that the two-particle field is active, introduce
+particle 2 at the origin. Press `q` to stop.
+
+Run the executable from the `cli` directory so it can find
+`two_particle_optimizer.py` and its `Vector` model. `PYTHON` is optional when
+`python` is already on `PATH`; when set, it must be the path to the Python
+executable. Python must have NumPy available.
+
+The fixed `--staged` mode remains available for experiments that require a
+pre-certified phase frame and no optimization delay.
 
 The FPGA retains each frame, so continuous retransmission is unnecessary. The
 phase file contains exactly 200 integer ticks; malformed or out-of-range files
