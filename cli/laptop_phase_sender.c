@@ -173,6 +173,33 @@ static int sendAll(socket_t sock, const void *buf, size_t len)
 	return 0;                                       /* Success: every byte was sent. */
 }
 
+/* Load a stiffness-optimised, static two-particle hologram (200 phase ticks). */
+static int loadPhaseFile(const char *path, HoloPhaseFrame *frame, uint16_t frameID)
+{
+	FILE *file = fopen(path, "r");
+	if(!file) return -1;
+	memset(frame, 0, sizeof(*frame));
+	frame->magic = HOLO_PHASE_MAGIC;
+	frame->version = HOLO_PHASE_VERSION;
+	frame->frame_id = frameID;
+	frame->phase_count = HOLO_PHASE_COUNT;
+	frame->phase_max = HOLO_PHASE_MAX;
+	for(int i = 0; i < HOLO_PHASE_COUNT; i++) {
+		unsigned value;
+		if(fscanf(file, "%u", &value) != 1 || value >= HOLO_PHASE_MAX) {
+			fclose(file);
+			return -1;
+		}
+		frame->phases[i] = (uint16_t)value;
+	}
+	/* Reject trailing numeric values: the file must describe exactly one frame. */
+	unsigned extra;
+	if(fscanf(file, "%u", &extra) == 1) { fclose(file); return -1; }
+	fclose(file);
+	frame->crc32 = holo_phase_frame_crc(frame);
+	return 0;
+}
+
 static socket_t connectToPi(const char *host, uint16_t port)
 {
 	socket_t sock = socket(AF_INET, SOCK_STREAM, 0); /* Create a TCP/IPv4 socket. */
@@ -236,12 +263,16 @@ int main(int argc, char **argv)
 {
 	if(argc < 2) {
 		printf("usage: %s <pi-ip-or-host> [port] [board-distance-mm]\n", argv[0]);
+		printf("       %s <pi-ip-or-host> --two <phase-file> [port]\n", argv[0]);
 		return 1;
 	}
 
 	const char *host = argv[1];
-	uint16_t port = argc >= 3 ? (uint16_t)atoi(argv[2]) : HOLO_PHASE_TCP_PORT;
-	double boardDistanceMm = argc >= 4 ? atof(argv[3]) : 135.0;
+	int twoParticleMode = argc >= 4 && strcmp(argv[2], "--two") == 0;
+	const char *phaseFile = twoParticleMode ? argv[3] : NULL;
+	uint16_t port = twoParticleMode ? (argc >= 5 ? (uint16_t)atoi(argv[4]) : HOLO_PHASE_TCP_PORT)
+	                                : (argc >= 3 ? (uint16_t)atoi(argv[2]) : HOLO_PHASE_TCP_PORT);
+	double boardDistanceMm = twoParticleMode ? 135.0 : (argc >= 4 ? atof(argv[3]) : 135.0);
 
 #ifdef _WIN32
 	WSADATA wsa;
@@ -257,6 +288,32 @@ int main(int argc, char **argv)
 	double x = 0.0, y = 0.0, z = 0.0;
 	uint16_t frameID = 0;
 	HoloPhaseFrame frame;
+	if(twoParticleMode) {
+		if(loadPhaseFile(phaseFile, &frame, frameID++) != 0) {
+			printf("invalid two-particle phase file: %s\n", phaseFile);
+			close_socket(sock);
+			return 1;
+		}
+		if(sendAll(sock, &frame, sizeof(frame)) < 0) {
+			printf("two-particle frame send failed\n");
+			close_socket(sock);
+			return 1;
+		}
+		printf("two-particle hologram active (frame %u); press Enter to resend or q to quit\n", frame.frame_id);
+		for(int ch; (ch = getchar()) != EOF && ch != 'q'; ) {
+			if(ch == '\n' || ch == '\r') {
+				frame.frame_id = frameID++;
+				frame.crc32 = holo_phase_frame_crc(&frame);
+				if(sendAll(sock, &frame, sizeof(frame)) < 0) break;
+				printf("resent frame %u\n", frame.frame_id);
+			}
+		}
+		close_socket(sock);
+#ifdef _WIN32
+		WSACleanup();
+#endif
+		return 0;
+	}
 
 	printHelp();
 	while(1) {
