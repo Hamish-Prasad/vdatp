@@ -2,8 +2,9 @@
  * Windows build:
  *   gcc -O2 -std=c11 -Wall -Wextra laptop_phase_sender_vector.c -I.. -o laptop_phase_sender_vector.exe -lm -lws2_32
  *
- *              .\laptop_phase_sender_vector.exe 169.254.101.245 one --port 5656
- *          current ip - 169.254.101.245
+ *              .\laptop_phase_sender_vector.exe 169.254.85.139 two --port 5656
+ *          current ip - 169.254.85.139
+ *          169.254.85.139
  */
 
 #ifdef _WIN32
