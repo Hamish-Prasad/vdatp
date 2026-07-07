@@ -52,8 +52,10 @@ class PotentialModel:
                            (rows[:, 2] - rows[:, 5])/(2*derivative_step_mm),
                            (rows[:, 3] - rows[:, 6])/(2*derivative_step_mm)), axis=1)
 
-    def evaluate(self, phases: np.ndarray) -> tuple[np.ndarray, np.ndarray]:
+    def evaluate(self, phases: np.ndarray, calibration: np.ndarray | None = None) -> tuple[np.ndarray, np.ndarray]:
         q = np.exp(1j*phases)
+        if calibration is not None:
+            q = q*calibration
         pressure = self.p @ q
         gradient = np.einsum("pdi,i->pd", self.g, q)
         beta = self.physics.beta_mm2
@@ -102,21 +104,31 @@ def optimize(targets: np.ndarray, board_mm: float, iterations: int, seed: int,
     model = PotentialModel(physics, points)
     rng = np.random.default_rng(seed)
     phases = initial_drive(targets, physics) + rng.normal(0, 0.04, 200)
+    # Optimise against nominal hardware plus fixed phase/amplitude-error worlds.
+    # This turns calibration tolerance into part of the design, not just a test.
+    calibrations = [np.ones(200, dtype=complex)]
+    for _ in range(4):
+        amplitude = np.maximum(rng.normal(1.0, 0.05, 200), 0.2)
+        phase_error = rng.normal(0.0, np.deg2rad(5.0), 200)
+        calibrations.append(amplitude*np.exp(1j*phase_error))
     u0, _ = model.evaluate(phases)
     scale = max(float(np.percentile(np.abs(u0), 70))/25.0, 1e-9)
     m_adam = np.zeros(200); v_adam = np.zeros(200)
     best = (-np.inf, phases.copy(), None)
 
     for step in range(1, iterations+1):
-        u, du = model.evaluate(phases)
         eigs, eig_grads, centers, center_grads = [], [], [], []
-        for mapping in maps:
-            g, dg, H, dH = local_derivatives(u, du, mapping, h)
-            values, vectors = np.linalg.eigh(H)
-            v = vectors[:, 0]
-            eigs.append(values[0])
-            eig_grads.append(np.einsum("a,abk,b->k", v, dH, v))
-            centers.append(g); center_grads.append(dg)
+        nominal_eigs = []
+        for scenario, calibration in enumerate(calibrations):
+            u, du = model.evaluate(phases, calibration)
+            for mapping in maps:
+                g, dg, H, dH = local_derivatives(u, du, mapping, h)
+                values, vectors = np.linalg.eigh(H)
+                v = vectors[:, 0]
+                eigs.append(values[0])
+                eig_grads.append(np.einsum("a,abk,b->k", v, dH, v))
+                centers.append(g); center_grads.append(dg)
+                if scenario == 0: nominal_eigs.append(values[0])
         eigs = np.asarray(eigs); eig_grads = np.asarray(eig_grads)
         centers = np.asarray(centers); center_grads = np.asarray(center_grads)
 
@@ -128,12 +140,18 @@ def optimize(targets: np.ndarray, board_mm: float, iterations: int, seed: int,
         grad_obj = np.sum(weights[:, None]*eig_grads, axis=0)/scale
 
         # A finite-difference Hessian can look good while its minimum is displaced.
-        force_penalty = 0.05*np.mean((centers/scale)**2)
-        grad_penalty = 0.10*np.einsum("ta,tak->k", centers/scale, center_grads/scale)
+        # Weight 0.30; derive the mean explicitly so scenario count stays correct.
+        force_penalty = 0.30*np.mean((centers/scale)**2)
+        grad_penalty = (0.60/centers.size)*np.einsum("sa,sak->k",
+            centers.reshape(-1,3)/scale, center_grads.reshape(-1,3,200)/scale)
         objective -= force_penalty
         grad_obj -= grad_penalty
         grad_obj -= np.mean(grad_obj)
         grad_obj = np.clip(grad_obj, -5.0, 5.0)
+
+        if objective > best[0] and np.all(eigs > 0):
+            # Score and phases must come from the same pre-update iterate.
+            best = (float(objective), phases.copy(), eigs.copy())
 
         m_adam = .9*m_adam + .1*grad_obj
         v_adam = .999*v_adam + .001*grad_obj*grad_obj
@@ -141,11 +159,10 @@ def optimize(targets: np.ndarray, board_mm: float, iterations: int, seed: int,
         lr = .025*(.2 + .8*.5*(1+math.cos(math.pi*step/iterations)))
         phases += lr*mh/(np.sqrt(vh)+1e-8)
         phases = (phases+np.pi)%(2*np.pi)-np.pi
-        if objective > best[0] and np.all(eigs > 0):
-            best = (float(objective), phases.copy(), eigs.copy())
         if step == 1 or step % 50 == 0:
             print(f"step={step:4d} weak_stiffness={np.min(eigs):.6g} "
-                  f"eigs={eigs} force_bias={np.linalg.norm(centers, axis=1)}", flush=True)
+                  f"nominal={np.asarray(nominal_eigs)} "
+                  f"worst_force_bias={np.max(np.linalg.norm(centers.reshape(-1,3), axis=1)):.5g}", flush=True)
 
     if best[2] is None:
         raise RuntimeError("optimizer did not find two positive-definite traps")
@@ -158,9 +175,12 @@ def optimize(targets: np.ndarray, board_mm: float, iterations: int, seed: int,
                              "eigenvalues": np.linalg.eigvalsh(H).tolist()})
     out.parent.mkdir(parents=True, exist_ok=True)
     np.savetxt(out, ticks.astype(int), fmt="%d")
-    report = {"method": "dual-trap maximin Gorkov stiffness hologram",
+    report = {"method": "robust dual-trap maximin Gorkov eigenstiffness hologram",
               "targets_mm": targets.tolist(), "physics": asdict(physics),
-              "stencil_mm": h, "phase_file": str(out), "quantized_verification": verification}
+              "stencil_mm": h, "phase_file": str(out),
+              "design_uncertainty": {"scenarios": len(calibrations), "phase_sd_deg": 5.0,
+                                     "amplitude_sd_fraction": 0.05},
+              "quantized_verification": verification}
     out.with_suffix(".json").write_text(json.dumps(report, indent=2), encoding="ascii")
     return report
 

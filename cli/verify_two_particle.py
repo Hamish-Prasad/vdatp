@@ -50,14 +50,38 @@ def derivatives(target, drive, physics, amplitude=None, h=.3):
 def main():
     p=argparse.ArgumentParser(); p.add_argument("--phases",type=Path,default=Path("cli/two_particle_phases.txt"))
     p.add_argument("--trials",type=int,default=250); p.add_argument("--output",type=Path,default=Path("cli/two_particle_verification.json")); a=p.parse_args()
-    ticks=np.loadtxt(a.phases,dtype=int); drive=np.exp(1j*ticks*2*np.pi/512)
-    physics=Physics(); targets=np.array([[-8.,0,0],[8.,0,0]])
-    report={"phase_file":str(a.phases),"targets_mm":targets.tolist(),"stencils":{},"robustness":{}}
+    ticks=np.loadtxt(a.phases,dtype=int)
+    if ticks.shape != (200,) or np.any(ticks < 0) or np.any(ticks >= 512):
+        raise SystemExit("phase file must contain exactly 200 integers in 0..511")
+    drive=np.exp(1j*ticks*2*np.pi/512)
+    metadata_path=a.phases.with_suffix(".json")
+    if not metadata_path.exists():
+        raise SystemExit(f"missing optimizer metadata: {metadata_path}")
+    metadata=json.loads(metadata_path.read_text(encoding="ascii"))
+    physics=Physics(**metadata["physics"])
+    targets=np.asarray(metadata["targets_mm"],dtype=float)
+    if targets.shape != (2,3): raise SystemExit("metadata must contain exactly two 3D targets")
+    report={"phase_file":str(a.phases),"targets_mm":targets.tolist(),"stencils":{},"equilibria":[],"robustness":{}}
     for h in (.2,.3,.45,.7):
         report["stencils"][str(h)]=[]
         for t in targets:
             g,H,ax=derivatives(t,drive,physics,h=h)
             report["stencils"][str(h)].append({"gradient":g.tolist(),"eigenvalues":np.linalg.eigvalsh(H).tolist(),"axis_well_margins":ax})
+    # Newton-refine the actual zero-force locations near the requested points.
+    for target in targets:
+        point=target.copy()
+        for _ in range(8):
+            g,H,_=derivatives(point,drive,physics,h=.25)
+            step=np.linalg.solve(H,g)
+            if np.linalg.norm(step)>1.0: raise SystemExit("local equilibrium search left its trusted basin")
+            point-=step
+            if np.linalg.norm(step)<1e-7: break
+        g,H,_=derivatives(point,drive,physics,h=.2)
+        eig=np.linalg.eigvalsh(H)
+        if np.min(eig)<=0 or np.linalg.norm(point-target)>1.0:
+            raise SystemExit("no nearby positive-definite equilibrium")
+        report["equilibria"].append({"position_mm":point.tolist(),"offset_mm":(point-target).tolist(),
+                                      "residual_gradient":g.tolist(),"eigenvalues":eig.tolist()})
     rng=np.random.default_rng(903)
     for phase_sd_deg,amp_sd in ((2,0.03),(5,0.05),(10,0.10),(20,0.15)):
         minima=[]; stable=0
@@ -72,6 +96,19 @@ def main():
     # Verify that the midpoint is not an accidentally competitive third well.
     centers=potential(np.vstack((targets,[[0.,0,0]])),drive,physics)
     report["center_potentials"]={"left":float(centers[0]),"right":float(centers[1]),"midpoint":float(centers[2])}
+    # Conditional dimensional estimate using the Physics reference pressure.
+    emitters,normals=emitter_geometry(physics)
+    center_row=transfer(np.zeros((1,3)),physics,emitters,normals)[0]
+    pressure_scale=physics.reference_focus_rms_pa/np.sum(np.abs(center_row))
+    radius_m=0.5e-3*physics.particle_diameter_mm
+    volume=4*np.pi*radius_m**3/3
+    force_scale=volume*physics.f1/(2*physics.air_density_kg_m3*physics.sound_speed_m_s**2)*pressure_scale**2*1000
+    weight=volume*physics.particle_density_kg_m3*9.80665
+    weakest=min(min(item["eigenvalues"]) for item in report["equilibria"])
+    report["conditional_physical_estimate"]={"reference_focus_rms_pa":physics.reference_focus_rms_pa,
+        "weakest_stiffness_n_per_m":force_scale*weakest*1000,
+        "particle_weight_n":weight,"linear_gravity_sag_mm":weight/(force_scale*weakest)}
+    a.output.parent.mkdir(parents=True,exist_ok=True)
     a.output.write_text(json.dumps(report,indent=2),encoding="ascii")
     print(json.dumps(report,indent=2))
 

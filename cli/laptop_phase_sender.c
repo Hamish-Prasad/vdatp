@@ -4,20 +4,9 @@
 #include <string.h>   /* memset/memcpy are used for packet and socket address setup. */
 #include <math.h>     /* sqrt is used for transducer-to-focus distance. */
 
-#ifdef _WIN32
-#include <windows.h>
-#else
+#ifndef _WIN32
 #include <unistd.h>
 #endif
-
-static void delay_ms(unsigned int ms)
-{
-#ifdef _WIN32
-    Sleep(ms);
-#else
-    usleep(ms * 1000);
-#endif
-}
 
 /*
  * Windows and Linux/macOS expose sockets through slightly different headers and
@@ -29,6 +18,7 @@ static void delay_ms(unsigned int ms)
 #define _WIN32_WINNT 0x0600
 #include <winsock2.h>                         /* Windows socket API. */
 #include <ws2tcpip.h>                         /* inet_pton on Windows. */
+#include <windows.h>                          /* Sleep and Windows platform declarations. */
 #ifndef INET_PTON
 WINSOCK_API_LINKAGE INT WSAAPI inet_pton(INT Family, PCSTR pszAddrString, PVOID pAddrBuf);
 #endif
@@ -45,6 +35,15 @@ typedef int socket_t;                         /* Unix sockets are plain integer 
 #define SOCKET_ERROR (-1)                     /* Match the Windows-style socket error name. */
 #define close_socket close                    /* Unix closes sockets with close(). */
 #endif
+
+static void delay_ms(unsigned int ms)
+{
+#ifdef _WIN32
+	Sleep(ms);
+#else
+	usleep(ms * 1000);
+#endif
+}
 
 #include "phase_protocol.h"                   /* Shared 200-phase packet format and CRC helpers. */
 
@@ -236,6 +235,7 @@ static void printHelp(void)
 	printf("  x/s    decrease/increase X\n");         /* x/s move through X. */
 	printf("  c/d    decrease/increase Y\n");         /* c/d move through Y. */
 	printf("  p      print current position\n");       /* p prints without moving. */
+	printf("  2      in --staged mode, add particle 2 at the origin\n");
 	printf("  o      circle command\n");			      /* circle command. */
 	printf("  q      quit\n");                         /* q exits program. */
 }
@@ -264,15 +264,34 @@ int main(int argc, char **argv)
 	if(argc < 2) {
 		printf("usage: %s <pi-ip-or-host> [port] [board-distance-mm]\n", argv[0]);
 		printf("       %s <pi-ip-or-host> --two <phase-file> [port]\n", argv[0]);
+		printf("       %s <pi-ip-or-host> --staged <phase-file> <first-x> <first-y> <first-z> [port]\n", argv[0]);
 		return 1;
 	}
 
 	const char *host = argv[1];
-	int twoParticleMode = argc >= 4 && strcmp(argv[2], "--two") == 0;
-	const char *phaseFile = twoParticleMode ? argv[3] : NULL;
-	uint16_t port = twoParticleMode ? (argc >= 5 ? (uint16_t)atoi(argv[4]) : HOLO_PHASE_TCP_PORT)
+	int requestedTwoParticleMode = argc >= 3 && strcmp(argv[2], "--two") == 0;
+	int stagedMode = argc >= 3 && strcmp(argv[2], "--staged") == 0;
+	if(requestedTwoParticleMode && argc < 4) {
+		printf("--two requires a 200-value phase file\n");
+		return 1;
+	}
+	if(stagedMode && argc < 7) {
+		printf("--staged requires a phase file and the first particle's staged x y z\n");
+		return 1;
+	}
+	int twoParticleMode = requestedTwoParticleMode;
+	const char *phaseFile = (twoParticleMode || stagedMode) ? argv[3] : NULL;
+	double stagedX = stagedMode ? atof(argv[4]) : 0.0;
+	double stagedY = stagedMode ? atof(argv[5]) : 0.0;
+	double stagedZ = stagedMode ? atof(argv[6]) : 0.0;
+	uint16_t port = stagedMode ? (argc >= 8 ? (uint16_t)atoi(argv[7]) : HOLO_PHASE_TCP_PORT)
+	                : twoParticleMode ? (argc >= 5 ? (uint16_t)atoi(argv[4]) : HOLO_PHASE_TCP_PORT)
 	                                : (argc >= 3 ? (uint16_t)atoi(argv[2]) : HOLO_PHASE_TCP_PORT);
-	double boardDistanceMm = twoParticleMode ? 135.0 : (argc >= 4 ? atof(argv[3]) : 135.0);
+	double boardDistanceMm = (twoParticleMode || stagedMode) ? 135.0 : (argc >= 4 ? atof(argv[3]) : 135.0);
+	if(port == 0) {
+		printf("invalid TCP port\n");
+		return 1;
+	}
 
 #ifdef _WIN32
 	WSADATA wsa;
@@ -315,6 +334,9 @@ int main(int argc, char **argv)
 		return 0;
 	}
 
+	if(stagedMode)
+		printf("staged loading: move particle 1 to %.1f, %.1f, %.1f mm, then press 2 to add particle 2 at the origin\n",
+		       stagedX, stagedY, stagedZ);
 	printHelp();
 	while(1) {
 		fillPhaseFrame(&frame, frameID++, x, y, z, boardDistanceMm);
@@ -333,10 +355,31 @@ int main(int argc, char **argv)
 			case 'c': y -= MOVE_INC_MM; break;
 			case 'd': y += MOVE_INC_MM; break;
 			case 'p': printf("position %.1f, %.1f, %.1f mm\n", x, y, z); break;
+			case '2':
+				if(!stagedMode) { printHelp(); break; }
+				if(fabs(x-stagedX) > 0.05 || fabs(y-stagedY) > 0.05 || fabs(z-stagedZ) > 0.05) {
+					printf("move particle 1 to %.1f, %.1f, %.1f mm before adding particle 2\n",
+					       stagedX, stagedY, stagedZ);
+					break;
+				}
+				if(loadPhaseFile(phaseFile, &frame, frameID++) != 0) {
+					printf("invalid staged two-particle phase file: %s\n", phaseFile);
+					break;
+				}
+				if(sendAll(sock, &frame, sizeof(frame)) < 0) {
+					printf("two-particle activation failed\n");
+					ch = EOF;
+					break;
+				}
+				printf("two-particle field active: particle 1 at %.1f, %.1f, %.1f; add particle 2 at 0,0,0; q quits\n",
+				       stagedX, stagedY, stagedZ);
+				while((ch = getchar()) != EOF && ch != 'q') { }
+				break;
 			case 'o': handleCircleCommand(sock, &frame, &frameID, z, boardDistanceMm); break;
 			case '\n': case '\r': break;
 			default: printHelp(); break;
 		}
+		if(ch == EOF || ch == 'q') break;
 
 		while(ch != '\n' && ch != '\r' && ch != EOF) ch = getchar();
 	}
