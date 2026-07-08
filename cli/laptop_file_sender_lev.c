@@ -22,7 +22,7 @@
  * our opposed-array pi split, but avoids online NLopt/AD so it can stream a
  * single moving trap as quickly as the Pi/FPGA path will accept frames.
  * gcc -std=gnu99 -O3 -Wall -Wextra cli\laptop_file_sender_lev.c -o cli\laptop_file_sender_lev.exe -lm -lws2_32
- * .laptop_file_sender_lev.exe 169.254.3.160 5656 135 3 64 0
+ * .\cli\laptop_file_sender_lev.exe 169.254.3.160 5656 135 3 64 0
  */
 
 #ifdef _WIN32
@@ -324,6 +324,7 @@ static int send_ramp(socket_t sock, uint16_t *frameID, double radiusMm,
 }
 
 static int stream_circle(socket_t sock, HoloPhaseFrame *frames, int frameCount,
+	uint16_t *frameID,
 	unsigned delayUs, unsigned long maxFrames)
 {
 	unsigned long sent = 0;
@@ -334,6 +335,8 @@ static int stream_circle(socket_t sock, HoloPhaseFrame *frames, int frameCount,
 	printf("streaming circle: press q to stop, any other key prints status\n");
 	while(maxFrames == 0 || sent < maxFrames) {
 		HoloPhaseFrame *frame = &frames[sent % (unsigned long)frameCount];
+		frame->frame_id = (*frameID)++;
+		frame->crc32 = holo_phase_frame_crc(frame);
 		if(send_all(sock, frame, sizeof(*frame)) < 0) return -1;
 		sent++;
 		delay_us(delayUs);
@@ -471,7 +474,7 @@ int main(int argc, char **argv)
 					printf("ramp send failed\n");
 					break;
 				}
-				if(stream_circle(sock, circleFrames, frameCount, delayUs, maxFrames) < 0) {
+				if(stream_circle(sock, circleFrames, frameCount, &frameID, delayUs, maxFrames) < 0) {
 					printf("circle send failed\n");
 					break;
 				}
