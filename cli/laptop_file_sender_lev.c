@@ -51,12 +51,14 @@ typedef int socket_t;
 
 #define NUM_BOARDS 4
 #define CHANNELS_PER_BOARD 50
+#define MAX_PARTICLES 2
 #define DEFAULT_BOARD_DISTANCE_MM 135.0
 #define DEFAULT_RADIUS_MM 3.0
 #define DEFAULT_FRAMES_PER_CIRCLE 64
 #define DEFAULT_DELAY_US 5000
 #define DEFAULT_RAMP_FRAMES 64
 #define DEFAULT_RAMP_DELAY_MS 6
+#define MOVE_INC_MM 0.5
 #define TRANSDUCER_RADIUS_MM 5.0
 #define SOUND_SPEED_MM_S 343000.0
 #define FREQUENCY_HZ 40000.0
@@ -69,6 +71,13 @@ enum BoardIndex {
 	BOARD_LEFT_BOTTOM = 2,
 	BOARD_RIGHT_BOTTOM = 3
 };
+
+typedef struct ParticleTarget {
+	double x;
+	double y;
+	double z;
+	int enabled;
+} ParticleTarget;
 
 static const int16_t xCols[5] = {450, 350, 250, 150, 50};
 static const int16_t zRows[10] = {-450, -350, -250, -150, -50, 50, 150, 250, 350, 450};
@@ -216,7 +225,7 @@ static double bessel_j0_series(double x)
 	return sum;
 }
 
-static uint16_t calculate_acousticlev_phase(double tx, double ty, double tz,
+static double calculate_acousticlev_phase_radians(double tx, double ty, double tz,
 	enum BoardIndex board, int channel, double boardDistanceMm)
 {
 	const double k = TWO_PI * FREQUENCY_HZ / SOUND_SPEED_MM_S;
@@ -243,11 +252,35 @@ static uint16_t calculate_acousticlev_phase(double tx, double ty, double tz,
 	drivePhase = -k * distance;
 	if(directivity < 0.0) drivePhase -= PI;
 	if(board_is_bottom(board)) drivePhase += PI;
-	return phase_radians_to_ticks(drivePhase);
+	return drivePhase;
 }
 
-static void fill_phase_frame(HoloPhaseFrame *frame, uint16_t frameID,
-	double x, double y, double z, double boardDistanceMm)
+static uint16_t calculate_multi_particle_phase(const ParticleTarget *particles,
+	int particleCount, enum BoardIndex board, int channel, double boardDistanceMm)
+{
+	double real = 0.0;
+	double imag = 0.0;
+	int enabledCount = 0;
+
+	for(int i = 0; i < particleCount; i++) {
+		if(!particles[i].enabled)
+			continue;
+
+		double phase = calculate_acousticlev_phase_radians(
+			particles[i].x, particles[i].y, particles[i].z,
+			board, channel, boardDistanceMm);
+		real += cos(phase);
+		imag += sin(phase);
+		enabledCount++;
+	}
+
+	if(enabledCount == 0)
+		return 0;
+	return phase_radians_to_ticks(atan2(imag, real));
+}
+
+static void fill_multi_particle_frame(HoloPhaseFrame *frame, uint16_t frameID,
+	const ParticleTarget *particles, int particleCount, double boardDistanceMm)
 {
 	memset(frame, 0, sizeof(*frame));
 	frame->magic = HOLO_PHASE_MAGIC;
@@ -259,11 +292,18 @@ static void fill_phase_frame(HoloPhaseFrame *frame, uint16_t frameID,
 	for(int board = 0; board < NUM_BOARDS; board++) {
 		for(int ch = 0; ch < CHANNELS_PER_BOARD; ch++) {
 			int idx = board * CHANNELS_PER_BOARD + ch;
-			frame->phases[idx] = calculate_acousticlev_phase(
-				x, y, z, (enum BoardIndex)board, ch, boardDistanceMm);
+			frame->phases[idx] = calculate_multi_particle_phase(
+				particles, particleCount, (enum BoardIndex)board, ch, boardDistanceMm);
 		}
 	}
 	frame->crc32 = holo_phase_frame_crc(frame);
+}
+
+static void fill_phase_frame(HoloPhaseFrame *frame, uint16_t frameID,
+	double x, double y, double z, double boardDistanceMm)
+{
+	ParticleTarget particle = {x, y, z, 1};
+	fill_multi_particle_frame(frame, frameID, &particle, 1, boardDistanceMm);
 }
 
 static int send_all(socket_t sock, const void *buf, size_t len)
@@ -381,6 +421,24 @@ static int stream_circle(socket_t sock, HoloPhaseFrame *frames, int frameCount,
 	return 0;
 }
 
+static void print_particles(const ParticleTarget *particles, int selected)
+{
+	for(int i = 0; i < MAX_PARTICLES; i++) {
+		printf("%c particle %d: %s at %.2f, %.2f, %.2f mm\n",
+			i == selected ? '*' : ' ',
+			i + 1,
+			particles[i].enabled ? "on " : "off",
+			particles[i].x, particles[i].y, particles[i].z);
+	}
+}
+
+static int send_particles(socket_t sock, HoloPhaseFrame *frame, uint16_t *frameID,
+	const ParticleTarget *particles, double boardDistanceMm)
+{
+	fill_multi_particle_frame(frame, (*frameID)++, particles, MAX_PARTICLES, boardDistanceMm);
+	return send_all(sock, frame, sizeof(*frame));
+}
+
 static void print_usage(const char *argv0)
 {
 	printf("usage: %s <pi-ip-or-host> [port] [board-mm] [radius-mm] [frames] [delay-us] [max-frames]\n", argv0);
@@ -389,8 +447,15 @@ static void print_usage(const char *argv0)
 		DEFAULT_FRAMES_PER_CIRCLE, DEFAULT_DELAY_US);
 	printf("delay-us controls particle speed: try 10000 gentler, 3000 faster, 0 for transport stress-test\n");
 	printf("commands after connect:\n");
-	printf("  Enter  resend origin holding frame\n");
-	printf("  g      ramp to the circle and stream as fast as configured\n");
+	printf("  1/2    select particle; selecting 2 enables it at centre\n");
+	printf("  x/s    decrease/increase X of selected particle\n");
+	printf("  c/d    decrease/increase Y of selected particle\n");
+	printf("  z/a    decrease/increase Z of selected particle\n");
+	printf("  h      move selected particle to centre\n");
+	printf("  0      disable selected particle, except particle 1\n");
+	printf("  Enter  resend current particles\n");
+	printf("  p      print particle positions\n");
+	printf("  g      legacy single-particle circle test\n");
 	printf("  q      quit\n");
 }
 
@@ -411,8 +476,13 @@ int main(int argc, char **argv)
 	unsigned delayUs;
 	unsigned long maxFrames;
 	uint16_t frameID = 0;
-	HoloPhaseFrame origin;
+	HoloPhaseFrame currentFrame;
 	HoloPhaseFrame *circleFrames = NULL;
+	ParticleTarget particles[MAX_PARTICLES] = {
+		{0.0, 0.0, 0.0, 1},
+		{0.0, 0.0, 0.0, 0}
+	};
+	int selectedParticle = 0;
 	socket_t sock;
 
 	if(argc < 2) {
@@ -459,7 +529,7 @@ int main(int argc, char **argv)
 		return 1;
 	}
 
-	fill_phase_frame(&origin, frameID++, 0.0, 0.0, 0.0, boardDistanceMm);
+	fill_multi_particle_frame(&currentFrame, frameID++, particles, MAX_PARTICLES, boardDistanceMm);
 	if(build_circle_frames(circleFrames, frameCount, &frameID, radiusMm, boardDistanceMm) != 0) {
 		printf("could not build circle frames\n");
 		free(circleFrames);
@@ -474,7 +544,7 @@ int main(int argc, char **argv)
 		printf("warning: could not switch terminal to raw mode; controls may require Enter\n");
 	}
 
-	printf("AcousticLev-style single-particle sender connected to %s:%u\n", host, port);
+	printf("AcousticLev-style two-particle sender connected to %s:%u\n", host, port);
 	printf("circle is X-Z around y=0: radius %.2f mm, %d frames, delay %u us",
 		radiusMm, frameCount, delayUs);
 	if(delayUs > 0)
@@ -483,19 +553,74 @@ int main(int argc, char **argv)
 	else
 		printf(" (uncapped transport stress-test)\n");
 	print_usage(argv[0]);
+	print_particles(particles, selectedParticle);
 
-	if(send_all(sock, &origin, sizeof(origin)) < 0) {
-		printf("origin send failed\n");
+	if(send_all(sock, &currentFrame, sizeof(currentFrame)) < 0) {
+		printf("initial particle send failed\n");
 	} else {
-		printf("holding origin; press g to draw the circle\n");
+		printf("particle 1 is active at centre; move it away, then press 2 to add particle 2 at centre\n");
 		while(1) {
 			int ch = read_key();
+			int sendCurrent = 0;
 			if(ch == EOF) {
 				delay_ms(10);
 				continue;
 			}
 			if(ch == 'q' || ch == 'Q') break;
-			if(ch == 'g' || ch == 'G') {
+
+			if(ch == '1') {
+				selectedParticle = 0;
+				particles[0].enabled = 1;
+				sendCurrent = 1;
+			} else if(ch == '2') {
+				selectedParticle = 1;
+				if(!particles[1].enabled) {
+					particles[1].x = 0.0;
+					particles[1].y = 0.0;
+					particles[1].z = 0.0;
+					particles[1].enabled = 1;
+				}
+				sendCurrent = 1;
+			} else if(ch == '0') {
+				if(selectedParticle == 0) {
+					printf("particle 1 stays enabled so there is always at least one trap\n");
+				} else {
+					particles[selectedParticle].enabled = 0;
+					sendCurrent = 1;
+				}
+			} else if(ch == 'h' || ch == 'H') {
+				particles[selectedParticle].x = 0.0;
+				particles[selectedParticle].y = 0.0;
+				particles[selectedParticle].z = 0.0;
+				particles[selectedParticle].enabled = 1;
+				sendCurrent = 1;
+			} else if(ch == 'x') {
+				particles[selectedParticle].x -= MOVE_INC_MM;
+				particles[selectedParticle].enabled = 1;
+				sendCurrent = 1;
+			} else if(ch == 's') {
+				particles[selectedParticle].x += MOVE_INC_MM;
+				particles[selectedParticle].enabled = 1;
+				sendCurrent = 1;
+			} else if(ch == 'c') {
+				particles[selectedParticle].y -= MOVE_INC_MM;
+				particles[selectedParticle].enabled = 1;
+				sendCurrent = 1;
+			} else if(ch == 'd') {
+				particles[selectedParticle].y += MOVE_INC_MM;
+				particles[selectedParticle].enabled = 1;
+				sendCurrent = 1;
+			} else if(ch == 'z') {
+				particles[selectedParticle].z -= MOVE_INC_MM;
+				particles[selectedParticle].enabled = 1;
+				sendCurrent = 1;
+			} else if(ch == 'a') {
+				particles[selectedParticle].z += MOVE_INC_MM;
+				particles[selectedParticle].enabled = 1;
+				sendCurrent = 1;
+			} else if(ch == 'p' || ch == 'P') {
+				print_particles(particles, selectedParticle);
+			} else if(ch == 'g' || ch == 'G') {
 				if(send_ramp(sock, &frameID, radiusMm, boardDistanceMm,
 					   DEFAULT_RAMP_FRAMES, DEFAULT_RAMP_DELAY_MS) < 0) {
 					printf("ramp send failed\n");
@@ -505,14 +630,17 @@ int main(int argc, char **argv)
 					printf("circle send failed\n");
 					break;
 				}
-				fill_phase_frame(&origin, frameID++, 0.0, 0.0, 0.0, boardDistanceMm);
-				if(send_all(sock, &origin, sizeof(origin)) < 0) break;
-				printf("holding origin again; press g to repeat or q to quit\n");
+				sendCurrent = 1;
 			} else if(ch == '\n' || ch == '\r') {
-				origin.frame_id = frameID++;
-				origin.crc32 = holo_phase_frame_crc(&origin);
-				if(send_all(sock, &origin, sizeof(origin)) < 0) break;
-				printf("resent origin frame %u\n", origin.frame_id);
+				sendCurrent = 1;
+			} else {
+				print_usage(argv[0]);
+			}
+
+			if(sendCurrent) {
+				if(send_particles(sock, &currentFrame, &frameID, particles, boardDistanceMm) < 0) break;
+				printf("sent frame %u\n", currentFrame.frame_id);
+				print_particles(particles, selectedParticle);
 			}
 		}
 	}
