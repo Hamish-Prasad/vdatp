@@ -26,9 +26,17 @@ def emitter_geometry(board_mm: float) -> tuple[np.ndarray, np.ndarray]:
     for board in range(4):
         bottom = board in (2, 3)
         for channel in range(50):
-            x0 = X_COLS_MM[channel // 10]
+            col = channel // 10
+            if board == 0:
+                x0 = X_COLS_MM[col]
+            elif board == 1:
+                x0 = -X_COLS_MM[4 - col]
+            elif board == 2:
+                x0 = X_COLS_MM[4 - col]
+            else:
+                x0 = -X_COLS_MM[col]
             points.append([
-                x0 if board in (0, 2) else -x0,
+                x0,
                 -0.5 * board_mm if bottom else 0.5 * board_mm,
                 Z_ROWS_MM[channel % 10],
             ])
@@ -85,8 +93,12 @@ def potential(points: np.ndarray, drive: np.ndarray, emitters: np.ndarray, norma
 
 
 def make_plot(out_png: Path, grid_x: np.ndarray, grid_z: np.ndarray, u: np.ndarray,
-              targets: np.ndarray, minima: np.ndarray) -> None:
-    import matplotlib
+              targets: np.ndarray, minima: np.ndarray) -> bool:
+    try:
+        import matplotlib
+    except ModuleNotFoundError:
+        return False
+
     matplotlib.use("Agg")
     import matplotlib.pyplot as plt
 
@@ -105,6 +117,7 @@ def make_plot(out_png: Path, grid_x: np.ndarray, grid_z: np.ndarray, u: np.ndarr
     fig.tight_layout()
     fig.savefig(out_png)
     plt.close(fig)
+    return True
 
 
 def main() -> None:
@@ -142,14 +155,15 @@ def main() -> None:
     preview_drive = np.exp(1j * ticks[preview_index] * 2.0 * math.pi / PHASE_MAX)
     u_preview = potential(points, preview_drive, emitters, normals)
     u_preview = (u_preview - np.min(u_preview)) / max(float(np.ptp(u_preview)), 1.0e-12)
-    make_plot(args.out_dir / "circle_potential_preview.png", grid_x, grid_z, u_preview, targets, minima)
+    preview_png = args.out_dir / "circle_potential_preview.png"
+    preview_written = make_plot(preview_png, grid_x, grid_z, u_preview, targets, minima)
 
     report = {
         "board_mm": args.board_mm,
         "radius_mm": args.radius_mm,
         "frames": args.frames,
         "phase_file": str(args.out_dir / "circle_phase_ticks.csv"),
-        "preview_png": str(args.out_dir / "circle_potential_preview.png"),
+        "preview_png": str(preview_png) if preview_written else None,
         "nearest_minimum_offset_mm": {
             "max": float(np.max(offsets)),
             "mean": float(np.mean(offsets)),

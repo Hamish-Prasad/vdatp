@@ -21,8 +21,9 @@
  * pressure derivatives.  This live sender keeps the analytic phase model and
  * our opposed-array pi split, but avoids online NLopt/AD so it can stream a
  * single moving trap as quickly as the Pi/FPGA path will accept frames.
- * gcc -std=gnu99 -O3 -Wall -Wextra cli\laptop_file_sender_lev.c -o cli\laptop_file_sender_lev.exe -lm -lws2_32
- * .\cli\laptop_file_sender_lev.exe 169.254.3.160 5656 135 3 64 0
+ * gcc -std=gnu99 -O3 -Wall -Wextra laptop_file_sender_lev.c -o laptop_file_sender_lev.exe -lm -lws2_32
+ * laptop_file_sender_lev.exe 169.254.251.233 5656 135 3 64 10000
+ * laptop_file_sender_lev.exe 169.254.102.90 5656 135 3 64 800
  */
 
 #ifdef _WIN32
@@ -53,7 +54,7 @@ typedef int socket_t;
 #define DEFAULT_BOARD_DISTANCE_MM 135.0
 #define DEFAULT_RADIUS_MM 3.0
 #define DEFAULT_FRAMES_PER_CIRCLE 64
-#define DEFAULT_DELAY_US 0
+#define DEFAULT_DELAY_US 5000
 #define DEFAULT_RAMP_FRAMES 64
 #define DEFAULT_RAMP_DELAY_MS 6
 #define TRANSDUCER_RADIUS_MM 5.0
@@ -85,8 +86,15 @@ static void delay_us(unsigned int us)
 {
 	if(us == 0) return;
 #ifdef _WIN32
-	if(us < 1000u) Sleep(1);
-	else Sleep((us + 999u) / 1000u);
+	static LARGE_INTEGER freq;
+	LARGE_INTEGER start;
+	LARGE_INTEGER now;
+	if(freq.QuadPart == 0) QueryPerformanceFrequency(&freq);
+	QueryPerformanceCounter(&start);
+	long long waitTicks = (long long)((double)us * (double)freq.QuadPart / 1000000.0);
+	do {
+		QueryPerformanceCounter(&now);
+	} while(now.QuadPart - start.QuadPart < waitTicks);
 #else
 	usleep(us);
 #endif
@@ -164,8 +172,14 @@ static int terminal_raw_mode(int enable)
 
 static double get_transducer_x(enum BoardIndex board, int channel)
 {
-	double x = (double)xCols[channel / 10] * 0.1;
-	return (board == BOARD_LEFT_TOP || board == BOARD_LEFT_BOTTOM) ? x : -x;
+	int col = channel / 10;
+	switch(board) {
+		case BOARD_LEFT_TOP:     return (double)xCols[col] * 0.1;
+		case BOARD_RIGHT_TOP:    return (double)-xCols[4 - col] * 0.1;
+		case BOARD_LEFT_BOTTOM:  return (double)xCols[4 - col] * 0.1;
+		case BOARD_RIGHT_BOTTOM: return (double)-xCols[col] * 0.1;
+		default: return 0.0;
+	}
 }
 
 static double get_transducer_z(int channel)
@@ -353,7 +367,7 @@ static int stream_circle(socket_t sock, HoloPhaseFrame *frames, int frameCount,
 			reportStartFrames = sent;
 		}
 
-		if(sent % 1000ul == 0ul) {
+		if(now_seconds() - reportStart >= 1.0) {
 			double now = now_seconds();
 			double elapsed = fmax(now - reportStart, 1.0e-9);
 			printf("%lu frames total, %.1f fps, %.2f circles/s recent\n",
@@ -373,10 +387,18 @@ static void print_usage(const char *argv0)
 	printf("defaults: port=%u board=%.1f radius=%.1f frames=%d delay-us=%u max-frames=0(infinite)\n",
 		HOLO_PHASE_TCP_PORT, DEFAULT_BOARD_DISTANCE_MM, DEFAULT_RADIUS_MM,
 		DEFAULT_FRAMES_PER_CIRCLE, DEFAULT_DELAY_US);
+	printf("delay-us controls particle speed: try 10000 gentler, 3000 faster, 0 for transport stress-test\n");
 	printf("commands after connect:\n");
 	printf("  Enter  resend origin holding frame\n");
 	printf("  g      ramp to the circle and stream as fast as configured\n");
 	printf("  q      quit\n");
+}
+
+static double requested_circle_rate_hz(int frameCount, unsigned delayUs)
+{
+	if(frameCount <= 0 || delayUs == 0)
+		return 0.0;
+	return 1000000.0 / ((double)frameCount * (double)delayUs);
 }
 
 int main(int argc, char **argv)
@@ -453,8 +475,13 @@ int main(int argc, char **argv)
 	}
 
 	printf("AcousticLev-style single-particle sender connected to %s:%u\n", host, port);
-	printf("circle is X-Z around y=0: radius %.2f mm, %d frames, delay %u us\n",
+	printf("circle is X-Z around y=0: radius %.2f mm, %d frames, delay %u us",
 		radiusMm, frameCount, delayUs);
+	if(delayUs > 0)
+		printf(" (requested %.2f circles/s before transfer overhead)\n",
+			requested_circle_rate_hz(frameCount, delayUs));
+	else
+		printf(" (uncapped transport stress-test)\n");
 	print_usage(argv[0]);
 
 	if(send_all(sock, &origin, sizeof(origin)) < 0) {

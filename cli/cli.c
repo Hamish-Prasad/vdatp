@@ -13,6 +13,7 @@
 #include <linux/spi/spidev.h>
 #include <termios.h>
 #include <unistd.h>
+#include <sys/time.h>
 #include <math.h>
 
 #include "phase_protocol.h"
@@ -21,6 +22,8 @@
 #define BUF_SIZE_BYTES (17)
 #define INC 1.0f
 #define MOVE_INC 0.1f
+#define DEFAULT_SPI_SPEED_HZ 500000u
+#define DEFAULT_PHASE_BRIDGE_SPI_SPEED_HZ 4000000u
 
 #define fabs(x) ((x>0)?x:-x)
 
@@ -80,7 +83,7 @@ int _kbhit(void)
 static const char *device = "/dev/spidev0.0";
 static const uint8_t mode = 0;
 static const uint8_t bits = 8;
-static const uint32_t spiSpeed = 500000;
+static uint32_t spiSpeed = DEFAULT_SPI_SPEED_HZ;
 static const uint16_t delay = 0;
 static int spiFD;
 int16_t spiTx[(BUF_SIZE_BYTES+1)/2];
@@ -187,6 +190,13 @@ void initSPI()
 void closeSPI()
 {
 	close(spiFD);
+}
+
+static double bridgeNowSeconds(void)
+{
+	struct timeval tv;
+	gettimeofday(&tv, NULL);
+	return (double)tv.tv_sec + (double)tv.tv_usec * 1.0e-6;
 }
 
 void printPos()
@@ -704,7 +714,7 @@ static int readFull(int fd, void *buf, size_t len)
 }
 
 /* Convert a validated laptop phase frame into the SPI byte stream expected by Holo.sv. */
-static void sendPhaseFrameToFpga(const HoloPhaseFrame *frame)
+static int sendPhaseFrameToFpga(const HoloPhaseFrame *frame)
 {
 	uint8_t tx[1 + HOLO_PHASE_COUNT * 2]; /* One command byte plus 200 unsigned 16-bit phase words. */
 
@@ -726,6 +736,7 @@ static void sendPhaseFrameToFpga(const HoloPhaseFrame *frame)
 	int ret = ioctl(spiFD, SPI_IOC_MESSAGE(1), &tr); /* Perform one SPI transaction. */
 	if(ret < 1)                                      /* spidev returns < 1 if the transfer failed. */
 		pabort("can't send phase frame spi message"); /* Abort like the original SPI helper does. */
+	return ret;
 }
 
 /* Validate a full laptop-to-Pi phase frame before forwarding it to the FPGA. */
@@ -748,6 +759,30 @@ static int validPhaseFrame(const HoloPhaseFrame *frame)
 	}
 
 	return 1;                                        /* Frame is safe to forward. */
+}
+
+/* Drain already-queued TCP frames so the FPGA sees the freshest live target. */
+static void drainQueuedPhaseFrames(int clientFD, HoloPhaseFrame *frame,
+	unsigned long *droppedFrames, unsigned long *invalidFrames)
+{
+	int bytesAvailable = 0;
+	if(ioctl(clientFD, FIONREAD, &bytesAvailable) < 0)
+		return;
+
+	int queuedFrames = bytesAvailable / (int)sizeof(HoloPhaseFrame);
+	for(int i = 0; i < queuedFrames; i++) {
+		HoloPhaseFrame candidate;
+		int rd = readFull(clientFD, &candidate, sizeof(candidate));
+		if(rd != 1)
+			return;
+
+		if(validPhaseFrame(&candidate)) {
+			*frame = candidate;
+			(*droppedFrames)++;
+		} else {
+			(*invalidFrames)++;
+		}
+	}
 }
 
 /* Run the Raspberry Pi as a TCP-to-SPI bridge for laptop-calculated phase frames. */
@@ -773,6 +808,7 @@ static int runPhaseBridge(uint16_t port)
 
 	printf("phase bridge listening on TCP port %u\n", port); /* Tell user which port to point laptop at. */
 	printf("forwarding %u laptop phases to FPGA command 0x%X\n", HOLO_PHASE_COUNT, HOLO_CMD_SET_PHASE_FRAME); /* Log bridge mode. */
+	printf("phase bridge SPI speed: %u Hz\n", spiSpeed);
 
 	while(1) {                                       /* Keep bridge alive forever until user stops program. */
 		struct sockaddr_in clientAddr;              /* Stores the laptop client's IP/port. */
@@ -785,10 +821,30 @@ static int runPhaseBridge(uint16_t port)
 		}
 
 		printf("phase client connected: %s\n", inet_ntoa(clientAddr.sin_addr)); /* Log laptop IP. */
+		unsigned long frameCount = 0;
+		unsigned long lastReportFrameCount = 0;
+		unsigned long frameGapCount = 0;
+		unsigned long shortSpiCount = 0;
+		unsigned long droppedFrameCount = 0;
+		unsigned long invalidQueuedFrameCount = 0;
+		unsigned long reportSpiCount = 0;
+		double reportRecvSeconds = 0.0;
+		double reportSpiSeconds = 0.0;
+		double maxRecvSeconds = 0.0;
+		double maxSpiSeconds = 0.0;
+		uint16_t lastFrameID = 0;
+		int haveLastFrameID = 0;
+		double reportStart = bridgeNowSeconds();
 
 		while(1) {                                   /* Read frames until this laptop disconnects. */
 			HoloPhaseFrame frame;                    /* Stack buffer for one full laptop phase packet. */
+			double recvStart = bridgeNowSeconds();
 			int rd = readFull(clientFD, &frame, sizeof(frame)); /* Receive exactly one complete frame. */
+			double recvElapsed = bridgeNowSeconds() - recvStart;
+			reportRecvSeconds += recvElapsed;
+			if(recvElapsed > maxRecvSeconds)
+				maxRecvSeconds = recvElapsed;
+
 			if(rd == 0) {                            /* Laptop closed connection cleanly. */
 				printf("phase client disconnected\n"); /* Log disconnect. */
 				break;                               /* Return to accept() for another laptop. */
@@ -802,9 +858,48 @@ static int runPhaseBridge(uint16_t port)
 				printf("dropping invalid phase frame\n"); /* Warn but keep connection open. */
 				continue;                            /* Wait for the next frame. */
 			}
+			drainQueuedPhaseFrames(clientFD, &frame, &droppedFrameCount, &invalidQueuedFrameCount);
 
-			sendPhaseFrameToFpga(&frame);            /* Forward the validated frame to FPGA over SPI. */
-			printf("forwarded phase frame %u\n", frame.frame_id); /* Log successful forwarding. */
+			if(haveLastFrameID && (uint16_t)(lastFrameID + 1u) != frame.frame_id)
+				frameGapCount++;
+
+			double spiStart = bridgeNowSeconds();
+			int spiBytes = sendPhaseFrameToFpga(&frame); /* Forward the validated frame to FPGA over SPI. */
+			double spiElapsed = bridgeNowSeconds() - spiStart;
+			reportSpiSeconds += spiElapsed;
+			reportSpiCount++;
+			if(spiElapsed > maxSpiSeconds)
+				maxSpiSeconds = spiElapsed;
+			if(spiBytes != (int)(1 + HOLO_PHASE_COUNT * 2))
+				shortSpiCount++;
+
+			frameCount++;
+			lastFrameID = frame.frame_id;
+			haveLastFrameID = 1;
+
+			double now = bridgeNowSeconds();
+			if(now - reportStart >= 1.0) {
+				double elapsed = now - reportStart;
+				unsigned long recentFrames = frameCount - lastReportFrameCount;
+				double avgRecvMs = recentFrames ? reportRecvSeconds * 1000.0 / (double)recentFrames : 0.0;
+				double avgSpiMs = reportSpiCount ? reportSpiSeconds * 1000.0 / (double)reportSpiCount : 0.0;
+				printf("forwarding %.1f fps, last frame %u, recv avg/max %.3f/%.3f ms, spi avg/max %.3f/%.3f ms, gaps %lu, dropped %lu, invalid queued %lu, short spi %lu\n",
+					(double)recentFrames / elapsed, lastFrameID,
+					avgRecvMs, maxRecvSeconds * 1000.0,
+					avgSpiMs, maxSpiSeconds * 1000.0,
+					frameGapCount, droppedFrameCount, invalidQueuedFrameCount, shortSpiCount);
+				reportStart = now;
+				lastReportFrameCount = frameCount;
+				frameGapCount = 0;
+				shortSpiCount = 0;
+				droppedFrameCount = 0;
+				invalidQueuedFrameCount = 0;
+				reportSpiCount = 0;
+				reportRecvSeconds = 0.0;
+				reportSpiSeconds = 0.0;
+				maxRecvSeconds = 0.0;
+				maxSpiSeconds = 0.0;
+			}
 		}
 
 		close(clientFD);                             /* Close this laptop connection before accepting another. */
@@ -836,8 +931,14 @@ int main(int argc, char const *argv[])
 
 	if(argc >= 2 && strcmp(argv[1], "--phase-bridge") == 0) { /* Pi forwards laptop phases to FPGA. */
 		uint16_t port = HOLO_PHASE_TCP_PORT;                 /* uint16_t is the standard 16-bit TCP port type. */
+		spiSpeed = DEFAULT_PHASE_BRIDGE_SPI_SPEED_HZ;        /* Direct phase frames are much larger than old CLI commands. */
 		if(argc >= 3)                                        /* Optional user-specified port. */
 			port = atoi(argv[2]);                            /* Convert port string to integer. */
+		if(argc >= 4) {                                      /* Optional direct-frame SPI speed in Hz. */
+			uint32_t requestedSpiSpeed = strtoul(argv[3], NULL, 10); /* Keep default 500 kHz unless user asks faster. */
+			if(requestedSpiSpeed > 0)
+				spiSpeed = requestedSpiSpeed;
+		}
 
 		initSPI();                                           /* Open and configure /dev/spidev0.0 as before. */
 		runPhaseBridge(port);                                /* Listen for laptop frames and forward them. */
@@ -848,7 +949,8 @@ int main(int argc, char const *argv[])
 	if(argc < 3) {                                           /* Old mode still needs distance and radius args. */
 		printf("usage:\n");                                  /* Print usage heading. */
 		printf("  %s [board separation distance] [radius]\n", argv[0]); /* Existing coordinate/FIFO mode. */
-		printf("  %s --phase-bridge [tcp port]\n", argv[0]); /* New laptop phase bridge mode. */
+		printf("  %s --phase-bridge [tcp port] [spi hz]\n", argv[0]); /* New laptop phase bridge mode. */
+		printf("     bridge defaults to %u Hz SPI; pass 500000 to use the old speed\n", DEFAULT_PHASE_BRIDGE_SPI_SPEED_HZ);
 		return 1;                                            /* Refuse to continue with missing arguments. */
 	}
 

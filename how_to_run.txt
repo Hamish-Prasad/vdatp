@@ -39,3 +39,374 @@ sender.exe 169.254.28.52 5656 135 4
 if needed to get ip:
 ssh levitator@levitator.local
 hostname -I
+
+
+
+
+levitator@levitator:~/pi_hamish/cli $ ./holo_pi_cli --phase-bridge 5656
+spi mode: 0
+bits per word: 8
+max speed: 4000000 Hz (4000 KHz)
+phase bridge listening on TCP port 5656
+forwarding 200 laptop phases to FPGA command 0xB
+phase bridge SPI speed: 4000000 Hz
+^C
+levitator@levitator:~/pi_hamish/cli $ hostname -I
+169.254.251.233
+levitator@levitator:~/pi_hamish/cli $ ./holo_pi_cli --phase-bridge 5656
+spi mode: 0
+bits per word: 8
+max speed: 4000000 Hz (4000 KHz)
+phase bridge listening on TCP port 5656
+forwarding 200 laptop phases to FPGA command 0xB
+phase bridge SPI speed: 4000000 Hz
+phase client connected: 169.254.194.168
+forwarding 0.0 fps, last frame 65, recv avg/max 114260.788/228517.748 ms, spi avg/max 0.983/0.984 ms, gaps 1, dropped 0, invalid queued 0, short spi 0
+forwarding 65.1 fps, last frame 131, recv avg/max 14.197/15.407 ms, spi avg/max 0.964/1.019 ms, gaps 0, dropped 0, invalid queued 0, short spi 0
+forwarding 64.6 fps, last frame 196, recv avg/max 14.323/15.587 ms, spi avg/max 0.962/1.020 ms, gaps 0, dropped 0, invalid queued 0, short spi 0
+forwarding 64.3 fps, last frame 261, recv avg/max 14.414/15.549 ms, spi avg/max 0.962/1.011 ms, gaps 0, dropped 0, invalid queued 0, short spi 0
+forwarding 64.7 fps, last frame 326, recv avg/max 14.298/15.627 ms, spi avg/max 0.966/1.204 ms, gaps 0, dropped 0, invalid queued 0, short spi 0
+forwarding 64.8 fps, last frame 391, recv avg/max 14.278/15.051 ms, spi avg/max 0.974/1.675 ms, gaps 0, dropped 0, invalid queued 0, short spi 0
+forwarding 64.5 fps, last frame 456, recv avg/max 14.347/15.612 ms, spi avg/max 0.961/0.986 ms, gaps 0, dropped 0, invalid queued 0, short spi 0
+forwarding 64.7 fps, last frame 521, recv avg/max 14.308/16.128 ms, spi avg/max 0.962/1.007 ms, gaps 0, dropped 0, invalid queued 0, short spi 0
+forwarding 64.6 fps, last frame 586, recv avg/max 14.307/15.460 ms, spi avg/max 0.981/1.992 ms, gaps 0, dropped 0, invalid queued 0, short spi 0
+forwarding 65.1 fps, last frame 652, recv avg/max 14.209/15.444 ms, spi avg/max 0.964/1.024 ms, gaps 0, dropped 0, invalid queued 0, short spi 0
+forwarding 64.5 fps, last frame 717, recv avg/max 14.338/15.215 ms, spi avg/max 0.964/0.986 ms, gaps 0, dropped 0, invalid queued 0, short spi 0
+forwarding 64.6 fps, last frame 782, recv avg/max 14.337/15.809 ms, spi avg/max 0.964/1.033 ms, gaps 0, dropped 0, invalid queued 0, short spi 0
+forwarding 65.4 fps, last frame 848, recv avg/max 14.143/15.906 ms, spi avg/max 0.963/1.006 ms, gaps 0, dropped 0, invalid queued 0, short spi 0
+forwarding 65.3 fps, last frame 914, recv avg/max 14.171/15.219 ms, spi avg/max 0.963/0.984 ms, gaps 0, dropped 0, invalid queued 0, short spi 0
+forwarding 65.7 fps, last frame 980, recv avg/max 14.064/14.914 ms, spi avg/max 0.965/1.014 ms, gaps 0, dropped 0, invalid queued 0, short spi 0
+forwarding 65.5 fps, last frame 1046, recv avg/max 14.122/14.990 ms, spi avg/max 0.963/0.985 ms, gaps 0, dropped 0, invalid queued 0, short spi 0
+forwarding 65.8 fps, last frame 1112, recv avg/max 14.047/15.040 ms, spi avg/max 0.965/1.038 ms, gaps 0, dropped 0, invalid queued 0, short spi 0
+forwarding 65.8 fps, last frame 1178, recv avg/max 14.052/14.903 ms, spi avg/max 0.963/0.982 ms, gaps 0, dropped 0, invalid queued 0, short spi 0
+forwarding 64.9 fps, last frame 1243, recv avg/max 14.232/15.338 ms, spi avg/max 0.963/1.003 ms, gaps 0, dropped 0, invalid queued 0, short spi 0
+forwarding 65.2 fps, last frame 1309, recv avg/max 14.173/15.664 ms, spi avg/max 0.963/0.999 ms, gaps 0, dropped 0, invalid queued 0, short spi 0
+forwarding 64.9 fps, last frame 1374, recv avg/max 14.256/15.134 ms, spi avg/max 0.964/0.992 ms, gaps 0, dropped 0, invalid queued 0, short spi 0
+forwarding 64.9 fps, last frame 1439, recv avg/max 14.268/15.318 ms, spi avg/max 0.964/0.985 ms, gaps 0, dropped 0, invalid queued 0, short spi 0
+forwarding 64.9 fps, last frame 1504, recv avg/max 14.261/15.220 ms, spi avg/max 0.963/0.978 ms, gaps 0, dropped 0, invalid queued 0, short spi 0
+forwarding 64.4 fps, last frame 1569, recv avg/max 14.370/15.755 ms, spi avg/max 0.965/1.017 ms, gaps 0, dropped 0, invalid queued 0, short spi 0
+forwarding 64.6 fps, last frame 1634, recv avg/max 14.314/15.372 ms, spi avg/max 0.964/0.993 ms, gaps 0, dropped 0, invalid queued 0, short spi 0
+forwarding 64.4 fps, last frame 1699, recv avg/max 14.371/15.516 ms, spi avg/max 0.964/1.046 ms, gaps 0, dropped 0, invalid queued 0, short spi 0
+forwarding 64.7 fps, last frame 1764, recv avg/max 14.310/15.500 ms, spi avg/max 0.964/0.991 ms, gaps 0, dropped 0, invalid queued 0, short spi 0
+forwarding 64.5 fps, last frame 1829, recv avg/max 14.349/16.095 ms, spi avg/max 0.965/1.038 ms, gaps 0, dropped 0, invalid queued 0, short spi 0
+forwarding 64.5 fps, last frame 1894, recv avg/max 14.340/15.109 ms, spi avg/max 0.964/1.037 ms, gaps 0, dropped 0, invalid queued 0, short spi 0
+forwarding 64.5 fps, last frame 1959, recv avg/max 14.339/15.924 ms, spi avg/max 0.965/1.062 ms, gaps 0, dropped 0, invalid queued 0, short spi 0
+forwarding 64.6 fps, last frame 2024, recv avg/max 14.323/15.485 ms, spi avg/max 0.962/0.986 ms, gaps 0, dropped 0, invalid queued 0, short spi 0
+forwarding 64.2 fps, last frame 2089, recv avg/max 14.405/15.368 ms, spi avg/max 0.965/1.050 ms, gaps 0, dropped 0, invalid queued 0, short spi 0
+forwarding 64.6 fps, last frame 2154, recv avg/max 14.314/16.373 ms, spi avg/max 0.964/1.028 ms, gaps 0, dropped 0, invalid queued 0, short spi 0
+forwarding 64.7 fps, last frame 2219, recv avg/max 14.298/14.984 ms, spi avg/max 0.963/1.035 ms, gaps 0, dropped 0, invalid queued 0, short spi 0
+forwarding 64.7 fps, last frame 2284, recv avg/max 14.309/15.047 ms, spi avg/max 0.963/1.044 ms, gaps 0, dropped 0, invalid queued 0, short spi 0
+forwarding 64.4 fps, last frame 2349, recv avg/max 14.365/15.515 ms, spi avg/max 0.963/1.020 ms, gaps 0, dropped 0, invalid queued 0, short spi 0
+forwarding 64.7 fps, last frame 2414, recv avg/max 14.296/15.201 ms, spi avg/max 0.963/0.999 ms, gaps 0, dropped 0, invalid queued 0, short spi 0
+forwarding 64.3 fps, last frame 2479, recv avg/max 14.407/15.684 ms, spi avg/max 0.962/0.984 ms, gaps 0, dropped 0, invalid queued 0, short spi 0
+forwarding 64.9 fps, last frame 2544, recv avg/max 14.239/15.349 ms, spi avg/max 0.966/1.030 ms, gaps 0, dropped 0, invalid queued 0, short spi 0
+forwarding 65.1 fps, last frame 2610, recv avg/max 14.214/15.165 ms, spi avg/max 0.963/1.049 ms, gaps 0, dropped 0, invalid queued 0, short spi 0
+forwarding 64.8 fps, last frame 2675, recv avg/max 14.278/15.373 ms, spi avg/max 0.963/1.022 ms, gaps 0, dropped 0, invalid queued 0, short spi 0
+forwarding 64.3 fps, last frame 2740, recv avg/max 14.384/16.416 ms, spi avg/max 0.965/1.038 ms, gaps 0, dropped 0, invalid queued 0, short spi 0
+forwarding 65.3 fps, last frame 2806, recv avg/max 14.150/15.182 ms, spi avg/max 0.966/1.159 ms, gaps 0, dropped 0, invalid queued 0, short spi 0
+forwarding 65.7 fps, last frame 2872, recv avg/max 14.056/14.958 ms, spi avg/max 0.963/1.033 ms, gaps 0, dropped 0, invalid queued 0, short spi 0
+forwarding 65.7 fps, last frame 2938, recv avg/max 14.068/14.813 ms, spi avg/max 0.963/1.014 ms, gaps 0, dropped 0, invalid queued 0, short spi 0
+forwarding 65.8 fps, last frame 3004, recv avg/max 14.039/14.865 ms, spi avg/max 0.963/0.986 ms, gaps 0, dropped 0, invalid queued 0, short spi 0
+forwarding 65.5 fps, last frame 3070, recv avg/max 14.115/15.355 ms, spi avg/max 0.962/0.994 ms, gaps 0, dropped 0, invalid queued 0, short spi 0
+forwarding 65.9 fps, last frame 3136, recv avg/max 14.014/15.825 ms, spi avg/max 0.963/1.022 ms, gaps 0, dropped 0, invalid queued 0, short spi 0
+forwarding 64.4 fps, last frame 3201, recv avg/max 14.375/15.318 ms, spi avg/max 0.964/1.033 ms, gaps 0, dropped 0, invalid queued 0, short spi 0
+forwarding 64.3 fps, last frame 3266, recv avg/max 14.394/15.195 ms, spi avg/max 0.962/0.987 ms, gaps 0, dropped 0, invalid queued 0, short spi 0
+forwarding 64.3 fps, last frame 3331, recv avg/max 14.394/15.330 ms, spi avg/max 0.964/1.013 ms, gaps 0, dropped 0, invalid queued 0, short spi 0
+forwarding 64.4 fps, last frame 3396, recv avg/max 14.380/15.234 ms, spi avg/max 0.964/1.024 ms, gaps 0, dropped 0, invalid queued 0, short spi 0
+phase client read failed: Connection reset by peer
+phase client connected: 169.254.194.168
+forwarding 0.6 fps, last frame 65, recv avg/max 1679.088/3355.985 ms, spi avg/max 0.981/0.985 ms, gaps 1, dropped 0, invalid queued 0, short spi 0
+forwarding 1.4 fps, last frame 70, recv avg/max 704.530/2879.227 ms, spi avg/max 0.974/0.985 ms, gaps 0, dropped 0, invalid queued 0, short spi 0
+forwarding 2.3 fps, last frame 73, recv avg/max 429.803/961.074 ms, spi avg/max 0.974/0.979 ms, gaps 0, dropped 0, invalid queued 0, short spi 0
+forwarding 65.3 fps, last frame 139, recv avg/max 14.153/15.778 ms, spi avg/max 0.962/0.983 ms, gaps 0, dropped 0, invalid queued 0, short spi 0
+forwarding 64.6 fps, last frame 204, recv avg/max 14.325/15.240 ms, spi avg/max 0.963/1.002 ms, gaps 0, dropped 0, invalid queued 0, short spi 0
+forwarding 64.4 fps, last frame 269, recv avg/max 14.377/15.239 ms, spi avg/max 0.963/1.043 ms, gaps 0, dropped 0, invalid queued 0, short spi 0
+forwarding 63.3 fps, last frame 333, recv avg/max 14.640/26.322 ms, spi avg/max 0.961/1.003 ms, gaps 0, dropped 0, invalid queued 0, short spi 0
+forwarding 21.3 fps, last frame 359, recv avg/max 45.866/831.137 ms, spi avg/max 0.967/1.073 ms, gaps 0, dropped 0, invalid queued 0, short spi 0
+phase client disconnected
+phase client connected: 169.254.194.168
+forwarding 1.3 fps, last frame 65, recv avg/max 751.434/1497.989 ms, spi avg/max 0.983/0.984 ms, gaps 1, dropped 0, invalid queued 0, short spi 0
+forwarding 65.2 fps, last frame 131, recv avg/max 14.176/14.885 ms, spi avg/max 0.963/1.031 ms, gaps 0, dropped 0, invalid queued 0, short spi 0
+forwarding 64.7 fps, last frame 196, recv avg/max 14.315/15.265 ms, spi avg/max 0.963/1.008 ms, gaps 0, dropped 0, invalid queued 0, short spi 0
+forwarding 64.4 fps, last frame 261, recv avg/max 14.372/15.756 ms, spi avg/max 0.961/0.984 ms, gaps 0, dropped 0, invalid queued 0, short spi 0
+forwarding 64.7 fps, last frame 326, recv avg/max 14.317/16.403 ms, spi avg/max 0.961/0.980 ms, gaps 0, dropped 0, invalid queued 0, short spi 0
+forwarding 64.4 fps, last frame 391, recv avg/max 14.374/16.114 ms, spi avg/max 0.961/0.988 ms, gaps 0, dropped 0, invalid queued 0, short spi 0
+forwarding 64.4 fps, last frame 456, recv avg/max 14.377/15.611 ms, spi avg/max 0.962/1.018 ms, gaps 0, dropped 0, invalid queued 0, short spi 0
+forwarding 64.8 fps, last frame 521, recv avg/max 14.289/15.184 ms, spi avg/max 0.961/0.994 ms, gaps 0, dropped 0, invalid queued 0, short spi 0
+forwarding 64.6 fps, last frame 586, recv avg/max 14.314/15.732 ms, spi avg/max 0.965/1.017 ms, gaps 0, dropped 0, invalid queued 0, short spi 0
+phase client disconnected
+phase client connected: 169.254.194.168
+phase client disconnected
+phase client connected: 169.254.194.168
+phase client disconnected
+phase client connected: 169.254.194.168
+forwarding 1.3 fps, last frame 65, recv avg/max 749.024/1495.336 ms, spi avg/max 0.990/1.005 ms, gaps 1, dropped 0, invalid queued 0, short spi 0
+forwarding 65.7 fps, last frame 131, recv avg/max 14.067/15.121 ms, spi avg/max 0.964/1.033 ms, gaps 0, dropped 0, invalid queued 0, short spi 0
+forwarding 65.4 fps, last frame 197, recv avg/max 14.141/15.623 ms, spi avg/max 0.963/1.012 ms, gaps 0, dropped 0, invalid queued 0, short spi 0
+forwarding 65.7 fps, last frame 263, recv avg/max 14.083/15.077 ms, spi avg/max 0.962/0.984 ms, gaps 0, dropped 0, invalid queued 0, short spi 0
+forwarding 65.6 fps, last frame 329, recv avg/max 14.106/15.389 ms, spi avg/max 0.962/1.014 ms, gaps 0, dropped 0, invalid queued 0, short spi 0
+forwarding 65.6 fps, last frame 395, recv avg/max 14.096/14.787 ms, spi avg/max 0.961/0.998 ms, gaps 0, dropped 0, invalid queued 0, short spi 0
+forwarding 30.4 fps, last frame 439, recv avg/max 31.775/790.905 ms, spi avg/max 0.961/0.985 ms, gaps 0, dropped 0, invalid queued 0, short spi 0
+phase client disconnected
+phase client connected: 169.254.194.168
+forwarding 1.7 fps, last frame 65, recv avg/max 595.066/1183.876 ms, spi avg/max 0.983/0.986 ms, gaps 1, dropped 0, invalid queued 0, short spi 0
+forwarding 65.0 fps, last frame 131, recv avg/max 14.225/15.102 ms, spi avg/max 0.962/0.984 ms, gaps 0, dropped 0, invalid queued 0, short spi 0
+forwarding 64.6 fps, last frame 196, recv avg/max 14.320/15.375 ms, spi avg/max 0.961/0.984 ms, gaps 0, dropped 0, invalid queued 0, short spi 0
+forwarding 64.9 fps, last frame 261, recv avg/max 14.248/15.261 ms, spi avg/max 0.962/1.007 ms, gaps 0, dropped 0, invalid queued 0, short spi 0
+forwarding 64.5 fps, last frame 326, recv avg/max 14.355/15.801 ms, spi avg/max 0.961/0.981 ms, gaps 0, dropped 0, invalid queued 0, short spi 0
+forwarding 64.5 fps, last frame 391, recv avg/max 14.365/15.403 ms, spi avg/max 0.960/0.983 ms, gaps 0, dropped 0, invalid queued 0, short spi 0
+forwarding 64.7 fps, last frame 456, recv avg/max 14.318/15.130 ms, spi avg/max 0.961/0.984 ms, gaps 0, dropped 0, invalid queued 0, short spi 0
+forwarding 64.6 fps, last frame 521, recv avg/max 14.323/15.570 ms, spi avg/max 0.963/1.018 ms, gaps 0, dropped 0, invalid queued 0, short spi 0
+forwarding 64.4 fps, last frame 586, recv avg/max 14.375/17.081 ms, spi avg/max 0.964/1.052 ms, gaps 0, dropped 0, invalid queued 0, short spi 0
+forwarding 65.1 fps, last frame 652, recv avg/max 14.211/15.384 ms, spi avg/max 0.962/0.983 ms, gaps 0, dropped 0, invalid queued 0, short spi 0
+phase client read failed: Connection reset by peer
+phase client connected: 169.254.194.168
+forwarding 1.6 fps, last frame 65, recv avg/max 607.416/1211.673 ms, spi avg/max 0.980/0.987 ms, gaps 1, dropped 0, invalid queued 0, short spi 0
+phase client disconnected
+phase client connected: 169.254.194.168
+forwarding 1.6 fps, last frame 65, recv avg/max 638.662/1275.253 ms, spi avg/max 0.984/0.987 ms, gaps 1, dropped 0, invalid queued 0, short spi 0
+forwarding 66.0 fps, last frame 132, recv avg/max 13.989/15.134 ms, spi avg/max 0.963/1.037 ms, gaps 0, dropped 0, invalid queued 0, short spi 0
+forwarding 65.9 fps, last frame 198, recv avg/max 14.027/15.034 ms, spi avg/max 0.962/0.987 ms, gaps 0, dropped 0, invalid queued 0, short spi 0
+forwarding 65.5 fps, last frame 264, recv avg/max 14.117/15.850 ms, spi avg/max 0.961/0.986 ms, gaps 0, dropped 0, invalid queued 0, short spi 0
+forwarding 65.3 fps, last frame 330, recv avg/max 14.166/15.256 ms, spi avg/max 0.961/1.011 ms, gaps 0, dropped 0, invalid queued 0, short spi 0
+forwarding 65.1 fps, last frame 396, recv avg/max 14.199/15.284 ms, spi avg/max 0.970/1.053 ms, gaps 0, dropped 0, invalid queued 0, short spi 0
+forwarding 64.7 fps, last frame 461, recv avg/max 14.299/15.240 ms, spi avg/max 0.961/0.993 ms, gaps 0, dropped 0, invalid queued 0, short spi 0
+forwarding 64.6 fps, last frame 526, recv avg/max 14.332/15.606 ms, spi avg/max 0.963/1.082 ms, gaps 0, dropped 0, invalid queued 0, short spi 0
+forwarding 64.8 fps, last frame 591, recv avg/max 14.272/15.646 ms, spi avg/max 0.965/1.068 ms, gaps 0, dropped 0, invalid queued 0, short spi 0
+phase client read failed: Connection reset by peer
+phase client connected: 169.254.194.168
+phase client disconnected
+
+
+
+AcousticLev-style single-particle sender connected to 169.254.251.233:5656
+circle is X-Z around y=0: radius 3.00 mm, 64 frames, delay 10000 us (requested 1.56 circles/s before transfer overhead)
+usage: C:\Users\Bored\OneDrive\Documents\GitHub\vdatp\cli\laptop_file_sender_lev.exe <pi-ip-or-host> [port] [board-mm] [radius-mm] [frames] [delay-us] [max-frames]
+defaults: port=5656 board=135.0 radius=3.0 frames=64 delay-us=5000 max-frames=0(infinite)
+delay-us controls particle speed: try 10000 gentler, 3000 faster, 0 for transport stress-test
+commands after connect:
+  Enter  resend origin holding frame
+  g      ramp to the circle and stream as fast as configured
+  q      quit
+holding origin; press g to draw the circle
+streaming circle: press q to stop, any other key prints status
+65 frames total, 64.6 fps, 1.01 circles/s recent
+130 frames total, 64.3 fps, 1.00 circles/s recent
+195 frames total, 64.7 fps, 1.01 circles/s recent
+260 frames total, 64.8 fps, 1.01 circles/s recent
+325 frames total, 64.6 fps, 1.01 circles/s recent
+390 frames total, 64.7 fps, 1.01 circles/s recent
+455 frames total, 64.7 fps, 1.01 circles/s recent
+521 frames total, 65.1 fps, 1.02 circles/s recent
+586 frames total, 64.6 fps, 1.01 circles/s recent
+651 frames total, 64.6 fps, 1.01 circles/s recent
+717 frames total, 65.3 fps, 1.02 circles/s recent
+783 frames total, 65.3 fps, 1.02 circles/s recent
+849 frames total, 65.7 fps, 1.03 circles/s recent
+915 frames total, 65.4 fps, 1.02 circles/s recent
+981 frames total, 65.8 fps, 1.03 circles/s recent
+1047 frames total, 65.8 fps, 1.03 circles/s recent
+1112 frames total, 64.9 fps, 1.01 circles/s recent
+1178 frames total, 65.2 fps, 1.02 circles/s recent
+1243 frames total, 64.9 fps, 1.01 circles/s recent
+1308 frames total, 64.9 fps, 1.01 circles/s recent
+1373 frames total, 64.8 fps, 1.01 circles/s recent
+1438 frames total, 64.4 fps, 1.01 circles/s recent
+1503 frames total, 64.6 fps, 1.01 circles/s recent
+1568 frames total, 64.4 fps, 1.01 circles/s recent
+1633 frames total, 64.7 fps, 1.01 circles/s recent
+1698 frames total, 64.4 fps, 1.01 circles/s recent
+1763 frames total, 64.7 fps, 1.01 circles/s recent
+1828 frames total, 64.5 fps, 1.01 circles/s recent
+1893 frames total, 64.6 fps, 1.01 circles/s recent
+1958 frames total, 64.3 fps, 1.00 circles/s recent
+2023 frames total, 64.6 fps, 1.01 circles/s recent
+2088 frames total, 64.7 fps, 1.01 circles/s recent
+2153 frames total, 64.6 fps, 1.01 circles/s recent
+2218 frames total, 64.5 fps, 1.01 circles/s recent
+2283 frames total, 64.7 fps, 1.01 circles/s recent
+2348 frames total, 64.3 fps, 1.00 circles/s recent
+2413 frames total, 64.9 fps, 1.01 circles/s recent
+2479 frames total, 65.1 fps, 1.02 circles/s recent
+2544 frames total, 64.9 fps, 1.01 circles/s recent
+2609 frames total, 64.3 fps, 1.00 circles/s recent
+2675 frames total, 65.4 fps, 1.02 circles/s recent
+2741 frames total, 65.7 fps, 1.03 circles/s recent
+2807 frames total, 65.7 fps, 1.03 circles/s recent
+2873 frames total, 65.8 fps, 1.03 circles/s recent
+2939 frames total, 65.5 fps, 1.02 circles/s recent
+3005 frames total, 65.9 fps, 1.03 circles/s recent
+3070 frames total, 64.4 fps, 1.01 circles/s recent
+3135 frames total, 64.3 fps, 1.00 circles/s recent
+3200 frames total, 64.4 fps, 1.01 circles/s recent
+3265 frames total, 64.4 fps, 1.01 circles/s recent
+PS C:\Users\Bored\OneDrive\Documents\GitHub\vdatp\cli> ./laptop_file_sender_lev.exe 169.254.251.233 5656 135 3 64 10000
+AcousticLev-style single-particle sender connected to 169.254.251.233:5656
+circle is X-Z around y=0: radius 3.00 mm, 64 frames, delay 10000 us (requested 1.56 circles/s before transfer overhead)
+usage: C:\Users\Bored\OneDrive\Documents\GitHub\vdatp\cli\laptop_file_sender_lev.exe <pi-ip-or-host> [port] [board-mm] [radius-mm] [frames] [delay-us] [max-frames]
+defaults: port=5656 board=135.0 radius=3.0 frames=64 delay-us=5000 max-frames=0(infinite)
+delay-us controls particle speed: try 10000 gentler, 3000 faster, 0 for transport stress-test
+commands after connect:
+  Enter  resend origin holding frame
+  g      ramp to the circle and stream as fast as configured
+  q      quit
+holding origin; press g to draw the circle
+resent origin frame 65
+resent origin frame 66
+resent origin frame 67
+resent origin frame 68
+resent origin frame 69
+resent origin frame 70
+resent origin frame 71
+resent origin frame 72
+streaming circle: press q to stop, any other key prints status
+65 frames total, 64.6 fps, 1.01 circles/s recent
+130 frames total, 64.4 fps, 1.01 circles/s recent
+194 frames total, 63.3 fps, 0.99 circles/s recent
+circle stopped after 220 frames in 3.431 s
+holding origin again; press g to repeat or q to quit
+resent origin frame 359
+resent origin frame 360
+resent origin frame 361
+PS C:\Users\Bored\OneDrive\Documents\GitHub\vdatp\cli> ^C
+PS C:\Users\Bored\OneDrive\Documents\GitHub\vdatp\cli> ./laptop_file_sender_lev.exe 169.254.251.233 5656 135 3 64 5000
+AcousticLev-style single-particle sender connected to 169.254.251.233:5656
+circle is X-Z around y=0: radius 3.00 mm, 64 frames, delay 5000 us (requested 3.13 circles/s before transfer overhead)
+usage: C:\Users\Bored\OneDrive\Documents\GitHub\vdatp\cli\laptop_file_sender_lev.exe <pi-ip-or-host> [port] [board-mm] [radius-mm] [frames] [delay-us] [max-frames]
+defaults: port=5656 board=135.0 radius=3.0 frames=64 delay-us=5000 max-frames=0(infinite)
+delay-us controls particle speed: try 10000 gentler, 3000 faster, 0 for transport stress-test
+commands after connect:
+  Enter  resend origin holding frame
+  g      ramp to the circle and stream as fast as configured
+  q      quit
+holding origin; press g to draw the circle
+streaming circle: press q to stop, any other key prints status
+65 frames total, 64.7 fps, 1.01 circles/s recent
+130 frames total, 64.4 fps, 1.01 circles/s recent
+195 frames total, 64.7 fps, 1.01 circles/s recent
+260 frames total, 64.5 fps, 1.01 circles/s recent
+325 frames total, 64.4 fps, 1.01 circles/s recent
+390 frames total, 64.8 fps, 1.01 circles/s recent
+423 frames total, 64.7 fps, 1.01 circles/s recent
+450 frames total, 64.3 fps, 1.01 circles/s recent
+462 frames total, 64.9 fps, 1.01 circles/s recent
+circle stopped after 489 frames in 7.576 s
+holding origin again; press g to repeat or q to quit
+PS C:\Users\Bored\OneDrive\Documents\GitHub\vdatp\cli> ./laptop_file_sender_lev.exe 169.254.251.233 5656 135 3 64 5000
+AcousticLev-style single-particle sender connected to 169.254.251.233:5656
+circle is X-Z around y=0: radius 3.00 mm, 64 frames, delay 5000 us (requested 3.13 circles/s before transfer overhead)
+usage: C:\Users\Bored\OneDrive\Documents\GitHub\vdatp\cli\laptop_file_sender_lev.exe <pi-ip-or-host> [port] [board-mm] [radius-mm] [frames] [delay-us] [max-frames]
+defaults: port=5656 board=135.0 radius=3.0 frames=64 delay-us=5000 max-frames=0(infinite)
+delay-us controls particle speed: try 10000 gentler, 3000 faster, 0 for transport stress-test
+commands after connect:
+  Enter  resend origin holding frame
+  g      ramp to the circle and stream as fast as configured
+  q      quit
+holding origin; press g to draw the circle
+PS C:\Users\Bored\OneDrive\Documents\GitHub\vdatp\cli> ./laptop_file_sender_lev.exe 169.254.251.233 5656 135 3 64 5000
+AcousticLev-style single-particle sender connected to 169.254.251.233:5656
+circle is X-Z around y=0: radius 3.00 mm, 64 frames, delay 5000 us (requested 3.13 circles/s before transfer overhead)
+usage: C:\Users\Bored\OneDrive\Documents\GitHub\vdatp\cli\laptop_file_sender_lev.exe <pi-ip-or-host> [port] [board-mm] [radius-mm] [frames] [delay-us] [max-frames]
+defaults: port=5656 board=135.0 radius=3.0 frames=64 delay-us=5000 max-frames=0(infinite)
+delay-us controls particle speed: try 10000 gentler, 3000 faster, 0 for transport stress-test
+commands after connect:
+  Enter  resend origin holding frame
+  g      ramp to the circle and stream as fast as configured
+  q      quit
+holding origin; press g to draw the circle
+resent origin frame 65
+resent origin frame 66
+resent origin frame 67
+PS C:\Users\Bored\OneDrive\Documents\GitHub\vdatp\cli>
+PS C:\Users\Bored\OneDrive\Documents\GitHub\vdatp\cli> ./laptop_file_sender_lev.exe 169.254.251.233 5656 135 3 64 3000
+AcousticLev-style single-particle sender connected to 169.254.251.233:5656
+circle is X-Z around y=0: radius 3.00 mm, 64 frames, delay 3000 us (requested 5.21 circles/s before transfer overhead)
+usage: C:\Users\Bored\OneDrive\Documents\GitHub\vdatp\cli\laptop_file_sender_lev.exe <pi-ip-or-host> [port] [board-mm] [radius-mm] [frames] [delay-us] [max-frames]
+defaults: port=5656 board=135.0 radius=3.0 frames=64 delay-us=5000 max-frames=0(infinite)
+delay-us controls particle speed: try 10000 gentler, 3000 faster, 0 for transport stress-test
+commands after connect:
+  Enter  resend origin holding frame
+  g      ramp to the circle and stream as fast as configured
+  q      quit
+holding origin; press g to draw the circle
+streaming circle: press q to stop, any other key prints status
+66 frames total, 65.3 fps, 1.02 circles/s recent
+132 frames total, 65.7 fps, 1.03 circles/s recent
+198 frames total, 65.5 fps, 1.02 circles/s recent
+264 frames total, 65.6 fps, 1.03 circles/s recent
+circle stopped after 308 frames in 4.700 s
+holding origin again; press g to repeat or q to quit
+resent origin frame 439
+resent origin frame 440
+resent origin frame 441
+PS C:\Users\Bored\OneDrive\Documents\GitHub\vdatp\cli> ./laptop_file_sender_lev.exe 169.254.251.233 5656 135 3 64 500
+AcousticLev-style single-particle sender connected to 169.254.251.233:5656
+circle is X-Z around y=0: radius 3.00 mm, 64 frames, delay 500 us (requested 31.25 circles/s before transfer overhead)
+usage: C:\Users\Bored\OneDrive\Documents\GitHub\vdatp\cli\laptop_file_sender_lev.exe <pi-ip-or-host> [port] [board-mm] [radius-mm] [frames] [delay-us] [max-frames]
+defaults: port=5656 board=135.0 radius=3.0 frames=64 delay-us=5000 max-frames=0(infinite)
+delay-us controls particle speed: try 10000 gentler, 3000 faster, 0 for transport stress-test
+commands after connect:
+  Enter  resend origin holding frame
+  g      ramp to the circle and stream as fast as configured
+  q      quit
+holding origin; press g to draw the circle
+streaming circle: press q to stop, any other key prints status
+1 frames total, 60.8 fps, 0.95 circles/s recent
+66 frames total, 64.6 fps, 1.01 circles/s recent
+131 frames total, 64.9 fps, 1.01 circles/s recent
+196 frames total, 64.4 fps, 1.01 circles/s recent
+261 frames total, 64.5 fps, 1.01 circles/s recent
+326 frames total, 64.7 fps, 1.01 circles/s recent
+391 frames total, 64.6 fps, 1.01 circles/s recent
+456 frames total, 64.4 fps, 1.01 circles/s recent
+522 frames total, 65.1 fps, 1.02 circles/s recent
+PS C:\Users\Bored\OneDrive\Documents\GitHub\vdatp\cli> ^C
+PS C:\Users\Bored\OneDrive\Documents\GitHub\vdatp\cli> ./laptop_file_sender_lev.exe 169.254.251.233 5656 135 3 64 500
+AcousticLev-style single-particle sender connected to 169.254.251.233:5656
+circle is X-Z around y=0: radius 3.00 mm, 64 frames, delay 500 us (requested 31.25 circles/s before transfer overhead)
+usage: C:\Users\Bored\OneDrive\Documents\GitHub\vdatp\cli\laptop_file_sender_lev.exe <pi-ip-or-host> [port] [board-mm] [radius-mm] [frames] [delay-us] [max-frames]
+defaults: port=5656 board=135.0 radius=3.0 frames=64 delay-us=5000 max-frames=0(infinite)
+delay-us controls particle speed: try 10000 gentler, 3000 faster, 0 for transport stress-test
+commands after connect:
+  Enter  resend origin holding frame
+  g      ramp to the circle and stream as fast as configured
+  q      quit
+holding origin; press g to draw the circle
+resent origin frame 65
+PS C:\Users\Bored\OneDrive\Documents\GitHub\vdatp\cli> ./laptop_file_sender_lev.exe 169.254.251.233 5656 135 3 64 50
+AcousticLev-style single-particle sender connected to 169.254.251.233:5656
+circle is X-Z around y=0: radius 3.00 mm, 64 frames, delay 50 us (requested 312.50 circles/s before transfer overhead)
+usage: C:\Users\Bored\OneDrive\Documents\GitHub\vdatp\cli\laptop_file_sender_lev.exe <pi-ip-or-host> [port] [board-mm] [radius-mm] [frames] [delay-us] [max-frames]
+defaults: port=5656 board=135.0 radius=3.0 frames=64 delay-us=5000 max-frames=0(infinite)
+delay-us controls particle speed: try 10000 gentler, 3000 faster, 0 for transport stress-test
+commands after connect:
+  Enter  resend origin holding frame
+  g      ramp to the circle and stream as fast as configured
+  q      quit
+holding origin; press g to draw the circle
+streaming circle: press q to stop, any other key prints status
+1 frames total, 61.4 fps, 0.96 circles/s recent
+5 frames total, 65.0 fps, 1.02 circles/s recent
+71 frames total, 65.9 fps, 1.03 circles/s recent
+137 frames total, 65.5 fps, 1.02 circles/s recent
+203 frames total, 65.3 fps, 1.02 circles/s recent
+269 frames total, 65.2 fps, 1.02 circles/s recent
+334 frames total, 64.7 fps, 1.01 circles/s recent
+399 frames total, 64.6 fps, 1.01 circles/s recent
+464 frames total, 64.7 fps, 1.01 circles/s recent
+PS C:\Users\Bored\OneDrive\Documents\GitHub\vdatp\cli> ./laptop_file_sender_lev.exe 169.254.251.233 5656 135 3 64 50
+AcousticLev-style single-particle sender connected to 169.254.251.233:5656
+circle is X-Z around y=0: radius 3.00 mm, 64 frames, delay 50 us (requested 312.50 circles/s before transfer overhead)
+usage: C:\Users\Bored\OneDrive\Documents\GitHub\vdatp\cli\laptop_file_sender_lev.exe <pi-ip-or-host> [port] [board-mm] [radius-mm] [frames] [delay-us] [max-frames]
+defaults: port=5656 board=135.0 radius=3.0 frames=64 delay-us=5000 max-frames=0(infinite)
+delay-us controls particle speed: try 10000 gentler, 3000 faster, 0 for transport stress-test
+commands after connect:
+  Enter  resend origin holding frame
+  g      ramp to the circle and stream as fast as configured
+  q      quit
+holding origin; press g to draw the circle
+resent origin frame 65
+resent origin frame 66
+resent origin frame 67
+resent origin frame 68
+resent origin frame 69
