@@ -127,7 +127,7 @@
     "cidr.known.project.marker": "true",
     "codeWithMe.voiceChat.enabledByDefault": "false",
     "com.intellij.ml.llm.matterhorn.ej.ui.settings.DefaultModelSelectionForGA.v1": "true",
-    "git-widget-placeholder": "Lev__Multi",
+    "git-widget-placeholder": "Lev__Multi2",
     "ignore.virus.scanning.warn.message": "true",
     "junie.onboarding.icon.badge.shown": "true",
     "kotlin-language-version-configured": "true",
@@ -206,6 +206,7 @@
       <workItem from="1783547175201" duration="376000" />
       <workItem from="1783548041689" duration="148000" />
       <workItem from="1783555911761" duration="11519000" />
+      <workItem from="1783641681617" duration="1725000" />
     </task>
     <servers />
   </component>

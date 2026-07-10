@@ -23,7 +23,7 @@
  * single moving trap as quickly as the Pi/FPGA path will accept frames.
  * gcc -std=gnu99 -O3 -Wall -Wextra laptop_file_sender_lev.c -o laptop_file_sender_lev.exe -lm -lws2_32
  * laptop_file_sender_lev.exe 169.254.251.233 5656 135 3 64 10000
- * laptop_file_sender_lev.exe 169.254.102.90 5656 135 3 64 800
+ * laptop_file_sender_lev.exe 169.254.65.146 5656 135 3 64 4000
  */
 
 #ifdef _WIN32
@@ -52,6 +52,8 @@ typedef int socket_t;
 #define NUM_BOARDS 4
 #define CHANNELS_PER_BOARD 50
 #define MAX_PARTICLES 2
+#define TOTAL_CHANNELS (NUM_BOARDS * CHANNELS_PER_BOARD)
+#define MULTI_PARTICLE_ITERATIONS 12
 #define DEFAULT_BOARD_DISTANCE_MM 135.0
 #define DEFAULT_RADIUS_MM 3.0
 #define DEFAULT_FRAMES_PER_CIRCLE 64
@@ -81,6 +83,9 @@ typedef struct ParticleTarget {
 
 static const int16_t xCols[5] = {450, 350, 250, 150, 50};
 static const int16_t zRows[10] = {-450, -350, -250, -150, -50, 50, 150, 250, 350, 450};
+
+static int send_particles(socket_t sock, HoloPhaseFrame *frame, uint16_t *frameID,
+	const ParticleTarget *particles, double boardDistanceMm);
 
 static void delay_ms(unsigned int ms)
 {
@@ -279,6 +284,80 @@ static uint16_t calculate_multi_particle_phase(const ParticleTarget *particles,
 	return phase_radians_to_ticks(atan2(imag, real));
 }
 
+static int collect_enabled_particles(const ParticleTarget *particles, int particleCount, int *enabledIdx)
+{
+	int enabledCount = 0;
+	for(int i = 0; i < particleCount; i++) {
+		if(particles[i].enabled)
+			enabledIdx[enabledCount++] = i;
+	}
+	return enabledCount;
+}
+
+static void fill_iterative_multi_particle_phases(HoloPhaseFrame *frame,
+	const ParticleTarget *particles, const int *enabledIdx, int enabledCount,
+	double boardDistanceMm)
+{
+	double focusReal[MAX_PARTICLES][TOTAL_CHANNELS];
+	double focusImag[MAX_PARTICLES][TOTAL_CHANNELS];
+	double targetReal[MAX_PARTICLES];
+	double targetImag[MAX_PARTICLES];
+	double driveReal[TOTAL_CHANNELS];
+	double driveImag[TOTAL_CHANNELS];
+
+	for(int p = 0; p < enabledCount; p++) {
+		const ParticleTarget *particle = &particles[enabledIdx[p]];
+		targetReal[p] = 1.0;
+		targetImag[p] = 0.0;
+		for(int board = 0; board < NUM_BOARDS; board++) {
+			for(int ch = 0; ch < CHANNELS_PER_BOARD; ch++) {
+				int idx = board * CHANNELS_PER_BOARD + ch;
+				double phase = calculate_acousticlev_phase_radians(
+					particle->x, particle->y, particle->z,
+					(enum BoardIndex)board, ch, boardDistanceMm);
+				focusReal[p][idx] = cos(phase);
+				focusImag[p][idx] = sin(phase);
+			}
+		}
+	}
+
+	for(int iter = 0; iter < MULTI_PARTICLE_ITERATIONS; iter++) {
+		for(int idx = 0; idx < TOTAL_CHANNELS; idx++) {
+			double real = 0.0;
+			double imag = 0.0;
+			for(int p = 0; p < enabledCount; p++) {
+				real += targetReal[p] * focusReal[p][idx] - targetImag[p] * focusImag[p][idx];
+				imag += targetReal[p] * focusImag[p][idx] + targetImag[p] * focusReal[p][idx];
+			}
+			double mag = hypot(real, imag);
+			if(mag > 0.0) {
+				driveReal[idx] = real / mag;
+				driveImag[idx] = imag / mag;
+			} else {
+				driveReal[idx] = 1.0;
+				driveImag[idx] = 0.0;
+			}
+		}
+
+		for(int p = 0; p < enabledCount; p++) {
+			double pressureReal = 0.0;
+			double pressureImag = 0.0;
+			for(int idx = 0; idx < TOTAL_CHANNELS; idx++) {
+				pressureReal += focusReal[p][idx] * driveReal[idx] + focusImag[p][idx] * driveImag[idx];
+				pressureImag += focusReal[p][idx] * driveImag[idx] - focusImag[p][idx] * driveReal[idx];
+			}
+			double mag = hypot(pressureReal, pressureImag);
+			if(mag > 0.0) {
+				targetReal[p] = pressureReal / mag;
+				targetImag[p] = pressureImag / mag;
+			}
+		}
+	}
+
+	for(int idx = 0; idx < TOTAL_CHANNELS; idx++)
+		frame->phases[idx] = phase_radians_to_ticks(atan2(driveImag[idx], driveReal[idx]));
+}
+
 static void fill_multi_particle_frame(HoloPhaseFrame *frame, uint16_t frameID,
 	const ParticleTarget *particles, int particleCount, double boardDistanceMm)
 {
@@ -289,11 +368,17 @@ static void fill_multi_particle_frame(HoloPhaseFrame *frame, uint16_t frameID,
 	frame->phase_count = HOLO_PHASE_COUNT;
 	frame->phase_max = HOLO_PHASE_MAX;
 
-	for(int board = 0; board < NUM_BOARDS; board++) {
-		for(int ch = 0; ch < CHANNELS_PER_BOARD; ch++) {
-			int idx = board * CHANNELS_PER_BOARD + ch;
-			frame->phases[idx] = calculate_multi_particle_phase(
-				particles, particleCount, (enum BoardIndex)board, ch, boardDistanceMm);
+	int enabledIdx[MAX_PARTICLES];
+	int enabledCount = collect_enabled_particles(particles, particleCount, enabledIdx);
+	if(enabledCount > 1) {
+		fill_iterative_multi_particle_phases(frame, particles, enabledIdx, enabledCount, boardDistanceMm);
+	} else {
+		for(int board = 0; board < NUM_BOARDS; board++) {
+			for(int ch = 0; ch < CHANNELS_PER_BOARD; ch++) {
+				int idx = board * CHANNELS_PER_BOARD + ch;
+				frame->phases[idx] = calculate_multi_particle_phase(
+					particles, particleCount, (enum BoardIndex)board, ch, boardDistanceMm);
+			}
 		}
 	}
 	frame->crc32 = holo_phase_frame_crc(frame);
@@ -421,6 +506,93 @@ static int stream_circle(socket_t sock, HoloPhaseFrame *frames, int frameCount,
 	return 0;
 }
 
+static int send_dual_circle_ramp(socket_t sock, HoloPhaseFrame *frame, uint16_t *frameID,
+	ParticleTarget *particles, double radiusMm, double boardDistanceMm,
+	const double *circleCenterY, const double *circleCenterZ,
+	int rampFrames, unsigned rampDelayMs)
+{
+	double startX[MAX_PARTICLES] = {particles[0].x, particles[1].x};
+	double startY[MAX_PARTICLES] = {particles[0].y, particles[1].y};
+	double startZ[MAX_PARTICLES] = {particles[0].z, particles[1].z};
+	double centerX[MAX_PARTICLES] = {radiusMm, -radiusMm};
+	double startTheta[MAX_PARTICLES] = {0.0, PI};
+
+	particles[0].enabled = 1;
+	particles[1].enabled = 1;
+
+	for(int i = 0; i <= rampFrames; i++) {
+		double t = (double)i / (double)rampFrames;
+		double smooth = t * t * (3.0 - 2.0 * t);
+		for(int p = 0; p < MAX_PARTICLES; p++) {
+			double endX = centerX[p] + radiusMm * cos(startTheta[p]);
+			double endY = circleCenterY[p];
+			double endZ = circleCenterZ[p] + radiusMm * sin(startTheta[p]);
+			particles[p].x = startX[p] + (endX - startX[p]) * smooth;
+			particles[p].y = startY[p] + (endY - startY[p]) * smooth;
+			particles[p].z = startZ[p] + (endZ - startZ[p]) * smooth;
+		}
+		if(send_particles(sock, frame, frameID, particles, boardDistanceMm) < 0)
+			return -1;
+		delay_ms(rampDelayMs);
+	}
+	return 0;
+}
+
+static int stream_dual_counter_circles(socket_t sock, HoloPhaseFrame *frame, uint16_t *frameID,
+	ParticleTarget *particles, int frameCount, double radiusMm, double boardDistanceMm,
+	const double *circleCenterY, const double *circleCenterZ,
+	unsigned delayUs, unsigned long maxFrames)
+{
+	unsigned long sent = 0;
+	unsigned long reportStartFrames = 0;
+	double start = now_seconds();
+	double reportStart = start;
+	double centerX[MAX_PARTICLES] = {radiusMm, -radiusMm};
+
+	particles[0].enabled = 1;
+	particles[1].enabled = 1;
+
+	printf("streaming two local opposite circles: press q to stop, any other key prints status\n");
+	while(maxFrames == 0 || sent < maxFrames) {
+		double theta = TWO_PI * (double)(sent % (unsigned long)frameCount) / (double)frameCount;
+		particles[0].x = centerX[0] + radiusMm * cos(theta);
+		particles[0].y = circleCenterY[0];
+		particles[0].z = circleCenterZ[0] + radiusMm * sin(theta);
+		particles[1].x = centerX[1] + radiusMm * cos(PI - theta);
+		particles[1].y = circleCenterY[1];
+		particles[1].z = circleCenterZ[1] + radiusMm * sin(PI - theta);
+
+		if(send_particles(sock, frame, frameID, particles, boardDistanceMm) < 0)
+			return -1;
+		sent++;
+		delay_us(delayUs);
+
+		if(key_pressed()) {
+			int ch = read_key();
+			if(ch == 'q' || ch == 'Q') break;
+			double now = now_seconds();
+			double elapsed = fmax(now - reportStart, 1.0e-9);
+			printf("%lu dual frames total, %.1f fps, %.2f circles/s recent\n",
+				sent, (double)(sent - reportStartFrames) / elapsed,
+				(double)(sent - reportStartFrames) / elapsed / (double)frameCount);
+			reportStart = now;
+			reportStartFrames = sent;
+		}
+
+		if(now_seconds() - reportStart >= 1.0) {
+			double now = now_seconds();
+			double elapsed = fmax(now - reportStart, 1.0e-9);
+			printf("%lu dual frames total, %.1f fps, %.2f circles/s recent\n",
+				sent, (double)(sent - reportStartFrames) / elapsed,
+				(double)(sent - reportStartFrames) / elapsed / (double)frameCount);
+			reportStart = now;
+			reportStartFrames = sent;
+		}
+	}
+	printf("dual circles stopped after %lu frames in %.3f s\n", sent, now_seconds() - start);
+	return 0;
+}
+
 static void print_particles(const ParticleTarget *particles, int selected)
 {
 	for(int i = 0; i < MAX_PARTICLES; i++) {
@@ -456,6 +628,7 @@ static void print_usage(const char *argv0)
 	printf("  Enter  resend current particles\n");
 	printf("  p      print particle positions\n");
 	printf("  g      legacy single-particle circle test\n");
+	printf("  o      two particles on local opposite X-Z circles using current Y/Z\n");
 	printf("  q      quit\n");
 }
 
@@ -464,6 +637,17 @@ static double requested_circle_rate_hz(int frameCount, unsigned delayUs)
 	if(frameCount <= 0 || delayUs == 0)
 		return 0.0;
 	return 1000000.0 / ((double)frameCount * (double)delayUs);
+}
+
+static void print_circle_dynamics(double radiusMm, double circleHz)
+{
+	if(circleHz <= 0.0)
+		return;
+	double omega = TWO_PI * circleHz;
+	double speedMmS = omega * radiusMm;
+	double accelMS2 = radiusMm * omega * omega / 1000.0;
+	printf("requested path speed %.1f mm/s, centripetal %.1f m/s^2 (%.1f g)\n",
+		speedMmS, accelMS2, accelMS2 / 9.80665);
 }
 
 int main(int argc, char **argv)
@@ -552,6 +736,7 @@ int main(int argc, char **argv)
 			requested_circle_rate_hz(frameCount, delayUs));
 	else
 		printf(" (uncapped transport stress-test)\n");
+	print_circle_dynamics(radiusMm, requested_circle_rate_hz(frameCount, delayUs));
 	print_usage(argv[0]);
 	print_particles(particles, selectedParticle);
 
@@ -620,6 +805,23 @@ int main(int argc, char **argv)
 				sendCurrent = 1;
 			} else if(ch == 'p' || ch == 'P') {
 				print_particles(particles, selectedParticle);
+			} else if(ch == 'o' || ch == 'O') {
+				double circleCenterY[MAX_PARTICLES] = {particles[0].y, particles[1].y};
+				double circleCenterZ[MAX_PARTICLES] = {particles[0].z, particles[1].z};
+				if(send_dual_circle_ramp(sock, &currentFrame, &frameID, particles,
+					   radiusMm, boardDistanceMm, circleCenterY, circleCenterZ,
+					   DEFAULT_RAMP_FRAMES, DEFAULT_RAMP_DELAY_MS) < 0) {
+					printf("dual circle ramp send failed\n");
+					break;
+				}
+				if(stream_dual_counter_circles(sock, &currentFrame, &frameID, particles,
+					   frameCount, radiusMm, boardDistanceMm, circleCenterY, circleCenterZ,
+					   delayUs, maxFrames) < 0) {
+					printf("dual circle send failed\n");
+					break;
+				}
+				selectedParticle = 0;
+				sendCurrent = 1;
 			} else if(ch == 'g' || ch == 'G') {
 				if(send_ramp(sock, &frameID, radiusMm, boardDistanceMm,
 					   DEFAULT_RAMP_FRAMES, DEFAULT_RAMP_DELAY_MS) < 0) {
