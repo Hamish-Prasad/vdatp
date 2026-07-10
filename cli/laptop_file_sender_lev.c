@@ -16,16 +16,19 @@
 #endif
 
 /*
- * AcousticLev uses an analytic baffled-piston transducer model,
- * J0(k*r*sin(theta))*exp(i*k*d)/d, then optimizes phase holograms using
- * pressure derivatives.  This live sender keeps the analytic phase model and
- * our opposed-array pi split, but avoids online NLopt/AD so it can stream a
- * single moving trap as quickly as the Pi/FPGA path will accept frames.
+ * This live sender uses an analytic baffled-piston transducer model,
+ * J0(k*r*sin(theta))*exp(i*k*d)/d, then solves a small phase-only constraint
+ * problem around each particle: low pressure at the centre and alternating
+ * guard samples around it.  That creates a more stable local cage than simply
+ * focusing all transducers at the particle centre.
  * gcc -std=gnu99 -O3 -Wall -Wextra laptop_file_sender_lev.c -o laptop_file_sender_lev.exe -lm -lws2_32
  * laptop_file_sender_lev.exe 169.254.251.233 5656 135 3 64 10000
  * laptop_file_sender_lev.exe 169.254.65.146 5656 135 3 64 4000
  *
  * laptop_file_sender_lev.exe 169.254.65.146 5656 135 3 128 0
+ * laptop_file_sender_lev.exe 169.254.166.13 5656 135 3 128 300
+ * laptop_file_sender_lev.exe 169.254.166.13 5656 135 3 32 200
+ *
  */
 
 #ifdef _WIN32
@@ -55,7 +58,6 @@ typedef int socket_t;
 #define CHANNELS_PER_BOARD 50
 #define MAX_PARTICLES 2
 #define TOTAL_CHANNELS (NUM_BOARDS * CHANNELS_PER_BOARD)
-#define MULTI_PARTICLE_ITERATIONS 12
 #define DEFAULT_BOARD_DISTANCE_MM 135.0
 #define DEFAULT_RADIUS_MM 3.0
 #define DEFAULT_FRAMES_PER_CIRCLE 64
@@ -63,8 +65,13 @@ typedef int socket_t;
 #define DEFAULT_RAMP_FRAMES 64
 #define DEFAULT_RAMP_DELAY_MS 6
 #define DEFAULT_SPEED_RAMP_FRAMES 128
+#define DEFAULT_FAST_RAMP_SECONDS 10.0
+#define FAST_RAMP_START_DELAY_US 12000
 #define MOVE_INC_MM 0.5
 #define TRANSDUCER_RADIUS_MM 5.0
+#define TRAP_GUARD_OFFSET_MM 1.6
+#define TRAP_SOLVER_ITERATIONS 72
+#define TRAP_SOLVER_STEP 0.045
 #define SOUND_SPEED_MM_S 343000.0
 #define FREQUENCY_HZ 40000.0
 #define PI 3.14159265358979323846
@@ -89,11 +96,21 @@ typedef struct CircleCenters {
 	double z[MAX_PARTICLES];
 } CircleCenters;
 
+typedef struct TrapConstraint {
+	double x;
+	double y;
+	double z;
+	double targetReal;
+	double targetImag;
+	double weight;
+} TrapConstraint;
+
 static const int16_t xCols[5] = {450, 350, 250, 150, 50};
 static const int16_t zRows[10] = {-450, -350, -250, -150, -50, 50, 150, 250, 350, 450};
 
 static int send_particles(socket_t sock, HoloPhaseFrame *frame, uint16_t *frameID,
 	const ParticleTarget *particles, double boardDistanceMm);
+static void make_phase_frame_temporally_continuous(HoloPhaseFrame *frame);
 
 static void delay_ms(unsigned int ms)
 {
@@ -238,7 +255,40 @@ static double bessel_j0_series(double x)
 	return sum;
 }
 
-static double calculate_acousticlev_phase_radians(double tx, double ty, double tz,
+static void calculate_transfer_components(double tx, double ty, double tz,
+	enum BoardIndex board, int channel, double boardDistanceMm,
+	double *real, double *imag)
+{
+	const double k = TWO_PI * FREQUENCY_HZ / SOUND_SPEED_MM_S;
+	double ex = get_transducer_x(board, channel);
+	double ey = board_is_bottom(board) ? -0.5 * boardDistanceMm : 0.5 * boardDistanceMm;
+	double ez = get_transducer_z(channel);
+	double nx = 0.0;
+	double ny = board_is_bottom(board) ? 1.0 : -1.0;
+	double nz = 0.0;
+	double dx = tx - ex;
+	double dy = ty - ey;
+	double dz = tz - ez;
+	double distance = sqrt(dx*dx + dy*dy + dz*dz);
+	double cosTheta = (dx*nx + dy*ny + dz*nz) / distance;
+	double sinTheta;
+	double directivity;
+	double amplitude;
+	double phase;
+
+	if(cosTheta < 0.0) cosTheta = 0.0;
+	if(cosTheta > 1.0) cosTheta = 1.0;
+	sinTheta = sqrt(fmax(0.0, 1.0 - cosTheta*cosTheta));
+	directivity = bessel_j0_series(k * TRANSDUCER_RADIUS_MM * sinTheta);
+	amplitude = directivity / distance;
+	if(board_is_bottom(board))
+		amplitude = -amplitude;
+	phase = k * distance;
+	*real = amplitude * cos(phase);
+	*imag = amplitude * sin(phase);
+}
+
+static double calculate_focus_phase_radians(double tx, double ty, double tz,
 	enum BoardIndex board, int channel, double boardDistanceMm)
 {
 	const double k = TWO_PI * FREQUENCY_HZ / SOUND_SPEED_MM_S;
@@ -268,28 +318,24 @@ static double calculate_acousticlev_phase_radians(double tx, double ty, double t
 	return drivePhase;
 }
 
-static uint16_t calculate_multi_particle_phase(const ParticleTarget *particles,
-	int particleCount, enum BoardIndex board, int channel, double boardDistanceMm)
+static void fill_single_focus_frame(HoloPhaseFrame *frame, uint16_t frameID,
+	double x, double y, double z, double boardDistanceMm)
 {
-	double real = 0.0;
-	double imag = 0.0;
-	int enabledCount = 0;
-
-	for(int i = 0; i < particleCount; i++) {
-		if(!particles[i].enabled)
-			continue;
-
-		double phase = calculate_acousticlev_phase_radians(
-			particles[i].x, particles[i].y, particles[i].z,
-			board, channel, boardDistanceMm);
-		real += cos(phase);
-		imag += sin(phase);
-		enabledCount++;
+	memset(frame, 0, sizeof(*frame));
+	frame->magic = HOLO_PHASE_MAGIC;
+	frame->version = HOLO_PHASE_VERSION;
+	frame->frame_id = frameID;
+	frame->phase_count = HOLO_PHASE_COUNT;
+	frame->phase_max = HOLO_PHASE_MAX;
+	for(int board = 0; board < NUM_BOARDS; board++) {
+		for(int ch = 0; ch < CHANNELS_PER_BOARD; ch++) {
+			int idx = board * CHANNELS_PER_BOARD + ch;
+			frame->phases[idx] = phase_radians_to_ticks(
+				calculate_focus_phase_radians(x, y, z, (enum BoardIndex)board, ch, boardDistanceMm));
+		}
 	}
-
-	if(enabledCount == 0)
-		return 0;
-	return phase_radians_to_ticks(atan2(imag, real));
+	make_phase_frame_temporally_continuous(frame);
+	frame->crc32 = holo_phase_frame_crc(frame);
 }
 
 static int collect_enabled_particles(const ParticleTarget *particles, int particleCount, int *enabledIdx)
@@ -300,6 +346,128 @@ static int collect_enabled_particles(const ParticleTarget *particles, int partic
 			enabledIdx[enabledCount++] = i;
 	}
 	return enabledCount;
+}
+
+static void add_constraint(TrapConstraint *constraints, int *count,
+	double x, double y, double z, double targetReal, double targetImag, double weight)
+{
+	constraints[*count].x = x;
+	constraints[*count].y = y;
+	constraints[*count].z = z;
+	constraints[*count].targetReal = targetReal;
+	constraints[*count].targetImag = targetImag;
+	constraints[*count].weight = weight;
+	(*count)++;
+}
+
+static int build_trap_constraints(const ParticleTarget *particles, const int *enabledIdx,
+	int enabledCount, TrapConstraint *constraints)
+{
+	int count = 0;
+	const double d = TRAP_GUARD_OFFSET_MM;
+
+	for(int i = 0; i < enabledCount; i++) {
+		const ParticleTarget *p = &particles[enabledIdx[i]];
+		double particlePhase = (enabledCount > 1) ? TWO_PI * (double)i / (double)enabledCount : 0.0;
+		double cr = cos(particlePhase);
+		double ci = sin(particlePhase);
+
+		add_constraint(constraints, &count, p->x, p->y, p->z, 0.0, 0.0, 40.0);
+		add_constraint(constraints, &count, p->x + d, p->y, p->z, cr, ci, 1.0);
+		add_constraint(constraints, &count, p->x - d, p->y, p->z, -cr, -ci, 1.0);
+		if(enabledCount == 1) {
+			add_constraint(constraints, &count, p->x, p->y + d, p->z, cr, ci, 1.15);
+			add_constraint(constraints, &count, p->x, p->y - d, p->z, -cr, -ci, 1.15);
+		} else {
+			add_constraint(constraints, &count, p->x, p->y + d, p->z, cr, ci, 1.15);
+			add_constraint(constraints, &count, p->x, p->y - d, p->z, -cr, -ci, 1.15);
+		}
+		add_constraint(constraints, &count, p->x, p->y, p->z + d, cr, ci, 1.0);
+		add_constraint(constraints, &count, p->x, p->y, p->z - d, -cr, -ci, 1.0);
+	}
+	return count;
+}
+
+static void fill_guard_trap_phases(HoloPhaseFrame *frame,
+	const ParticleTarget *particles, const int *enabledIdx, int enabledCount,
+	double boardDistanceMm)
+{
+	TrapConstraint constraints[MAX_PARTICLES * 7];
+	double transferReal[MAX_PARTICLES * 7][TOTAL_CHANNELS];
+	double transferImag[MAX_PARTICLES * 7][TOTAL_CHANNELS];
+	double driveReal[TOTAL_CHANNELS];
+	double driveImag[TOTAL_CHANNELS];
+	int constraintCount = build_trap_constraints(particles, enabledIdx, enabledCount, constraints);
+
+	for(int c = 0; c < constraintCount; c++) {
+		for(int board = 0; board < NUM_BOARDS; board++) {
+			for(int ch = 0; ch < CHANNELS_PER_BOARD; ch++) {
+				int idx = board * CHANNELS_PER_BOARD + ch;
+				calculate_transfer_components(
+					constraints[c].x, constraints[c].y, constraints[c].z,
+					(enum BoardIndex)board, ch, boardDistanceMm,
+					&transferReal[c][idx], &transferImag[c][idx]);
+			}
+		}
+	}
+
+	for(int idx = 0; idx < TOTAL_CHANNELS; idx++) {
+		double real = 0.0;
+		double imag = 0.0;
+		for(int c = 0; c < constraintCount; c++) {
+			double w = constraints[c].weight;
+			double br = constraints[c].targetReal;
+			double bi = constraints[c].targetImag;
+			real += w * (transferReal[c][idx] * br + transferImag[c][idx] * bi);
+			imag += w * (transferReal[c][idx] * bi - transferImag[c][idx] * br);
+		}
+		double mag = hypot(real, imag);
+		if(mag > 0.0) {
+			driveReal[idx] = real / mag;
+			driveImag[idx] = imag / mag;
+		} else {
+			driveReal[idx] = 1.0;
+			driveImag[idx] = 0.0;
+		}
+	}
+
+	for(int iter = 0; iter < TRAP_SOLVER_ITERATIONS; iter++) {
+		double gradReal[TOTAL_CHANNELS];
+		double gradImag[TOTAL_CHANNELS];
+		for(int idx = 0; idx < TOTAL_CHANNELS; idx++) {
+			gradReal[idx] = 0.0;
+			gradImag[idx] = 0.0;
+		}
+
+		for(int c = 0; c < constraintCount; c++) {
+			double fieldReal = 0.0;
+			double fieldImag = 0.0;
+			double w = constraints[c].weight;
+			for(int idx = 0; idx < TOTAL_CHANNELS; idx++) {
+				fieldReal += transferReal[c][idx] * driveReal[idx] - transferImag[c][idx] * driveImag[idx];
+				fieldImag += transferReal[c][idx] * driveImag[idx] + transferImag[c][idx] * driveReal[idx];
+			}
+			double errReal = w * (fieldReal - constraints[c].targetReal);
+			double errImag = w * (fieldImag - constraints[c].targetImag);
+			for(int idx = 0; idx < TOTAL_CHANNELS; idx++) {
+				gradReal[idx] += transferReal[c][idx] * errReal + transferImag[c][idx] * errImag;
+				gradImag[idx] += transferReal[c][idx] * errImag - transferImag[c][idx] * errReal;
+			}
+		}
+
+		for(int idx = 0; idx < TOTAL_CHANNELS; idx++) {
+			double real = driveReal[idx] - TRAP_SOLVER_STEP * gradReal[idx];
+			double imag = driveImag[idx] - TRAP_SOLVER_STEP * gradImag[idx];
+			double mag = hypot(real, imag);
+			if(mag > 0.0) {
+				driveReal[idx] = real / mag;
+				driveImag[idx] = imag / mag;
+			}
+		}
+	}
+
+	for(int idx = 0; idx < TOTAL_CHANNELS; idx++)
+		frame->phases[idx] = phase_radians_to_ticks(atan2(driveImag[idx], driveReal[idx]));
 }
 
 static void set_dual_circle_positions(ParticleTarget *particles, double radiusMm,
@@ -331,76 +499,17 @@ static double particle_distance(const ParticleTarget *a, const ParticleTarget *b
 	return sqrt(dx*dx + dy*dy + dz*dz);
 }
 
-static void fill_iterative_multi_particle_phases(HoloPhaseFrame *frame,
-	const ParticleTarget *particles, const int *enabledIdx, int enabledCount,
-	double boardDistanceMm)
-{
-	double focusReal[MAX_PARTICLES][TOTAL_CHANNELS];
-	double focusImag[MAX_PARTICLES][TOTAL_CHANNELS];
-	double targetReal[MAX_PARTICLES];
-	double targetImag[MAX_PARTICLES];
-	double driveReal[TOTAL_CHANNELS];
-	double driveImag[TOTAL_CHANNELS];
-
-	for(int p = 0; p < enabledCount; p++) {
-		const ParticleTarget *particle = &particles[enabledIdx[p]];
-		targetReal[p] = 1.0;
-		targetImag[p] = 0.0;
-		for(int board = 0; board < NUM_BOARDS; board++) {
-			for(int ch = 0; ch < CHANNELS_PER_BOARD; ch++) {
-				int idx = board * CHANNELS_PER_BOARD + ch;
-				double phase = calculate_acousticlev_phase_radians(
-					particle->x, particle->y, particle->z,
-					(enum BoardIndex)board, ch, boardDistanceMm);
-				focusReal[p][idx] = cos(phase);
-				focusImag[p][idx] = sin(phase);
-			}
-		}
-	}
-
-	for(int iter = 0; iter < MULTI_PARTICLE_ITERATIONS; iter++) {
-		for(int idx = 0; idx < TOTAL_CHANNELS; idx++) {
-			double real = 0.0;
-			double imag = 0.0;
-			for(int p = 0; p < enabledCount; p++) {
-				real += targetReal[p] * focusReal[p][idx] - targetImag[p] * focusImag[p][idx];
-				imag += targetReal[p] * focusImag[p][idx] + targetImag[p] * focusReal[p][idx];
-			}
-			double mag = hypot(real, imag);
-			if(mag > 0.0) {
-				driveReal[idx] = real / mag;
-				driveImag[idx] = imag / mag;
-			} else {
-				driveReal[idx] = 1.0;
-				driveImag[idx] = 0.0;
-			}
-		}
-
-		for(int p = 0; p < enabledCount; p++) {
-			double pressureReal = 0.0;
-			double pressureImag = 0.0;
-			for(int idx = 0; idx < TOTAL_CHANNELS; idx++) {
-				pressureReal += focusReal[p][idx] * driveReal[idx] + focusImag[p][idx] * driveImag[idx];
-				pressureImag += focusReal[p][idx] * driveImag[idx] - focusImag[p][idx] * driveReal[idx];
-			}
-			double mag = hypot(pressureReal, pressureImag);
-			if(mag > 0.0) {
-				targetReal[p] = pressureReal / mag;
-				targetImag[p] = pressureImag / mag;
-			}
-		}
-	}
-
-	for(int idx = 0; idx < TOTAL_CHANNELS; idx++)
-		frame->phases[idx] = phase_radians_to_ticks(atan2(driveImag[idx], driveReal[idx]));
-}
-
 static void make_phase_frame_temporally_continuous(HoloPhaseFrame *frame)
 {
 	static uint16_t previous[HOLO_PHASE_COUNT];
 	static int havePrevious = 0;
 	double real = 0.0;
 	double imag = 0.0;
+
+	if(frame == NULL) {
+		havePrevious = 0;
+		return;
+	}
 
 	if(!havePrevious) {
 		memcpy(previous, frame->phases, sizeof(previous));
@@ -425,6 +534,61 @@ static void make_phase_frame_temporally_continuous(HoloPhaseFrame *frame)
 	}
 }
 
+static void reset_phase_temporal_continuity(void)
+{
+	make_phase_frame_temporally_continuous(NULL);
+}
+
+static double pressure_magnitude_at(const HoloPhaseFrame *frame,
+	double x, double y, double z, double boardDistanceMm)
+{
+	double fieldReal = 0.0;
+	double fieldImag = 0.0;
+
+	for(int board = 0; board < NUM_BOARDS; board++) {
+		for(int ch = 0; ch < CHANNELS_PER_BOARD; ch++) {
+			int idx = board * CHANNELS_PER_BOARD + ch;
+			double tr;
+			double ti;
+			double phase = TWO_PI * (double)frame->phases[idx] / (double)HOLO_PHASE_MAX;
+			double dr = cos(phase);
+			double di = sin(phase);
+			calculate_transfer_components(x, y, z, (enum BoardIndex)board, ch,
+				boardDistanceMm, &tr, &ti);
+			fieldReal += tr * dr - ti * di;
+			fieldImag += tr * di + ti * dr;
+		}
+	}
+	return hypot(fieldReal, fieldImag);
+}
+
+static void measure_trap_pressure_ratio(const HoloPhaseFrame *frame,
+	const ParticleTarget *particles, const int *enabledIdx, int enabledCount,
+	double boardDistanceMm, double *centerAvg, double *guardAvg)
+{
+	TrapConstraint constraints[MAX_PARTICLES * 7];
+	int constraintCount = build_trap_constraints(particles, enabledIdx, enabledCount, constraints);
+	double centerSum = 0.0;
+	double guardSum = 0.0;
+	int centerCount = 0;
+	int guardCount = 0;
+
+	for(int c = 0; c < constraintCount; c++) {
+		double mag = pressure_magnitude_at(frame, constraints[c].x, constraints[c].y,
+			constraints[c].z, boardDistanceMm);
+		if(constraints[c].targetReal == 0.0 && constraints[c].targetImag == 0.0) {
+			centerSum += mag;
+			centerCount++;
+		} else {
+			guardSum += mag;
+			guardCount++;
+		}
+	}
+
+	*centerAvg = centerCount ? centerSum / (double)centerCount : 0.0;
+	*guardAvg = guardCount ? guardSum / (double)guardCount : 0.0;
+}
+
 static void fill_multi_particle_frame(HoloPhaseFrame *frame, uint16_t frameID,
 	const ParticleTarget *particles, int particleCount, double boardDistanceMm)
 {
@@ -437,26 +601,18 @@ static void fill_multi_particle_frame(HoloPhaseFrame *frame, uint16_t frameID,
 
 	int enabledIdx[MAX_PARTICLES];
 	int enabledCount = collect_enabled_particles(particles, particleCount, enabledIdx);
-	if(enabledCount > 1) {
-		fill_iterative_multi_particle_phases(frame, particles, enabledIdx, enabledCount, boardDistanceMm);
+	if(enabledCount > 0) {
+		fill_guard_trap_phases(frame, particles, enabledIdx, enabledCount, boardDistanceMm);
 	} else {
 		for(int board = 0; board < NUM_BOARDS; board++) {
 			for(int ch = 0; ch < CHANNELS_PER_BOARD; ch++) {
 				int idx = board * CHANNELS_PER_BOARD + ch;
-				frame->phases[idx] = calculate_multi_particle_phase(
-					particles, particleCount, (enum BoardIndex)board, ch, boardDistanceMm);
+				frame->phases[idx] = 0;
 			}
 		}
 	}
 	make_phase_frame_temporally_continuous(frame);
 	frame->crc32 = holo_phase_frame_crc(frame);
-}
-
-static void fill_phase_frame(HoloPhaseFrame *frame, uint16_t frameID,
-	double x, double y, double z, double boardDistanceMm)
-{
-	ParticleTarget particle = {x, y, z, 1};
-	fill_multi_particle_frame(frame, frameID, &particle, 1, boardDistanceMm);
 }
 
 static int send_all(socket_t sock, const void *buf, size_t len)
@@ -502,20 +658,6 @@ static socket_t connect_to_pi(const char *host, uint16_t port)
 	return sock;
 }
 
-static int build_circle_frames(HoloPhaseFrame *frames, int frameCount,
-	uint16_t *nextFrameID, double radiusMm, double boardDistanceMm)
-{
-	if(frameCount < 3) return -1;
-	for(int i = 0; i < frameCount; i++) {
-		double theta = TWO_PI * (double)i / (double)frameCount;
-		double x = radiusMm * cos(theta);
-		double y = 0.0;
-		double z = radiusMm * sin(theta);
-		fill_phase_frame(&frames[i], (*nextFrameID)++, x, y, z, boardDistanceMm);
-	}
-	return 0;
-}
-
 static int send_ramp(socket_t sock, uint16_t *frameID, double radiusMm,
 	double boardDistanceMm, int rampFrames, unsigned rampDelayMs)
 {
@@ -523,39 +665,74 @@ static int send_ramp(socket_t sock, uint16_t *frameID, double radiusMm,
 	for(int i = 0; i <= rampFrames; i++) {
 		double t = (double)i / (double)rampFrames;
 		double smooth = t * t * (3.0 - 2.0 * t);
-		fill_phase_frame(&frame, (*frameID)++, radiusMm * smooth, 0.0, 0.0, boardDistanceMm);
+		fill_single_focus_frame(&frame, (*frameID)++, radiusMm * smooth, 0.0, 0.0, boardDistanceMm);
 		if(send_all(sock, &frame, sizeof(frame)) < 0) return -1;
 		delay_ms(rampDelayMs);
 	}
 	return 0;
 }
 
-static int stream_circle(socket_t sock, HoloPhaseFrame *frames, int frameCount,
-	uint16_t *frameID,
-	unsigned delayUs, unsigned long maxFrames)
+static int build_single_circle_frames(HoloPhaseFrame *frames, int frameCount,
+	double radiusMm, double boardDistanceMm)
+{
+	if(frameCount < 3) return -1;
+	reset_phase_temporal_continuity();
+	for(int i = 0; i < frameCount; i++) {
+		double theta = TWO_PI * (double)i / (double)frameCount;
+		fill_single_focus_frame(&frames[i], (uint16_t)i,
+			radiusMm * cos(theta), 0.0, radiusMm * sin(theta), boardDistanceMm);
+	}
+	reset_phase_temporal_continuity();
+	return 0;
+}
+
+static int stream_single_circle_fast(socket_t sock, HoloPhaseFrame *frames, int frameCount,
+	uint16_t *frameID, unsigned delayUs, unsigned long maxFrames)
 {
 	unsigned long sent = 0;
 	unsigned long reportStartFrames = 0;
 	double start = now_seconds();
 	double reportStart = start;
+	double lastDelayUs = 0.0;
 
-	printf("streaming circle: press q to stop, any other key prints status\n");
+	printf("streaming precomputed fast single-particle circle: ramping for %.1f seconds, then holding max speed\n",
+		DEFAULT_FAST_RAMP_SECONDS);
+	if(delayUs > 0) {
+		printf("target max delay %u us, target max %.1f fps, %.2f circles/s\n",
+			delayUs, 1000000.0 / (double)delayUs,
+			1000000.0 / ((double)delayUs * (double)frameCount));
+	} else {
+		printf("target max delay 0 us, holding uncapped sender/transport speed after ramp\n");
+	}
+	printf("press q to stop, any other key prints status\n");
 	while(maxFrames == 0 || sent < maxFrames) {
 		HoloPhaseFrame *frame = &frames[sent % (unsigned long)frameCount];
+		unsigned currentDelayUs = delayUs;
+		double elapsedTotal = now_seconds() - start;
+		int ramping = elapsedTotal < DEFAULT_FAST_RAMP_SECONDS;
+		if(ramping) {
+			double t = elapsedTotal / DEFAULT_FAST_RAMP_SECONDS;
+			double smooth = t * t * (3.0 - 2.0 * t);
+			currentDelayUs = (unsigned)floor(
+				(double)FAST_RAMP_START_DELAY_US +
+				((double)delayUs - (double)FAST_RAMP_START_DELAY_US) * smooth + 0.5);
+		}
 		frame->frame_id = (*frameID)++;
 		frame->crc32 = holo_phase_frame_crc(frame);
 		if(send_all(sock, frame, sizeof(*frame)) < 0) return -1;
 		sent++;
-		delay_us(delayUs);
+		lastDelayUs = (double)currentDelayUs;
+		delay_us(currentDelayUs);
 
 		if(key_pressed()) {
 			int ch = read_key();
 			if(ch == 'q' || ch == 'Q') break;
 			double now = now_seconds();
 			double elapsed = fmax(now - reportStart, 1.0e-9);
-			printf("%lu frames total, %.1f fps, %.2f circles/s recent\n",
+			printf("%lu fast frames total, %.1f fps, %.2f circles/s recent, command delay %.0f us%s\n",
 				sent, (double)(sent - reportStartFrames) / elapsed,
-				(double)(sent - reportStartFrames) / elapsed / (double)frameCount);
+				(double)(sent - reportStartFrames) / elapsed / (double)frameCount,
+				lastDelayUs, ramping ? " ramping" : " holding");
 			reportStart = now;
 			reportStartFrames = sent;
 		}
@@ -563,14 +740,15 @@ static int stream_circle(socket_t sock, HoloPhaseFrame *frames, int frameCount,
 		if(now_seconds() - reportStart >= 1.0) {
 			double now = now_seconds();
 			double elapsed = fmax(now - reportStart, 1.0e-9);
-			printf("%lu frames total, %.1f fps, %.2f circles/s recent\n",
+			printf("%lu fast frames total, %.1f fps, %.2f circles/s recent, command delay %.0f us%s\n",
 				sent, (double)(sent - reportStartFrames) / elapsed,
-				(double)(sent - reportStartFrames) / elapsed / (double)frameCount);
+				(double)(sent - reportStartFrames) / elapsed / (double)frameCount,
+				lastDelayUs, ramping ? " ramping" : " holding");
 			reportStart = now;
 			reportStartFrames = sent;
 		}
 	}
-	printf("circle stopped after %lu frames in %.3f s\n", sent, now_seconds() - start);
+	printf("fast circle stopped after %lu frames in %.3f s\n", sent, now_seconds() - start);
 	return 0;
 }
 
@@ -686,7 +864,7 @@ static void print_usage(const char *argv0)
 	printf("defaults: port=%u board=%.1f radius=%.1f frames=%d delay-us=%u max-frames=0(infinite)\n",
 		HOLO_PHASE_TCP_PORT, DEFAULT_BOARD_DISTANCE_MM, DEFAULT_RADIUS_MM,
 		DEFAULT_FRAMES_PER_CIRCLE, DEFAULT_DELAY_US);
-	printf("delay-us controls particle speed: try 10000 gentler, 3000 faster, 0 for transport stress-test\n");
+	printf("delay-us is the held max speed after ramp: try 10000 gentler, 3000 faster, 0 for max transport\n");
 	printf("commands after connect:\n");
 	printf("  1/2    select particle; selecting 2 enables it at centre\n");
 	printf("  x/s    decrease/increase X of selected particle\n");
@@ -696,7 +874,7 @@ static void print_usage(const char *argv0)
 	printf("  0      disable selected particle, except particle 1\n");
 	printf("  Enter  resend current particles\n");
 	printf("  p      print particle positions\n");
-	printf("  g      legacy single-particle circle test\n");
+	printf("  g      ramp up then hold precomputed fast single-particle circle\n");
 	printf("  o      two particles on local opposite X-Z circles using current Y/Z\n");
 	printf("  q      quit\n");
 }
@@ -721,6 +899,10 @@ static void print_circle_dynamics(double radiusMm, double circleHz)
 
 static int run_self_test(double boardDistanceMm, double radiusMm, int frameCount)
 {
+	ParticleTarget singleParticles[MAX_PARTICLES] = {
+		{0.0, 0.0, 0.0, 1},
+		{0.0, 0.0, 0.0, 0}
+	};
 	ParticleTarget particles[MAX_PARTICLES] = {
 		{0.0, 0.0, 0.0, 1},
 		{0.0, 0.0, 0.0, 1}
@@ -728,7 +910,12 @@ static int run_self_test(double boardDistanceMm, double radiusMm, int frameCount
 	CircleCenters centers = {{0.0, 0.0}, {0.0, 0.0}};
 	HoloPhaseFrame frame;
 	double minSeparation = 1.0e9;
+	double singleMaxStep = 0.0;
 	double maxStep[MAX_PARTICLES] = {0.0, 0.0};
+	double worstSingleCenterGuardRatio = 0.0;
+	double worstSingleBelowAboveRatio = 0.0;
+	double worstCenterGuardRatio = 0.0;
+	ParticleTarget singlePrevious = {0.0, 0.0, 0.0, 1};
 	ParticleTarget previous[MAX_PARTICLES] = {
 		{0.0, 0.0, 0.0, 1},
 		{0.0, 0.0, 0.0, 1}
@@ -736,6 +923,52 @@ static int run_self_test(double boardDistanceMm, double radiusMm, int frameCount
 
 	if(frameCount < 3 || radiusMm < 0.0 || boardDistanceMm <= 0.0)
 		return 1;
+
+	for(int i = 0; i < frameCount; i++) {
+		double theta = TWO_PI * (double)i / (double)frameCount;
+		singleParticles[0].x = radiusMm * cos(theta);
+		singleParticles[0].y = 0.0;
+		singleParticles[0].z = radiusMm * sin(theta);
+		if(i > 0) {
+			double step = particle_distance(&singleParticles[0], &singlePrevious);
+			if(step > singleMaxStep)
+				singleMaxStep = step;
+		}
+		singlePrevious = singleParticles[0];
+		fill_multi_particle_frame(&frame, (uint16_t)i, singleParticles, MAX_PARTICLES, boardDistanceMm);
+		if(frame.magic != HOLO_PHASE_MAGIC || frame.version != HOLO_PHASE_VERSION ||
+		   frame.phase_count != HOLO_PHASE_COUNT || frame.phase_max != HOLO_PHASE_MAX ||
+		   frame.crc32 != holo_phase_frame_crc(&frame)) {
+			printf("self-test failed: invalid single frame at index %d\n", i);
+			return 1;
+		}
+		{
+			int enabledIdx[MAX_PARTICLES];
+			double centerAvg;
+			double guardAvg;
+			double belowMag;
+			double aboveMag;
+			int enabledCount = collect_enabled_particles(singleParticles, MAX_PARTICLES, enabledIdx);
+			measure_trap_pressure_ratio(&frame, singleParticles, enabledIdx, enabledCount,
+				boardDistanceMm, &centerAvg, &guardAvg);
+			if(guardAvg > 0.0) {
+				double ratio = centerAvg / guardAvg;
+				if(ratio > worstSingleCenterGuardRatio)
+					worstSingleCenterGuardRatio = ratio;
+			}
+			belowMag = pressure_magnitude_at(&frame,
+				singleParticles[0].x, singleParticles[0].y - TRAP_GUARD_OFFSET_MM,
+				singleParticles[0].z, boardDistanceMm);
+			aboveMag = pressure_magnitude_at(&frame,
+				singleParticles[0].x, singleParticles[0].y + TRAP_GUARD_OFFSET_MM,
+				singleParticles[0].z, boardDistanceMm);
+			if(aboveMag > 0.0) {
+				double ratio = belowMag / aboveMag;
+				if(ratio > worstSingleBelowAboveRatio)
+					worstSingleBelowAboveRatio = ratio;
+			}
+		}
+	}
 
 	for(int i = 0; i < frameCount; i++) {
 		double theta = TWO_PI * (double)i / (double)frameCount;
@@ -765,12 +998,35 @@ static int run_self_test(double boardDistanceMm, double radiusMm, int frameCount
 				return 1;
 			}
 		}
+		{
+			int enabledIdx[MAX_PARTICLES];
+			double centerAvg;
+			double guardAvg;
+			int enabledCount = collect_enabled_particles(particles, MAX_PARTICLES, enabledIdx);
+			measure_trap_pressure_ratio(&frame, particles, enabledIdx, enabledCount,
+				boardDistanceMm, &centerAvg, &guardAvg);
+			if(guardAvg > 0.0) {
+				double ratio = centerAvg / guardAvg;
+				if(ratio > worstCenterGuardRatio)
+					worstCenterGuardRatio = ratio;
+			}
+		}
 	}
 
-	printf("self-test ok: %d dual-circle frames, min particle separation %.3f mm, max step %.3f/%.3f mm\n",
-		frameCount, minSeparation, maxStep[0], maxStep[1]);
+	printf("self-test ok: %d single-circle frames, max step %.3f mm, worst center/guard pressure %.3f, worst below/above pressure %.3f\n",
+		frameCount, singleMaxStep, worstSingleCenterGuardRatio, worstSingleBelowAboveRatio);
+	printf("self-test ok: %d dual-circle frames, min particle separation %.3f mm, max step %.3f/%.3f mm, worst center/guard pressure %.3f\n",
+		frameCount, minSeparation, maxStep[0], maxStep[1], worstCenterGuardRatio);
+	if(worstSingleCenterGuardRatio >= 0.85) {
+		printf("self-test failed: single trap center is not sufficiently lower than guard ring\n");
+		return 1;
+	}
 	if(minSeparation + 1.0e-6 < 2.0 * radiusMm) {
 		printf("self-test failed: particles should not approach closer than 2*radius\n");
+		return 1;
+	}
+	if(worstCenterGuardRatio >= 0.85) {
+		printf("self-test failed: trap center is not sufficiently lower than guard ring\n");
 		return 1;
 	}
 	return 0;
@@ -787,7 +1043,7 @@ int main(int argc, char **argv)
 	unsigned long maxFrames;
 	uint16_t frameID = 0;
 	HoloPhaseFrame currentFrame;
-	HoloPhaseFrame *circleFrames = NULL;
+	HoloPhaseFrame *singleCircleFrames = NULL;
 	ParticleTarget particles[MAX_PARTICLES] = {
 		{0.0, 0.0, 0.0, 1},
 		{0.0, 0.0, 0.0, 0}
@@ -827,19 +1083,30 @@ int main(int argc, char **argv)
 	}
 #endif
 
-	sock = connect_to_pi(host, port);
-	if(sock == INVALID_SOCKET) {
-		printf("could not connect to %s:%u\n", host, port);
+	singleCircleFrames = (HoloPhaseFrame *)calloc((size_t)frameCount, sizeof(HoloPhaseFrame));
+	if(!singleCircleFrames) {
+		printf("could not allocate %d single circle frames\n", frameCount);
 #ifdef _WIN32
 		WSACleanup();
 #endif
 		return 1;
 	}
 
-	circleFrames = (HoloPhaseFrame *)calloc((size_t)frameCount, sizeof(HoloPhaseFrame));
-	if(!circleFrames) {
-		printf("could not allocate %d circle frames\n", frameCount);
+	printf("precomputing %d stable single-particle circle frames...\n", frameCount);
+	if(build_single_circle_frames(singleCircleFrames, frameCount, radiusMm, boardDistanceMm) != 0) {
+		printf("could not build single circle frames\n");
+		free(singleCircleFrames);
 		close_socket(sock);
+#ifdef _WIN32
+		WSACleanup();
+#endif
+		return 1;
+	}
+
+	sock = connect_to_pi(host, port);
+	if(sock == INVALID_SOCKET) {
+		printf("could not connect to %s:%u\n", host, port);
+		free(singleCircleFrames);
 #ifdef _WIN32
 		WSACleanup();
 #endif
@@ -847,15 +1114,6 @@ int main(int argc, char **argv)
 	}
 
 	fill_multi_particle_frame(&currentFrame, frameID++, particles, MAX_PARTICLES, boardDistanceMm);
-	if(build_circle_frames(circleFrames, frameCount, &frameID, radiusMm, boardDistanceMm) != 0) {
-		printf("could not build circle frames\n");
-		free(circleFrames);
-		close_socket(sock);
-#ifdef _WIN32
-		WSACleanup();
-#endif
-		return 1;
-	}
 
 	if(terminal_raw_mode(1) != 0) {
 		printf("warning: could not switch terminal to raw mode; controls may require Enter\n");
@@ -963,7 +1221,8 @@ int main(int argc, char **argv)
 					printf("ramp send failed\n");
 					break;
 				}
-				if(stream_circle(sock, circleFrames, frameCount, &frameID, delayUs, maxFrames) < 0) {
+				if(stream_single_circle_fast(sock, singleCircleFrames, frameCount,
+					   &frameID, delayUs, maxFrames) < 0) {
 					printf("circle send failed\n");
 					break;
 				}
@@ -983,7 +1242,7 @@ int main(int argc, char **argv)
 	}
 
 	terminal_raw_mode(0);
-	free(circleFrames);
+	free(singleCircleFrames);
 	close_socket(sock);
 #ifdef _WIN32
 	WSACleanup();
