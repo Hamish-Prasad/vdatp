@@ -24,6 +24,8 @@
  * gcc -std=gnu99 -O3 -Wall -Wextra laptop_file_sender_lev.c -o laptop_file_sender_lev.exe -lm -lws2_32
  * laptop_file_sender_lev.exe 169.254.251.233 5656 135 3 64 10000
  * laptop_file_sender_lev.exe 169.254.65.146 5656 135 3 64 4000
+ *
+ * laptop_file_sender_lev.exe 169.254.65.146 5656 135 3 128 0
  */
 
 #ifdef _WIN32
