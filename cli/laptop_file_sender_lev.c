@@ -28,7 +28,9 @@
  * laptop_file_sender_lev.exe 169.254.65.146 5656 135 3 128 0
  * laptop_file_sender_lev.exe 169.254.166.13 5656 135 3 128 300
  * laptop_file_sender_lev.exe 169.254.166.13 5656 135 3 32 200
- *
+ * laptop_file_sender_lev.exe 169.254.166.13 5656 135 2 64 390 0 xz
+ * laptop_file_sender_lev.exe 169.254.166.13 5656 135 2 64 390 0 xz
+ * laptop_file_sender_lev.exe 169.254.219.139 5656 135 3 64 5000
  */
 
 #ifdef _WIN32
@@ -56,7 +58,7 @@ typedef int socket_t;
 
 #define NUM_BOARDS 4
 #define CHANNELS_PER_BOARD 50
-#define MAX_PARTICLES 2
+#define MAX_PARTICLES 9
 #define TOTAL_CHANNELS (NUM_BOARDS * CHANNELS_PER_BOARD)
 #define DEFAULT_BOARD_DISTANCE_MM 135.0
 #define DEFAULT_RADIUS_MM 3.0
@@ -76,6 +78,7 @@ typedef int socket_t;
 #define FREQUENCY_HZ 40000.0
 #define PI 3.14159265358979323846
 #define TWO_PI (2.0 * PI)
+#define STABILITY_ACCEL_WARN_M_S2 120.0
 
 enum BoardIndex {
 	BOARD_LEFT_TOP = 0,
@@ -83,6 +86,12 @@ enum BoardIndex {
 	BOARD_LEFT_BOTTOM = 2,
 	BOARD_RIGHT_BOTTOM = 3
 };
+
+typedef enum CirclePlane {
+	CIRCLE_PLANE_XZ = 0,
+	CIRCLE_PLANE_XY,
+	CIRCLE_PLANE_YZ
+} CirclePlane;
 
 typedef struct ParticleTarget {
 	double x;
@@ -105,11 +114,44 @@ typedef struct TrapConstraint {
 	double weight;
 } TrapConstraint;
 
+typedef struct LightState {
+	uint8_t red;
+	uint8_t green;
+	uint8_t blue;
+	uint8_t brightness;
+	int enabled;
+	int blink;
+	int preset;
+	int redEnabled;
+	int greenEnabled;
+	int blueEnabled;
+} LightState;
+
+typedef struct LightPreset {
+	const char *name;
+	uint8_t red;
+	uint8_t green;
+	uint8_t blue;
+} LightPreset;
+
 static const int16_t xCols[5] = {450, 350, 250, 150, 50};
 static const int16_t zRows[10] = {-450, -350, -250, -150, -50, 50, 150, 250, 350, 450};
+static const LightPreset photoLightPresets[9] = {
+	{"warm white", 255, 214, 170},
+	{"ice blue", 115, 190, 255},
+	{"deep violet", 165, 90, 255},
+	{"magenta", 255, 75, 210},
+	{"amber", 255, 155, 35},
+	{"cyan", 45, 235, 255},
+	{"emerald", 70, 255, 135},
+	{"rose", 255, 105, 125},
+	{"studio white", 255, 255, 255}
+};
 
 static int send_particles(socket_t sock, HoloPhaseFrame *frame, uint16_t *frameID,
 	const ParticleTarget *particles, double boardDistanceMm);
+static int send_light_control(socket_t sock, uint16_t *frameID, const LightState *light);
+static int handle_light_key(socket_t sock, uint16_t *frameID, LightState *light, int ch);
 static void make_phase_frame_temporally_continuous(HoloPhaseFrame *frame);
 
 static void delay_ms(unsigned int ms)
@@ -318,26 +360,6 @@ static double calculate_focus_phase_radians(double tx, double ty, double tz,
 	return drivePhase;
 }
 
-static void fill_single_focus_frame(HoloPhaseFrame *frame, uint16_t frameID,
-	double x, double y, double z, double boardDistanceMm)
-{
-	memset(frame, 0, sizeof(*frame));
-	frame->magic = HOLO_PHASE_MAGIC;
-	frame->version = HOLO_PHASE_VERSION;
-	frame->frame_id = frameID;
-	frame->phase_count = HOLO_PHASE_COUNT;
-	frame->phase_max = HOLO_PHASE_MAX;
-	for(int board = 0; board < NUM_BOARDS; board++) {
-		for(int ch = 0; ch < CHANNELS_PER_BOARD; ch++) {
-			int idx = board * CHANNELS_PER_BOARD + ch;
-			frame->phases[idx] = phase_radians_to_ticks(
-				calculate_focus_phase_radians(x, y, z, (enum BoardIndex)board, ch, boardDistanceMm));
-		}
-	}
-	make_phase_frame_temporally_continuous(frame);
-	frame->crc32 = holo_phase_frame_crc(frame);
-}
-
 static int collect_enabled_particles(const ParticleTarget *particles, int particleCount, int *enabledIdx)
 {
 	int enabledCount = 0;
@@ -539,6 +561,82 @@ static void reset_phase_temporal_continuity(void)
 	make_phase_frame_temporally_continuous(NULL);
 }
 
+static const char *circle_plane_name(CirclePlane plane)
+{
+	switch(plane) {
+		case CIRCLE_PLANE_XY: return "X-Y";
+		case CIRCLE_PLANE_YZ: return "Y-Z";
+		case CIRCLE_PLANE_XZ:
+		default: return "X-Z";
+	}
+}
+
+static int parse_circle_plane(const char *text, CirclePlane *plane)
+{
+	if(text == NULL || text[0] == '\0') return 0;
+	if((text[0] == 'x' || text[0] == 'X') && (text[1] == 'z' || text[1] == 'Z') && text[2] == '\0') {
+		*plane = CIRCLE_PLANE_XZ;
+		return 1;
+	}
+	if((text[0] == 'x' || text[0] == 'X') && (text[1] == 'y' || text[1] == 'Y') && text[2] == '\0') {
+		*plane = CIRCLE_PLANE_XY;
+		return 1;
+	}
+	if((text[0] == 'y' || text[0] == 'Y') && (text[1] == 'z' || text[1] == 'Z') && text[2] == '\0') {
+		*plane = CIRCLE_PLANE_YZ;
+		return 1;
+	}
+	return 0;
+}
+
+static void set_single_circle_position(ParticleTarget *particle, double radiusMm,
+	CirclePlane plane, double theta)
+{
+	double c = radiusMm * cos(theta);
+	double s = radiusMm * sin(theta);
+
+	particle->x = 0.0;
+	particle->y = 0.0;
+	particle->z = 0.0;
+	switch(plane) {
+		case CIRCLE_PLANE_XY:
+			particle->x = c;
+			particle->y = s;
+			break;
+		case CIRCLE_PLANE_YZ:
+			particle->y = c;
+			particle->z = s;
+			break;
+		case CIRCLE_PLANE_XZ:
+		default:
+			particle->x = c;
+			particle->z = s;
+			break;
+	}
+	particle->enabled = 1;
+}
+
+static void fill_single_focus_frame(HoloPhaseFrame *frame, uint16_t frameID,
+	const ParticleTarget *particle, double boardDistanceMm)
+{
+	memset(frame, 0, sizeof(*frame));
+	frame->magic = HOLO_PHASE_MAGIC;
+	frame->version = HOLO_PHASE_VERSION;
+	frame->frame_id = frameID;
+	frame->phase_count = HOLO_PHASE_COUNT;
+	frame->phase_max = HOLO_PHASE_MAX;
+	for(int board = 0; board < NUM_BOARDS; board++) {
+		for(int ch = 0; ch < CHANNELS_PER_BOARD; ch++) {
+			int idx = board * CHANNELS_PER_BOARD + ch;
+			frame->phases[idx] = phase_radians_to_ticks(
+				calculate_focus_phase_radians(particle->x, particle->y, particle->z,
+					(enum BoardIndex)board, ch, boardDistanceMm));
+		}
+	}
+	make_phase_frame_temporally_continuous(frame);
+	frame->crc32 = holo_phase_frame_crc(frame);
+}
+
 static double pressure_magnitude_at(const HoloPhaseFrame *frame,
 	double x, double y, double z, double boardDistanceMm)
 {
@@ -659,13 +757,18 @@ static socket_t connect_to_pi(const char *host, uint16_t port)
 }
 
 static int send_ramp(socket_t sock, uint16_t *frameID, double radiusMm,
-	double boardDistanceMm, int rampFrames, unsigned rampDelayMs)
+	double boardDistanceMm, CirclePlane plane, int rampFrames, unsigned rampDelayMs)
 {
 	HoloPhaseFrame frame;
+	ParticleTarget particles[MAX_PARTICLES] = {
+		{0.0, 0.0, 0.0, 1},
+		{0.0, 0.0, 0.0, 0}
+	};
 	for(int i = 0; i <= rampFrames; i++) {
 		double t = (double)i / (double)rampFrames;
 		double smooth = t * t * (3.0 - 2.0 * t);
-		fill_single_focus_frame(&frame, (*frameID)++, radiusMm * smooth, 0.0, 0.0, boardDistanceMm);
+		set_single_circle_position(&particles[0], radiusMm * smooth, plane, 0.0);
+		fill_single_focus_frame(&frame, (*frameID)++, &particles[0], boardDistanceMm);
 		if(send_all(sock, &frame, sizeof(frame)) < 0) return -1;
 		delay_ms(rampDelayMs);
 	}
@@ -673,21 +776,25 @@ static int send_ramp(socket_t sock, uint16_t *frameID, double radiusMm,
 }
 
 static int build_single_circle_frames(HoloPhaseFrame *frames, int frameCount,
-	double radiusMm, double boardDistanceMm)
+	double radiusMm, double boardDistanceMm, CirclePlane plane)
 {
+	ParticleTarget particles[MAX_PARTICLES] = {
+		{0.0, 0.0, 0.0, 1},
+		{0.0, 0.0, 0.0, 0}
+	};
 	if(frameCount < 3) return -1;
 	reset_phase_temporal_continuity();
 	for(int i = 0; i < frameCount; i++) {
 		double theta = TWO_PI * (double)i / (double)frameCount;
-		fill_single_focus_frame(&frames[i], (uint16_t)i,
-			radiusMm * cos(theta), 0.0, radiusMm * sin(theta), boardDistanceMm);
+		set_single_circle_position(&particles[0], radiusMm, plane, theta);
+		fill_single_focus_frame(&frames[i], (uint16_t)i, &particles[0], boardDistanceMm);
 	}
 	reset_phase_temporal_continuity();
 	return 0;
 }
 
 static int stream_single_circle_fast(socket_t sock, HoloPhaseFrame *frames, int frameCount,
-	uint16_t *frameID, unsigned delayUs, unsigned long maxFrames)
+	uint16_t *frameID, unsigned delayUs, unsigned long maxFrames, LightState *light)
 {
 	unsigned long sent = 0;
 	unsigned long reportStartFrames = 0;
@@ -727,6 +834,8 @@ static int stream_single_circle_fast(socket_t sock, HoloPhaseFrame *frames, int 
 		if(key_pressed()) {
 			int ch = read_key();
 			if(ch == 'q' || ch == 'Q') break;
+			if(handle_light_key(sock, frameID, light, ch) < 0)
+				return -1;
 			double now = now_seconds();
 			double elapsed = fmax(now - reportStart, 1.0e-9);
 			printf("%lu fast frames total, %.1f fps, %.2f circles/s recent, command delay %.0f us%s\n",
@@ -784,7 +893,7 @@ static int send_dual_circle_ramp(socket_t sock, HoloPhaseFrame *frame, uint16_t 
 static int stream_dual_counter_circles(socket_t sock, HoloPhaseFrame *frame, uint16_t *frameID,
 	ParticleTarget *particles, int frameCount, double radiusMm, double boardDistanceMm,
 	const CircleCenters *centers,
-	unsigned delayUs, unsigned long maxFrames, unsigned speedRampFrames)
+	unsigned delayUs, unsigned long maxFrames, unsigned speedRampFrames, LightState *light)
 {
 	unsigned long sent = 0;
 	unsigned long reportStartFrames = 0;
@@ -816,6 +925,8 @@ static int stream_dual_counter_circles(socket_t sock, HoloPhaseFrame *frame, uin
 		if(key_pressed()) {
 			int ch = read_key();
 			if(ch == 'q' || ch == 'Q') break;
+			if(handle_light_key(sock, frameID, light, ch) < 0)
+				return -1;
 			double now = now_seconds();
 			double elapsed = fmax(now - reportStart, 1.0e-9);
 			printf("%lu dual frames total, %.1f fps, %.2f circles/s recent\n",
@@ -857,16 +968,138 @@ static int send_particles(socket_t sock, HoloPhaseFrame *frame, uint16_t *frameI
 	return send_all(sock, frame, sizeof(*frame));
 }
 
+static int send_light_control(socket_t sock, uint16_t *frameID, const LightState *light)
+{
+	HoloPhaseFrame packet;
+	memset(&packet, 0, sizeof(packet));
+	packet.magic = HOLO_CONTROL_MAGIC;
+	packet.version = HOLO_PHASE_VERSION;
+	packet.frame_id = (*frameID)++;
+	packet.phase_count = 0;
+	packet.phase_max = HOLO_PHASE_MAX;
+	packet.phases[0] = HOLO_CONTROL_SET_LIGHT;
+	packet.phases[1] = light->redEnabled ? light->red : 0;
+	packet.phases[2] = light->greenEnabled ? light->green : 0;
+	packet.phases[3] = light->blueEnabled ? light->blue : 0;
+	packet.phases[4] = light->brightness;
+	packet.phases[5] = light->blink ? 1u : 0u;
+	packet.phases[6] = light->enabled ? 1u : 0u;
+	packet.crc32 = holo_phase_frame_crc(&packet);
+	return send_all(sock, &packet, sizeof(packet));
+}
+
+static void apply_light_preset(LightState *light, int preset)
+{
+	int count = (int)(sizeof(photoLightPresets) / sizeof(photoLightPresets[0]));
+	while(preset < 0)
+		preset += count;
+	preset %= count;
+	light->preset = preset;
+	light->red = photoLightPresets[preset].red;
+	light->green = photoLightPresets[preset].green;
+	light->blue = photoLightPresets[preset].blue;
+	light->enabled = 1;
+}
+
+static void print_light_state(const LightState *light)
+{
+	const char *presetName = "custom";
+	unsigned outRed = light->redEnabled ? light->red : 0;
+	unsigned outGreen = light->greenEnabled ? light->green : 0;
+	unsigned outBlue = light->blueEnabled ? light->blue : 0;
+	int presetCount = (int)(sizeof(photoLightPresets) / sizeof(photoLightPresets[0]));
+	if(light->preset >= 0 && light->preset < presetCount &&
+	   light->red == photoLightPresets[light->preset].red &&
+	   light->green == photoLightPresets[light->preset].green &&
+	   light->blue == photoLightPresets[light->preset].blue)
+		presetName = photoLightPresets[light->preset].name;
+	printf("light %s preset=%d %s rgb=%u,%u,%u out=%u,%u,%u channels=%c%c%c brightness=%u%s\n",
+		light->enabled ? "on " : "off",
+		light->preset + 1, presetName,
+		(unsigned)light->red, (unsigned)light->green, (unsigned)light->blue,
+		outRed, outGreen, outBlue,
+		light->redEnabled ? 'R' : '-',
+		light->greenEnabled ? 'G' : '-',
+		light->blueEnabled ? 'B' : '-',
+		(unsigned)light->brightness, light->blink ? " blink" : "");
+}
+
+static int handle_light_key(socket_t sock, uint16_t *frameID, LightState *light, int ch)
+{
+	int changed = 0;
+	if(ch == 'L') {
+		light->enabled = !light->enabled;
+		changed = 1;
+	} else if(ch == '[') {
+		light->brightness = light->brightness > 16 ? (uint8_t)(light->brightness - 16) : 0;
+		changed = 1;
+	} else if(ch == ']') {
+		light->brightness = light->brightness < 239 ? (uint8_t)(light->brightness + 16) : 255;
+		changed = 1;
+	} else if(ch == 'B') {
+		light->blink = !light->blink;
+		changed = 1;
+	} else if(ch == 'r') {
+		light->redEnabled = !light->redEnabled;
+		changed = 1;
+	} else if(ch == 'e') {
+		light->greenEnabled = !light->greenEnabled;
+		changed = 1;
+	} else if(ch == 'b') {
+		light->blueEnabled = !light->blueEnabled;
+		changed = 1;
+	} else if(ch == 'A') {
+		light->redEnabled = 1;
+		light->greenEnabled = 1;
+		light->blueEnabled = 1;
+		changed = 1;
+	} else if(ch == 'C') {
+		apply_light_preset(light, light->preset + 1);
+		changed = 1;
+	} else if(ch == 'V') {
+		apply_light_preset(light, light->preset - 1);
+		changed = 1;
+	} else if(ch == 'R') {
+		light->red = 255; light->green = 0; light->blue = 0; light->enabled = 1; light->preset = -1;
+		light->redEnabled = 1; light->greenEnabled = 1; light->blueEnabled = 1;
+		changed = 1;
+	} else if(ch == 'G') {
+		light->red = 0; light->green = 255; light->blue = 0; light->enabled = 1; light->preset = -1;
+		light->redEnabled = 1; light->greenEnabled = 1; light->blueEnabled = 1;
+		changed = 1;
+	} else if(ch == 'Y') {
+		light->red = 255; light->green = 160; light->blue = 0; light->enabled = 1; light->preset = -1;
+		light->redEnabled = 1; light->greenEnabled = 1; light->blueEnabled = 1;
+		changed = 1;
+	} else if(ch == 'W') {
+		light->red = 255; light->green = 255; light->blue = 255; light->enabled = 1; light->preset = -1;
+		light->redEnabled = 1; light->greenEnabled = 1; light->blueEnabled = 1;
+		changed = 1;
+	} else if(ch == 'U') {
+		light->red = 0; light->green = 0; light->blue = 255; light->enabled = 1; light->preset = -1;
+		light->redEnabled = 1; light->greenEnabled = 1; light->blueEnabled = 1;
+		changed = 1;
+	}
+
+	if(!changed)
+		return 0;
+	if(send_light_control(sock, frameID, light) < 0)
+		return -1;
+	print_light_state(light);
+	return 1;
+}
+
 static void print_usage(const char *argv0)
 {
-	printf("usage: %s <pi-ip-or-host> [port] [board-mm] [radius-mm] [frames] [delay-us] [max-frames]\n", argv0);
+	printf("usage: %s <pi-ip-or-host> [port] [board-mm] [radius-mm] [frames] [delay-us] [max-frames] [plane]\n", argv0);
 	printf("       %s --self-test [board-mm] [radius-mm] [frames]\n", argv0);
 	printf("defaults: port=%u board=%.1f radius=%.1f frames=%d delay-us=%u max-frames=0(infinite)\n",
 		HOLO_PHASE_TCP_PORT, DEFAULT_BOARD_DISTANCE_MM, DEFAULT_RADIUS_MM,
 		DEFAULT_FRAMES_PER_CIRCLE, DEFAULT_DELAY_US);
 	printf("delay-us is the held max speed after ramp: try 10000 gentler, 3000 faster, 0 for max transport\n");
+	printf("plane selects the single-particle circle plane: xz(default), xy, or yz\n");
 	printf("commands after connect:\n");
-	printf("  1/2    select particle; selecting 2 enables it at centre\n");
+	printf("  1-9    select particle; selecting a new particle enables it at centre\n");
 	printf("  x/s    decrease/increase X of selected particle\n");
 	printf("  c/d    decrease/increase Y of selected particle\n");
 	printf("  z/a    decrease/increase Z of selected particle\n");
@@ -876,7 +1109,17 @@ static void print_usage(const char *argv0)
 	printf("  p      print particle positions\n");
 	printf("  g      ramp up then hold precomputed fast single-particle circle\n");
 	printf("  o      two particles on local opposite X-Z circles using current Y/Z\n");
+	printf("  L      toggle lights, [/]=brightness, C/V photo colors, R/G/U/Y/W quick colors, B blink\n");
+	printf("  r/e/b  toggle red/green/blue LED channels, A all LED channels on\n");
 	printf("  q      quit\n");
+	printf("photo colors via C/V:\n");
+	for(size_t i = 0; i < sizeof(photoLightPresets) / sizeof(photoLightPresets[0]); i++) {
+		printf("  %u      %s rgb=%u,%u,%u\n", (unsigned)(i + 1),
+			photoLightPresets[i].name,
+			(unsigned)photoLightPresets[i].red,
+			(unsigned)photoLightPresets[i].green,
+			(unsigned)photoLightPresets[i].blue);
+	}
 }
 
 static double requested_circle_rate_hz(int frameCount, unsigned delayUs)
@@ -895,6 +1138,24 @@ static void print_circle_dynamics(double radiusMm, double circleHz)
 	double accelMS2 = radiusMm * omega * omega / 1000.0;
 	printf("requested path speed %.1f mm/s, centripetal %.1f m/s^2 (%.1f g)\n",
 		speedMmS, accelMS2, accelMS2 / 9.80665);
+	if(accelMS2 > STABILITY_ACCEL_WARN_M_S2) {
+		double gentlerRadiusMm = STABILITY_ACCEL_WARN_M_S2 * 1000.0 / (omega * omega);
+		printf("stability warning: %.2f mm at %.2f circles/s asks for high trap force; %.2f mm is gentler at the same speed\n",
+			radiusMm, circleHz, gentlerRadiusMm);
+	}
+}
+
+static void print_transport_budget(int frameCount, unsigned delayUs)
+{
+	if(delayUs == 0) {
+		printf("transport budget: uncapped sender; Pi/FPGA SPI speed sets the real frame rate\n");
+		return;
+	}
+
+	double targetFps = 1000000.0 / (double)delayUs;
+	double requiredSpiHz = targetFps * (double)(1 + HOLO_PHASE_COUNT * 2) * 8.0;
+	printf("transport budget: target %.0f phase frames/s for %d-frame circles; Pi bridge needs about %.1f MHz SPI before overhead\n",
+		targetFps, frameCount, requiredSpiHz / 1000000.0);
 }
 
 static int run_self_test(double boardDistanceMm, double radiusMm, int frameCount)
@@ -1041,6 +1302,7 @@ int main(int argc, char **argv)
 	int frameCount;
 	unsigned delayUs;
 	unsigned long maxFrames;
+	CirclePlane circlePlane = CIRCLE_PLANE_XZ;
 	uint16_t frameID = 0;
 	HoloPhaseFrame currentFrame;
 	HoloPhaseFrame *singleCircleFrames = NULL;
@@ -1048,6 +1310,7 @@ int main(int argc, char **argv)
 		{0.0, 0.0, 0.0, 1},
 		{0.0, 0.0, 0.0, 0}
 	};
+	LightState light = {255, 214, 170, 80, 0, 0, 0, 1, 1, 1};
 	int selectedParticle = 0;
 	socket_t sock;
 
@@ -1070,6 +1333,11 @@ int main(int argc, char **argv)
 	frameCount = argc >= 6 ? atoi(argv[5]) : DEFAULT_FRAMES_PER_CIRCLE;
 	delayUs = argc >= 7 ? (unsigned)strtoul(argv[6], NULL, 10) : DEFAULT_DELAY_US;
 	maxFrames = argc >= 8 ? strtoul(argv[7], NULL, 10) : 0ul;
+	if(argc >= 9 && !parse_circle_plane(argv[8], &circlePlane)) {
+		printf("unknown circle plane '%s'\n", argv[8]);
+		print_usage(argv[0]);
+		return 1;
+	}
 
 	if(port == 0 || boardDistanceMm <= 0.0 || radiusMm < 0.0 || frameCount < 3) {
 		print_usage(argv[0]);
@@ -1093,10 +1361,9 @@ int main(int argc, char **argv)
 	}
 
 	printf("precomputing %d stable single-particle circle frames...\n", frameCount);
-	if(build_single_circle_frames(singleCircleFrames, frameCount, radiusMm, boardDistanceMm) != 0) {
+	if(build_single_circle_frames(singleCircleFrames, frameCount, radiusMm, boardDistanceMm, circlePlane) != 0) {
 		printf("could not build single circle frames\n");
 		free(singleCircleFrames);
-		close_socket(sock);
 #ifdef _WIN32
 		WSACleanup();
 #endif
@@ -1113,6 +1380,16 @@ int main(int argc, char **argv)
 		return 1;
 	}
 
+	if(send_light_control(sock, &frameID, &light) < 0) {
+		printf("initial light-off send failed\n");
+		free(singleCircleFrames);
+		close_socket(sock);
+#ifdef _WIN32
+		WSACleanup();
+#endif
+		return 1;
+	}
+
 	fill_multi_particle_frame(&currentFrame, frameID++, particles, MAX_PARTICLES, boardDistanceMm);
 
 	if(terminal_raw_mode(1) != 0) {
@@ -1120,41 +1397,40 @@ int main(int argc, char **argv)
 	}
 
 	printf("AcousticLev-style two-particle sender connected to %s:%u\n", host, port);
-	printf("circle is X-Z around y=0: radius %.2f mm, %d frames, delay %u us",
-		radiusMm, frameCount, delayUs);
+	printf("single-particle circle is %s around centre: radius %.2f mm, %d frames, delay %u us",
+		circle_plane_name(circlePlane), radiusMm, frameCount, delayUs);
 	if(delayUs > 0)
 		printf(" (requested %.2f circles/s before transfer overhead)\n",
 			requested_circle_rate_hz(frameCount, delayUs));
 	else
 		printf(" (uncapped transport stress-test)\n");
 	print_circle_dynamics(radiusMm, requested_circle_rate_hz(frameCount, delayUs));
+	print_transport_budget(frameCount, delayUs);
 	print_usage(argv[0]);
 	print_particles(particles, selectedParticle);
+	print_light_state(&light);
 
 	if(send_all(sock, &currentFrame, sizeof(currentFrame)) < 0) {
 		printf("initial particle send failed\n");
 	} else {
-		printf("particle 1 is active at centre; move it away, then press 2 to add particle 2 at centre\n");
+		printf("particle 1 is active at centre; move it away, then press 2-9 to add more particles at centre\n");
 		while(1) {
 			int ch = read_key();
 			int sendCurrent = 0;
+			int lightResult = 0;
 			if(ch == EOF) {
 				delay_ms(10);
 				continue;
 			}
 			if(ch == 'q' || ch == 'Q') break;
 
-			if(ch == '1') {
-				selectedParticle = 0;
-				particles[0].enabled = 1;
-				sendCurrent = 1;
-			} else if(ch == '2') {
-				selectedParticle = 1;
-				if(!particles[1].enabled) {
-					particles[1].x = 0.0;
-					particles[1].y = 0.0;
-					particles[1].z = 0.0;
-					particles[1].enabled = 1;
+			if(ch >= '1' && ch <= '9') {
+				selectedParticle = ch - '1';
+				if(!particles[selectedParticle].enabled) {
+					particles[selectedParticle].x = 0.0;
+					particles[selectedParticle].y = 0.0;
+					particles[selectedParticle].z = 0.0;
+					particles[selectedParticle].enabled = 1;
 				}
 				sendCurrent = 1;
 			} else if(ch == '0') {
@@ -1209,7 +1485,7 @@ int main(int argc, char **argv)
 				}
 				if(stream_dual_counter_circles(sock, &currentFrame, &frameID, particles,
 					   frameCount, radiusMm, boardDistanceMm, &centers,
-					   delayUs, maxFrames, DEFAULT_SPEED_RAMP_FRAMES) < 0) {
+					   delayUs, maxFrames, DEFAULT_SPEED_RAMP_FRAMES, &light) < 0) {
 					printf("dual circle send failed\n");
 					break;
 				}
@@ -1217,16 +1493,20 @@ int main(int argc, char **argv)
 				sendCurrent = 1;
 			} else if(ch == 'g' || ch == 'G') {
 				if(send_ramp(sock, &frameID, radiusMm, boardDistanceMm,
-					   DEFAULT_RAMP_FRAMES, DEFAULT_RAMP_DELAY_MS) < 0) {
+					   circlePlane, DEFAULT_RAMP_FRAMES, DEFAULT_RAMP_DELAY_MS) < 0) {
 					printf("ramp send failed\n");
 					break;
 				}
 				if(stream_single_circle_fast(sock, singleCircleFrames, frameCount,
-					   &frameID, delayUs, maxFrames) < 0) {
+					   &frameID, delayUs, maxFrames, &light) < 0) {
 					printf("circle send failed\n");
 					break;
 				}
 				sendCurrent = 1;
+			} else if((lightResult = handle_light_key(sock, &frameID, &light, ch)) != 0) {
+				if(lightResult < 0)
+					break;
+				sendCurrent = 0;
 			} else if(ch == '\n' || ch == '\r') {
 				sendCurrent = 1;
 			} else {

@@ -161,7 +161,13 @@
 	
 	//0x1 process color commands
 	always@(posedge clk) begin
-		if(cmdReceived == CMD_SET_COLORS) begin
+		if(!nReset) begin
+			colors[0] <= '0;
+			colors[1] <= '0;
+			colors[2] <= '0;
+			blinkEnabled <= '0;
+			LEDoverride <= '1;
+		end else if(cmdReceived == CMD_SET_COLORS) begin
 			colors[0] <= spiParameter[0][7:0];
 			colors[1] <= spiParameter[1][7:0];
 			colors[2] <= spiParameter[2][7:0];

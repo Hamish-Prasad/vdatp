@@ -23,11 +23,15 @@
  */
 
 #define HOLO_PHASE_MAGIC 0x484F4C4Fu       /* ASCII "HOLO" packed into a 32-bit unsigned value. */
+#define HOLO_CONTROL_MAGIC 0x4843544Cu     /* ASCII "HCTL" packed into a 32-bit unsigned value. */
 #define HOLO_PHASE_VERSION 1u              /* Protocol version; bump this if the packet format changes. */
 #define HOLO_PHASE_COUNT 200u              /* Four FPGA boards times 50 phase outputs per board. */
 #define HOLO_PHASE_MAX 512u                /* Current FPGA PWM phase period: 20.48 MHz / 40 kHz = 512. */
 #define HOLO_PHASE_TCP_PORT 5656           /* Default TCP port used by the laptop sender and Pi bridge. */
+#define HOLO_CMD_SET_COLORS 0x01u          /* FPGA SPI command number for RGB LED PWM duty control. */
 #define HOLO_CMD_SET_PHASE_FRAME 0x0Bu     /* FPGA SPI command number for direct phase-frame mode. */
+#define HOLO_CONTROL_SET_LIGHT 1u          /* Laptop-to-Pi control packet command for RGB lighting. */
+#define HOLO_LIGHT_MAX 255u                /* Laptop-side RGB and brightness values use 0..255. */
 
 /*
  * Force byte packing so the struct has no compiler-inserted padding bytes.

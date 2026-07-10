@@ -23,7 +23,7 @@
 #define INC 1.0f
 #define MOVE_INC 0.1f
 #define DEFAULT_SPI_SPEED_HZ 500000u
-#define DEFAULT_PHASE_BRIDGE_SPI_SPEED_HZ 4000000u
+#define DEFAULT_PHASE_BRIDGE_SPI_SPEED_HZ 12000000u
 
 #define fabs(x) ((x>0)?x:-x)
 
@@ -729,13 +729,48 @@ static int sendPhaseFrameToFpga(const HoloPhaseFrame *frame)
 		.rx_buf = 0,                      /* No receive buffer; the FPGA command is write-only. */
 		.len = sizeof(tx),                /* Send the entire command plus 400-byte phase payload. */
 		.delay_usecs = delay,             /* Reuse the existing project SPI delay setting. */
-		.speed_hz = spiSpeed,             /* Reuse the existing 500 kHz SPI speed. */
+		.speed_hz = spiSpeed,             /* Direct phase frames are large, so bridge mode uses the higher configured SPI speed. */
 		.bits_per_word = bits,            /* Reuse the existing 8 bits per SPI word. */
 	};
 
 	int ret = ioctl(spiFD, SPI_IOC_MESSAGE(1), &tr); /* Perform one SPI transaction. */
 	if(ret < 1)                                      /* spidev returns < 1 if the transfer failed. */
 		pabort("can't send phase frame spi message"); /* Abort like the original SPI helper does. */
+	return ret;
+}
+
+/* Send RGB LED PWM duties to the FPGA using the original CMD_SET_COLORS command. */
+static int sendLightControlToFpga(uint8_t red, uint8_t green, uint8_t blue,
+	uint8_t brightness, uint8_t blink, uint8_t enable)
+{
+	uint8_t scaledRed = enable ? (uint8_t)(((uint16_t)red * brightness) / HOLO_LIGHT_MAX) : 0;
+	uint8_t scaledGreen = enable ? (uint8_t)(((uint16_t)green * brightness) / HOLO_LIGHT_MAX) : 0;
+	uint8_t scaledBlue = enable ? (uint8_t)(((uint16_t)blue * brightness) / HOLO_LIGHT_MAX) : 0;
+	uint16_t flags = (uint16_t)((blink ? 1u : 0u) | 2u); /* LEDoverride keeps direct phase mode from FIFO color changes. */
+	uint8_t tx[9];
+
+	tx[0] = HOLO_CMD_SET_COLORS << 1;
+	tx[1] = scaledRed;
+	tx[2] = 0;
+	tx[3] = scaledGreen;
+	tx[4] = 0;
+	tx[5] = scaledBlue;
+	tx[6] = 0;
+	tx[7] = flags & 0xff;
+	tx[8] = flags >> 8;
+
+	struct spi_ioc_transfer tr = {
+		.tx_buf = (unsigned long)tx,
+		.rx_buf = 0,
+		.len = sizeof(tx),
+		.delay_usecs = delay,
+		.speed_hz = spiSpeed,
+		.bits_per_word = bits,
+	};
+
+	int ret = ioctl(spiFD, SPI_IOC_MESSAGE(1), &tr);
+	if(ret < 1)
+		pabort("can't send light control spi message");
 	return ret;
 }
 
@@ -761,9 +796,28 @@ static int validPhaseFrame(const HoloPhaseFrame *frame)
 	return 1;                                        /* Frame is safe to forward. */
 }
 
+/* Validate and identify a laptop lighting control packet carried in the phase-frame-sized envelope. */
+static int validLightControlFrame(const HoloPhaseFrame *frame)
+{
+	if(frame->magic != HOLO_CONTROL_MAGIC)
+		return 0;
+	if(frame->version != HOLO_PHASE_VERSION)
+		return 0;
+	if(frame->phase_count != 0)
+		return 0;
+	if(frame->phases[0] != HOLO_CONTROL_SET_LIGHT)
+		return 0;
+	if(frame->phases[1] > HOLO_LIGHT_MAX || frame->phases[2] > HOLO_LIGHT_MAX ||
+	   frame->phases[3] > HOLO_LIGHT_MAX || frame->phases[4] > HOLO_LIGHT_MAX)
+		return 0;
+	if(frame->crc32 != holo_phase_frame_crc(frame))
+		return 0;
+	return 1;
+}
+
 /* Drain already-queued TCP frames so the FPGA sees the freshest live target. */
 static void drainQueuedPhaseFrames(int clientFD, HoloPhaseFrame *frame,
-	unsigned long *droppedFrames, unsigned long *invalidFrames)
+	unsigned long *droppedFrames, unsigned long *invalidFrames, unsigned long *lightFrames)
 {
 	int bytesAvailable = 0;
 	if(ioctl(clientFD, FIONREAD, &bytesAvailable) < 0)
@@ -779,6 +833,11 @@ static void drainQueuedPhaseFrames(int clientFD, HoloPhaseFrame *frame,
 		if(validPhaseFrame(&candidate)) {
 			*frame = candidate;
 			(*droppedFrames)++;
+		} else if(validLightControlFrame(&candidate)) {
+			sendLightControlToFpga((uint8_t)candidate.phases[1], (uint8_t)candidate.phases[2],
+				(uint8_t)candidate.phases[3], (uint8_t)candidate.phases[4],
+				(uint8_t)candidate.phases[5], (uint8_t)candidate.phases[6]);
+			(*lightFrames)++;
 		} else {
 			(*invalidFrames)++;
 		}
@@ -809,6 +868,8 @@ static int runPhaseBridge(uint16_t port)
 	printf("phase bridge listening on TCP port %u\n", port); /* Tell user which port to point laptop at. */
 	printf("forwarding %u laptop phases to FPGA command 0x%X\n", HOLO_PHASE_COUNT, HOLO_CMD_SET_PHASE_FRAME); /* Log bridge mode. */
 	printf("phase bridge SPI speed: %u Hz\n", spiSpeed);
+	sendLightControlToFpga(0, 0, 0, 0, 0, 0);
+	printf("lighting starts off; laptop sender can enable RGB brightness controls\n");
 
 	while(1) {                                       /* Keep bridge alive forever until user stops program. */
 		struct sockaddr_in clientAddr;              /* Stores the laptop client's IP/port. */
@@ -827,6 +888,7 @@ static int runPhaseBridge(uint16_t port)
 		unsigned long shortSpiCount = 0;
 		unsigned long droppedFrameCount = 0;
 		unsigned long invalidQueuedFrameCount = 0;
+		unsigned long lightFrameCount = 0;
 		unsigned long reportSpiCount = 0;
 		double reportRecvSeconds = 0.0;
 		double reportSpiSeconds = 0.0;
@@ -854,11 +916,19 @@ static int runPhaseBridge(uint16_t port)
 				break;                               /* Drop this client. */
 			}
 
+			if(validLightControlFrame(&frame)) {
+				sendLightControlToFpga((uint8_t)frame.phases[1], (uint8_t)frame.phases[2],
+					(uint8_t)frame.phases[3], (uint8_t)frame.phases[4],
+					(uint8_t)frame.phases[5], (uint8_t)frame.phases[6]);
+				lightFrameCount++;
+				continue;
+			}
+
 			if(!validPhaseFrame(&frame)) {           /* Validate header, CRC, and phase ranges. */
 				printf("dropping invalid phase frame\n"); /* Warn but keep connection open. */
 				continue;                            /* Wait for the next frame. */
 			}
-			drainQueuedPhaseFrames(clientFD, &frame, &droppedFrameCount, &invalidQueuedFrameCount);
+			drainQueuedPhaseFrames(clientFD, &frame, &droppedFrameCount, &invalidQueuedFrameCount, &lightFrameCount);
 
 			if(haveLastFrameID && (uint16_t)(lastFrameID + 1u) != frame.frame_id)
 				frameGapCount++;
@@ -883,17 +953,18 @@ static int runPhaseBridge(uint16_t port)
 				unsigned long recentFrames = frameCount - lastReportFrameCount;
 				double avgRecvMs = recentFrames ? reportRecvSeconds * 1000.0 / (double)recentFrames : 0.0;
 				double avgSpiMs = reportSpiCount ? reportSpiSeconds * 1000.0 / (double)reportSpiCount : 0.0;
-				printf("forwarding %.1f fps, last frame %u, recv avg/max %.3f/%.3f ms, spi avg/max %.3f/%.3f ms, gaps %lu, dropped %lu, invalid queued %lu, short spi %lu\n",
+				printf("forwarding %.1f fps, last frame %u, recv avg/max %.3f/%.3f ms, spi avg/max %.3f/%.3f ms, gaps %lu, dropped %lu, lights %lu, invalid queued %lu, short spi %lu\n",
 					(double)recentFrames / elapsed, lastFrameID,
 					avgRecvMs, maxRecvSeconds * 1000.0,
 					avgSpiMs, maxSpiSeconds * 1000.0,
-					frameGapCount, droppedFrameCount, invalidQueuedFrameCount, shortSpiCount);
+					frameGapCount, droppedFrameCount, lightFrameCount, invalidQueuedFrameCount, shortSpiCount);
 				reportStart = now;
 				lastReportFrameCount = frameCount;
 				frameGapCount = 0;
 				shortSpiCount = 0;
 				droppedFrameCount = 0;
 				invalidQueuedFrameCount = 0;
+				lightFrameCount = 0;
 				reportSpiCount = 0;
 				reportRecvSeconds = 0.0;
 				reportSpiSeconds = 0.0;
