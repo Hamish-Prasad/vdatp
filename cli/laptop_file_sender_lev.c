@@ -60,6 +60,7 @@ typedef int socket_t;
 #define DEFAULT_DELAY_US 5000
 #define DEFAULT_RAMP_FRAMES 64
 #define DEFAULT_RAMP_DELAY_MS 6
+#define DEFAULT_SPEED_RAMP_FRAMES 128
 #define MOVE_INC_MM 0.5
 #define TRANSDUCER_RADIUS_MM 5.0
 #define SOUND_SPEED_MM_S 343000.0
@@ -80,6 +81,11 @@ typedef struct ParticleTarget {
 	double z;
 	int enabled;
 } ParticleTarget;
+
+typedef struct CircleCenters {
+	double y[MAX_PARTICLES];
+	double z[MAX_PARTICLES];
+} CircleCenters;
 
 static const int16_t xCols[5] = {450, 350, 250, 150, 50};
 static const int16_t zRows[10] = {-450, -350, -250, -150, -50, 50, 150, 250, 350, 450};
@@ -294,6 +300,35 @@ static int collect_enabled_particles(const ParticleTarget *particles, int partic
 	return enabledCount;
 }
 
+static void set_dual_circle_positions(ParticleTarget *particles, double radiusMm,
+	const CircleCenters *centers, double theta)
+{
+	double centerX[MAX_PARTICLES] = {radiusMm, -radiusMm};
+
+	/*
+	 * Particle 1 moves counter-clockwise around +radius.
+	 * Particle 2 moves clockwise around -radius with the same cosine phase.
+	 * This keeps the traps separated by at least 2*radius in X instead of
+	 * colliding at the middle once per cycle.
+	 */
+	particles[0].x = centerX[0] + radiusMm * cos(theta);
+	particles[0].y = centers->y[0];
+	particles[0].z = centers->z[0] + radiusMm * sin(theta);
+	particles[1].x = centerX[1] + radiusMm * cos(theta);
+	particles[1].y = centers->y[1];
+	particles[1].z = centers->z[1] - radiusMm * sin(theta);
+	particles[0].enabled = 1;
+	particles[1].enabled = 1;
+}
+
+static double particle_distance(const ParticleTarget *a, const ParticleTarget *b)
+{
+	double dx = a->x - b->x;
+	double dy = a->y - b->y;
+	double dz = a->z - b->z;
+	return sqrt(dx*dx + dy*dy + dz*dz);
+}
+
 static void fill_iterative_multi_particle_phases(HoloPhaseFrame *frame,
 	const ParticleTarget *particles, const int *enabledIdx, int enabledCount,
 	double boardDistanceMm)
@@ -358,6 +393,36 @@ static void fill_iterative_multi_particle_phases(HoloPhaseFrame *frame,
 		frame->phases[idx] = phase_radians_to_ticks(atan2(driveImag[idx], driveReal[idx]));
 }
 
+static void make_phase_frame_temporally_continuous(HoloPhaseFrame *frame)
+{
+	static uint16_t previous[HOLO_PHASE_COUNT];
+	static int havePrevious = 0;
+	double real = 0.0;
+	double imag = 0.0;
+
+	if(!havePrevious) {
+		memcpy(previous, frame->phases, sizeof(previous));
+		havePrevious = 1;
+		return;
+	}
+
+	for(size_t i = 0; i < HOLO_PHASE_COUNT; i++) {
+		double prev = TWO_PI * (double)previous[i] / (double)HOLO_PHASE_MAX;
+		double cur = TWO_PI * (double)frame->phases[i] / (double)HOLO_PHASE_MAX;
+		real += cos(prev - cur);
+		imag += sin(prev - cur);
+	}
+
+	int offset = (int)floor(atan2(imag, real) * (double)HOLO_PHASE_MAX / TWO_PI + 0.5);
+	for(size_t i = 0; i < HOLO_PHASE_COUNT; i++) {
+		int shifted = (int)frame->phases[i] + offset;
+		shifted %= (int)HOLO_PHASE_MAX;
+		if(shifted < 0) shifted += (int)HOLO_PHASE_MAX;
+		frame->phases[i] = (uint16_t)shifted;
+		previous[i] = frame->phases[i];
+	}
+}
+
 static void fill_multi_particle_frame(HoloPhaseFrame *frame, uint16_t frameID,
 	const ParticleTarget *particles, int particleCount, double boardDistanceMm)
 {
@@ -381,6 +446,7 @@ static void fill_multi_particle_frame(HoloPhaseFrame *frame, uint16_t frameID,
 			}
 		}
 	}
+	make_phase_frame_temporally_continuous(frame);
 	frame->crc32 = holo_phase_frame_crc(frame);
 }
 
@@ -508,28 +574,25 @@ static int stream_circle(socket_t sock, HoloPhaseFrame *frames, int frameCount,
 
 static int send_dual_circle_ramp(socket_t sock, HoloPhaseFrame *frame, uint16_t *frameID,
 	ParticleTarget *particles, double radiusMm, double boardDistanceMm,
-	const double *circleCenterY, const double *circleCenterZ,
+	const CircleCenters *centers,
 	int rampFrames, unsigned rampDelayMs)
 {
 	double startX[MAX_PARTICLES] = {particles[0].x, particles[1].x};
 	double startY[MAX_PARTICLES] = {particles[0].y, particles[1].y};
 	double startZ[MAX_PARTICLES] = {particles[0].z, particles[1].z};
-	double centerX[MAX_PARTICLES] = {radiusMm, -radiusMm};
-	double startTheta[MAX_PARTICLES] = {0.0, PI};
+	ParticleTarget end[MAX_PARTICLES] = {{0.0, 0.0, 0.0, 1}, {0.0, 0.0, 0.0, 1}};
 
 	particles[0].enabled = 1;
 	particles[1].enabled = 1;
+	set_dual_circle_positions(end, radiusMm, centers, 0.0);
 
 	for(int i = 0; i <= rampFrames; i++) {
 		double t = (double)i / (double)rampFrames;
 		double smooth = t * t * (3.0 - 2.0 * t);
 		for(int p = 0; p < MAX_PARTICLES; p++) {
-			double endX = centerX[p] + radiusMm * cos(startTheta[p]);
-			double endY = circleCenterY[p];
-			double endZ = circleCenterZ[p] + radiusMm * sin(startTheta[p]);
-			particles[p].x = startX[p] + (endX - startX[p]) * smooth;
-			particles[p].y = startY[p] + (endY - startY[p]) * smooth;
-			particles[p].z = startZ[p] + (endZ - startZ[p]) * smooth;
+			particles[p].x = startX[p] + (end[p].x - startX[p]) * smooth;
+			particles[p].y = startY[p] + (end[p].y - startY[p]) * smooth;
+			particles[p].z = startZ[p] + (end[p].z - startZ[p]) * smooth;
 		}
 		if(send_particles(sock, frame, frameID, particles, boardDistanceMm) < 0)
 			return -1;
@@ -540,31 +603,34 @@ static int send_dual_circle_ramp(socket_t sock, HoloPhaseFrame *frame, uint16_t 
 
 static int stream_dual_counter_circles(socket_t sock, HoloPhaseFrame *frame, uint16_t *frameID,
 	ParticleTarget *particles, int frameCount, double radiusMm, double boardDistanceMm,
-	const double *circleCenterY, const double *circleCenterZ,
-	unsigned delayUs, unsigned long maxFrames)
+	const CircleCenters *centers,
+	unsigned delayUs, unsigned long maxFrames, unsigned speedRampFrames)
 {
 	unsigned long sent = 0;
 	unsigned long reportStartFrames = 0;
+	double theta = 0.0;
 	double start = now_seconds();
 	double reportStart = start;
-	double centerX[MAX_PARTICLES] = {radiusMm, -radiusMm};
+	double nominalStep = TWO_PI / (double)frameCount;
 
 	particles[0].enabled = 1;
 	particles[1].enabled = 1;
 
-	printf("streaming two local opposite circles: press q to stop, any other key prints status\n");
+	printf("streaming two local opposite circles with %u-frame speed ramp: press q to stop, any other key prints status\n",
+		speedRampFrames);
 	while(maxFrames == 0 || sent < maxFrames) {
-		double theta = TWO_PI * (double)(sent % (unsigned long)frameCount) / (double)frameCount;
-		particles[0].x = centerX[0] + radiusMm * cos(theta);
-		particles[0].y = circleCenterY[0];
-		particles[0].z = circleCenterZ[0] + radiusMm * sin(theta);
-		particles[1].x = centerX[1] + radiusMm * cos(PI - theta);
-		particles[1].y = circleCenterY[1];
-		particles[1].z = circleCenterZ[1] + radiusMm * sin(PI - theta);
+		double speedScale = 1.0;
+		if(speedRampFrames > 0 && sent < speedRampFrames) {
+			double t = (double)sent / (double)speedRampFrames;
+			speedScale = t * t * (3.0 - 2.0 * t);
+		}
+		set_dual_circle_positions(particles, radiusMm, centers, theta);
 
 		if(send_particles(sock, frame, frameID, particles, boardDistanceMm) < 0)
 			return -1;
 		sent++;
+		theta += nominalStep * speedScale;
+		if(theta >= TWO_PI) theta = fmod(theta, TWO_PI);
 		delay_us(delayUs);
 
 		if(key_pressed()) {
@@ -614,6 +680,7 @@ static int send_particles(socket_t sock, HoloPhaseFrame *frame, uint16_t *frameI
 static void print_usage(const char *argv0)
 {
 	printf("usage: %s <pi-ip-or-host> [port] [board-mm] [radius-mm] [frames] [delay-us] [max-frames]\n", argv0);
+	printf("       %s --self-test [board-mm] [radius-mm] [frames]\n", argv0);
 	printf("defaults: port=%u board=%.1f radius=%.1f frames=%d delay-us=%u max-frames=0(infinite)\n",
 		HOLO_PHASE_TCP_PORT, DEFAULT_BOARD_DISTANCE_MM, DEFAULT_RADIUS_MM,
 		DEFAULT_FRAMES_PER_CIRCLE, DEFAULT_DELAY_US);
@@ -650,6 +717,63 @@ static void print_circle_dynamics(double radiusMm, double circleHz)
 		speedMmS, accelMS2, accelMS2 / 9.80665);
 }
 
+static int run_self_test(double boardDistanceMm, double radiusMm, int frameCount)
+{
+	ParticleTarget particles[MAX_PARTICLES] = {
+		{0.0, 0.0, 0.0, 1},
+		{0.0, 0.0, 0.0, 1}
+	};
+	CircleCenters centers = {{0.0, 0.0}, {0.0, 0.0}};
+	HoloPhaseFrame frame;
+	double minSeparation = 1.0e9;
+	double maxStep[MAX_PARTICLES] = {0.0, 0.0};
+	ParticleTarget previous[MAX_PARTICLES] = {
+		{0.0, 0.0, 0.0, 1},
+		{0.0, 0.0, 0.0, 1}
+	};
+
+	if(frameCount < 3 || radiusMm < 0.0 || boardDistanceMm <= 0.0)
+		return 1;
+
+	for(int i = 0; i < frameCount; i++) {
+		double theta = TWO_PI * (double)i / (double)frameCount;
+		set_dual_circle_positions(particles, radiusMm, &centers, theta);
+		double sep = particle_distance(&particles[0], &particles[1]);
+		if(sep < minSeparation)
+			minSeparation = sep;
+		if(i > 0) {
+			for(int p = 0; p < MAX_PARTICLES; p++) {
+				double step = particle_distance(&particles[p], &previous[p]);
+				if(step > maxStep[p])
+					maxStep[p] = step;
+			}
+		}
+		previous[0] = particles[0];
+		previous[1] = particles[1];
+		fill_multi_particle_frame(&frame, (uint16_t)i, particles, MAX_PARTICLES, boardDistanceMm);
+		if(frame.magic != HOLO_PHASE_MAGIC || frame.version != HOLO_PHASE_VERSION ||
+		   frame.phase_count != HOLO_PHASE_COUNT || frame.phase_max != HOLO_PHASE_MAX ||
+		   frame.crc32 != holo_phase_frame_crc(&frame)) {
+			printf("self-test failed: invalid frame at index %d\n", i);
+			return 1;
+		}
+		for(size_t ch = 0; ch < HOLO_PHASE_COUNT; ch++) {
+			if(frame.phases[ch] >= HOLO_PHASE_MAX) {
+				printf("self-test failed: phase %u out of range at frame %d\n", (unsigned)ch, i);
+				return 1;
+			}
+		}
+	}
+
+	printf("self-test ok: %d dual-circle frames, min particle separation %.3f mm, max step %.3f/%.3f mm\n",
+		frameCount, minSeparation, maxStep[0], maxStep[1]);
+	if(minSeparation + 1.0e-6 < 2.0 * radiusMm) {
+		printf("self-test failed: particles should not approach closer than 2*radius\n");
+		return 1;
+	}
+	return 0;
+}
+
 int main(int argc, char **argv)
 {
 	const char *host;
@@ -668,6 +792,13 @@ int main(int argc, char **argv)
 	};
 	int selectedParticle = 0;
 	socket_t sock;
+
+	if(argc >= 2 && strcmp(argv[1], "--self-test") == 0) {
+		boardDistanceMm = argc >= 3 ? atof(argv[2]) : DEFAULT_BOARD_DISTANCE_MM;
+		radiusMm = argc >= 4 ? atof(argv[3]) : DEFAULT_RADIUS_MM;
+		frameCount = argc >= 5 ? atoi(argv[4]) : DEFAULT_FRAMES_PER_CIRCLE;
+		return run_self_test(boardDistanceMm, radiusMm, frameCount);
+	}
 
 	if(argc < 2) {
 		print_usage(argv[0]);
@@ -806,17 +937,19 @@ int main(int argc, char **argv)
 			} else if(ch == 'p' || ch == 'P') {
 				print_particles(particles, selectedParticle);
 			} else if(ch == 'o' || ch == 'O') {
-				double circleCenterY[MAX_PARTICLES] = {particles[0].y, particles[1].y};
-				double circleCenterZ[MAX_PARTICLES] = {particles[0].z, particles[1].z};
+				CircleCenters centers = {
+					{particles[0].y, particles[1].y},
+					{particles[0].z, particles[1].z}
+				};
 				if(send_dual_circle_ramp(sock, &currentFrame, &frameID, particles,
-					   radiusMm, boardDistanceMm, circleCenterY, circleCenterZ,
+					   radiusMm, boardDistanceMm, &centers,
 					   DEFAULT_RAMP_FRAMES, DEFAULT_RAMP_DELAY_MS) < 0) {
 					printf("dual circle ramp send failed\n");
 					break;
 				}
 				if(stream_dual_counter_circles(sock, &currentFrame, &frameID, particles,
-					   frameCount, radiusMm, boardDistanceMm, circleCenterY, circleCenterZ,
-					   delayUs, maxFrames) < 0) {
+					   frameCount, radiusMm, boardDistanceMm, &centers,
+					   delayUs, maxFrames, DEFAULT_SPEED_RAMP_FRAMES) < 0) {
 					printf("dual circle send failed\n");
 					break;
 				}
