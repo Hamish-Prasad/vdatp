@@ -30,7 +30,7 @@
  * laptop_file_sender_lev.exe 169.254.166.13 5656 135 3 32 200
  * laptop_file_sender_lev.exe 169.254.166.13 5656 135 2 64 390 0 xz
  * laptop_file_sender_lev.exe 169.254.166.13 5656 135 2 64 390 0 xz
- * laptop_file_sender_lev.exe 169.254.219.139 5656 135 3 64 5000
+ * laptop_file_sender_lev.exe 169.254.114.104 5656 135 3 64 5000
  */
 
 #ifdef _WIN32
